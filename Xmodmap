@@ -1,0 +1,11 @@
+!remove mod4 = Super_L
+!add control = Super_L
+!clear lock
+!keycode 66 = Hyper_R
+!add mod3 = Hyper_R
+!{{}}}}^^^^^^^^&&½½¼¼¼¼
+keycode  13 = 4 dollar 4 currency dollar cent dollar
+keycode 34 = braceleft bracketleft aring Aring oe OE oe
+keycode  35 = braceright bracketright diaeresis asciicircum asciitilde caron asciitilde
+keycode  49 = ampersand asciitilde asciicircum asciitilde asciicircum onequarter
+keycode  66 = Control_L NoSymbol Control_L

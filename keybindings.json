@@ -1,0 +1,241 @@
+// Place your key bindings in this file to override the defaultsauto[]
+//editor.action.clipboardPasteAction
+[
+    {
+        "key": "alt+left",
+        "command": "workbench.action.navigateBack",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+right",
+        "command": "workbench.action.navigateForward",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+s",
+        "command": "workbench.action.files.save",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+right",
+        "command": "cursorWordStartRightSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+x",
+        "command": "workbench.action.showCommands",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+left",
+        "command": "cursorWordStartLeftSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "f5",
+        "command": "workbench.action.tasks.runTask",
+        "args": "check cargo"
+    },
+    {
+        "key": "f6",
+        "command": "workbench.action.tasks.runTask",
+        "args": "test cargo"
+    },
+    {
+        "key": "f8",
+        "command": "workbench.action.tasks.runTask",
+        "args": "run cargo"
+    },
+    {
+        "key": "ctrl+x ctrl+s",
+        "command": "workbench.action.files.save"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "-editor.action.clipboardCopyAction",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+x",
+        "command": "-editor.action.clipboardCutAction",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+0",
+        "command": "-workbench.action.zoomIn"
+    },
+    {
+        "key": "ctrl+shift+0",
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+i",
+        "command": "-editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+a",
+        "command": "-editor.action.selectAll",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "-workbench.action.quickOpen"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "editor.action.clipboardCopyAction"
+    },
+    {
+        "key": "ctrl+shift+'",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "ctrl+shift+left",
+        "command": "-workbench.action.terminal.resizePaneLeft",
+        "when": "terminalFocus"
+    },
+    // {
+    //     "key": "ctrl+v",
+    //     "command": "-extension.vim_ctrl+v",
+    //     "when": "editorTextFocus && vim.active && vim.use<C-v> && !inDebugRepl"
+    // },
+    // {
+    //     "key": "ctrl+c",
+    //     "command": "-extension.vim_ctrl+c",
+    //     "when": "editorTextFocus && vim.active && vim.overrideCtrlC && vim.use<C-c> && !inDebugRepl"
+    // },
+    {
+        "key": "ctrl+[Period]",
+        "command": "-editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+[Period]",
+        "command": "editor.action.revealDefinition",
+        "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+    },
+    {
+        "key": "f12",
+        "command": "-editor.action.revealDefinition",
+        "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+    },
+    {
+        "key": "ctrl+alt+-",
+        "command": "-workbench.action.quickInputBack",
+        "when": "inQuickOpen"
+    },
+    {
+        "key": "ctrl+o",
+        "command": "workbench.action.navigateBack"
+    },
+    {
+        "key": "ctrl+alt+-",
+        "command": "-workbench.action.navigateBack"
+    },
+    {
+        "key": "ctrl+shift+right",
+        "command": "-cursorWordEndRightSelect",
+        "when": "textInputFocus"
+    },
+    // {
+    //     "key": "ctrl+x",
+    //     "command": "-extension.vim_ctrl+x",
+    //     "when": "editorTextFocus && vim.active && vim.use<C-x> && !inDebugRepl"
+    // },
+    {
+        "key": "f1",
+        "command": "-workbench.action.showCommands"
+    },
+    {
+        "key": "f1",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+    },
+    // {
+    //     "key": "ctrl+k ctrl+i",
+    //     "command": "-editor.action.showHover",
+    //     "when": "editorTextFocus"
+    // },
+    {
+        "key": "ctrl+n",
+        "command": "workbench.action.files.newUntitledFile",
+        "when": "editorTextFocus"
+    },
+    // {
+    //     "key": "ctrl+v",
+    //     "command": "editor.action.webvieweditor.paste",
+    //     "when": "!editorFocus && !inputFocus && activeEditor == 'WebviewEditor'"
+    // },
+    // {
+    //     "key": "cmd+v",
+    //     "command": "-editor.action.webvieweditor.paste",
+    //     "when": "!editorFocus && !inputFocus && activeEditor == 'WebviewEditor'"
+    // },
+    {
+        "key": "ctrl+v",
+        "command": "editor.action.clipboardPasteAction",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+v",
+        "command": "-editor.action.clipboardPasteAction",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+f",
+        "command": "actions.find"
+    },
+    {
+        "key": "cmd+f",
+        "command": "-actions.find"
+    },
+    {
+        "key": "ctrl+f",
+        "command": "-cursorRight",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "f9",
+        "command": "-workbench.action.debug.start",
+        "when": "!inDebugMode"
+    },
+    {
+        "key": "f9",
+        "command": "-workbench.action.debug.continue",
+        "when": "inDebugMode"
+    },
+    // {
+    //     "key": "ctrl+[Comma]",
+    //     "command": "-workbench.action.openSettings"
+    // },
+    {
+        "key": "f12",
+        "command": "workbench.action.openPreviousRecentlyUsedEditor"
+    },
+    // {
+    //     "key": "ctrl+k",
+    //     "command": "list.focusUp",
+    //     "when": "listFocus && !inputFocus"
+    // },
+    {
+        "key": "ctrl+k",
+        "command": "list.focusUp",
+        "when": "listFocus && !inputFocus"
+    },
+    // {
+    //     "key": "ctrl+f",
+    //     "command": "-extension.vim_ctrl+f",
+    //     "when": "editorTextFocus && vim.active && vim.use<C-f> && !inDebugRepl && vim.mode != 'Insert'"
+    // },
+    // {
+    //     "key": "ctrl+shift+[Equal]",
+    //     "command": "-workbench.action.terminal.toggleTerminal"
+    // },
+    // {
+    //     "key": "ctrl+x",
+    //     "command": "-extension.vim_ctrl+x",
+    //     "when": "editorTextFocus && vim.active && vim.use<C-x> && !inDebugRepl"
+    // }
+]
