@@ -15,3 +15,5 @@ alias ls="ls -l"
 alias ls="ls -l"
 alias lrun="LEIN_FAST_TRAMPOLINE=y lein trampoline run -m"
 alias leinrun="LEIN_FAST_TRAMPOLINE=y lein trampoline run -m"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
