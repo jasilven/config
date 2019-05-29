@@ -32,7 +32,7 @@ set noswapfile nobackup noshowmode hidden nowrap nojoinspaces
 set timeoutlen=700 scrolloff=2 ttyfast lazyredraw synmaxcol=500
 set laststatus=2 signcolumn=yes colorcolumn=80
 set clipboard=unnamed,unnamedplus mouse=a
-set shell=/usr/bin/zsh
+set shell=/bin/zsh
 set shiftwidth=4 softtabstop=4 tabstop=4 expandtab colorcolumn=100
 set guioptions+=c guioptions-=T guioptions+=a  guioptions-=m gdefault "vb t_vb= "bell
 set splitright splitbelow wildignorecase
@@ -43,7 +43,7 @@ set formatoptions=tcrqnb
 set ignorecase smartcase inccommand=nosplit
 set number
 set nolist listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
-set noshowcmd nofoldenable foldmethod=syntax
+set noshowcmd nofoldenable foldmethod=indent
 set completeopt=noinsert,menuone,noselect " set completeopt=menuone,preview
 set diffopt+=iwhite " No whitespace in vimdiff
 set diffopt+=algorithm:patience
@@ -53,7 +53,7 @@ set shortmess-=F
 set grepprg=rg\ --no-heading\ --vimgrep
 set grepformat=%f:%l:%c:%m
 set cursorline termguicolors
-set autoindent
+set autoindent autoread
 " guifont=DejaVu\ Sans\ Mono:h13
 filetype plugin indent on
 syntax on
@@ -62,6 +62,7 @@ colorscheme codedark
 " =============================================================================
 " # Misc
 " =============================================================================
+let g:rooter_silent_chdir = 1
 let NERDTreeQuitOnOpen=1
 let base16colorspace=256
 let g:sneak#s_next = 1
@@ -97,6 +98,7 @@ let g:lsc_server_commands = {'rust': 'rls'}
 au FileType rust noremap gd :ALEGoToDefinition<cr>
 au FileType rust map <F3> :ALEGoToDefinition<cr>
 au FileType rust map <F1> :ALEHover<cr>
+au FileType rust noremap <leader>i :ALEHover<cr>
 au FileType rust nmap K :ALEHover<cr>
 " au FileType rust nmap <F1> <Plug>(rust-doc)
 " au FileType rust nmap K <Plug>(rust-doc)
@@ -179,7 +181,7 @@ nmap <leader>w :w<CR>
 nmap <leader>x :bd<CR>
 map <leader>q :bd<CR>
 " nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader><tab> <c-^>
+" nnoremap <leader><tab> <c-^>
 nnoremap <leader>, :set invlist<cr>
 
 " =============================================================================
@@ -288,7 +290,7 @@ let g:gitgutter_sign_removed_first_line = '-'
 let g:gitgutter_sign_modified_removed = '-'
 hi Cursor guifg=#000000 guibg=#afdf00
 hi iCursor guifg=#000000 guibg=#ff2222
-" set guicursor=n-v-c:block-Cursor
+set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver75-iCursor
 set guicursor+=n-v-c:blinkon1
 
@@ -322,8 +324,8 @@ function! s:RunShellCommand(cmdline)
         endif
     endfor
     botright new
-    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+    setlocal noswapfile nowrap
     execute ':silent $read !'. expanded_cmdline
-    setlocal nomodifiable
+    setlocal modifiable
     1
 endfunction
