@@ -3,9 +3,24 @@
 !clear lock
 !keycode 66 = Hyper_R
 !add mod3 = Hyper_R
-!{{}}}}^^^^^^^^&&½½¼¼¼¼
-keycode  13 = 4 dollar 4 currency dollar cent dollar
-keycode 34 = braceleft bracketleft aring Aring oe OE oe
-keycode  35 = braceright bracketright diaeresis asciicircum asciitilde caron asciitilde
-keycode  49 = ampersand asciitilde asciicircum asciitilde asciicircum onequarter
-keycode  66 = Control_L NoSymbol Control_L
+! keycode 11 = 2 at
+! keycode 13 = 4 dollar 4 currency dollar cent dollar
+! keycode 15 = 6 asciicircum
+! keycode 16 = 7 ampersand
+! keycode 17 = 8 asterisk
+! keycode 18 = 9 parenleft
+! keycode 19 = 0 parenright
+! keycode 20 = minus underscore
+! keycode 21 = equal plus
+keycode 32 = o O odiaeresis Odiaeresis odiaeresis Odiaeresis
+! keycode 34 = bracketleft braceleft aring Aring oe OE oe
+! keycode 35 = bracketright braceright diaeresis asciicircum asciitilde caron asciitilde
+keycode 38 = a A adiaeresis Adiaeresis adiaeresis Adiaeresis
+! keycode 47 = semicolon colon
+keycode 48 = apostrophe quotedbl
+keycode 49 = asciitilde grave asciicircum onequarter
+! keycode 51 = backslash bar
+! keycode 59 = comma less
+! keycode 60 = period greater
+! keycode 61 = slash question
+! keycode 66 = Control_L NoSymbol Control_L
