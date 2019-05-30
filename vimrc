@@ -14,6 +14,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'easymotion/vim-easymotion'
 Plug 'machakann/vim-highlightedyank'
 Plug 'airblade/vim-rooter'
+Plug 'ap/vim-buftabline'
 " Plug 'ncm2/ncm2'
 " Plug 'ncm2/ncm2-racer'
 " Plug 'ncm2/ncm2-bufword'
@@ -62,6 +63,7 @@ colorscheme codedark
 " =============================================================================
 " # Misc
 " =============================================================================
+let g:buftabline_indicators = 1
 let g:rooter_silent_chdir = 1
 let NERDTreeQuitOnOpen=1
 let base16colorspace=256
@@ -82,8 +84,10 @@ let g:vim_markdown_frontmatter = 1
 " =============================================================================
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_save= 1
 let g:ale_virtualtext_cursor = 1
-let g:ale_virtualtext_prefix = '» '
+let g:ale_virtualtext_prefix = '»'
 let g:ale_linters = {'rust': ['rls']}
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
 let g:ale_fix_on_save = 0
@@ -142,8 +146,9 @@ let g:fzf_colors =
 " =============================================================================
 " # Global shortcuts
 " =============================================================================
-nmap <TAB> :bp<cr>
-nmap <S-TAB> :bn<cr>
+nmap <TAB> :bn<cr>
+nmap <C-TAB> :bn<cr>
+nmap <S-TAB> :bp<cr>
 map <F8> :%s/\<<C-r><C-w>\>//gc<left><left><left>
 nmap :Q :q
 nmap ; :
@@ -262,6 +267,9 @@ autocmd FileType netrw setl bufhidden=wipe " allow netrw buffer close
 " =============================================================================
 " # My colors
 " =============================================================================
+hi link BufTabLineCurrent CursorLineNR
+hi link BufTabLineActive SignColumn
+hi link BufTabLineHidden SignColumn
 hi fzf1 guifg=gray
 hi CursorLine guibg=#2c2c2c
 hi CursorLineNr gui=underline guifg=#9CDCFE
