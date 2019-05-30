@@ -1,6 +1,4 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558 
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
@@ -39,18 +37,6 @@
                 "$rustc"
             ]
         },
-        // {
-        //     "label": "check - cargo",
-        //     "type": "cargo",
-        //     "subcommand": "check",
-        //     "presentation": {
-        //         "panel": "shared",
-        //         "clear": true
-        //     },
-        //     "problemMatcher": [
-        //         "$rustc"
-        //     ]
-        // },
         {
             "label": "test cargo",
             "type": "shell",

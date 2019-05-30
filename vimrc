@@ -15,21 +15,14 @@ Plug 'easymotion/vim-easymotion'
 Plug 'machakann/vim-highlightedyank'
 Plug 'airblade/vim-rooter'
 Plug 'ap/vim-buftabline'
-" Plug 'ncm2/ncm2'
-" Plug 'ncm2/ncm2-racer'
-" Plug 'ncm2/ncm2-bufword'
-" Plug 'ncm2/ncm2-path'
-" Plug 'roxma/nvim-yarp'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-" Plug 'racer-rust/vim-racer', { 'for': 'rust' }
 call plug#end()
 
 " =============================================================================
 " # Editor settings
 " =============================================================================
-set noswapfile nobackup noshowmode hidden nowrap nojoinspaces
+set undofile noswapfile nobackup noshowmode hidden nowrap nojoinspaces
 set timeoutlen=700 scrolloff=2 ttyfast lazyredraw synmaxcol=500
 set laststatus=2 signcolumn=yes colorcolumn=80
 set clipboard=unnamed,unnamedplus mouse=a
@@ -39,13 +32,11 @@ set guioptions+=c guioptions-=T guioptions+=a  guioptions-=m gdefault "vb t_vb= 
 set splitright splitbelow wildignorecase
 set wildmode=longest:list,full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,.directory,target,*.zip,*.jar,*~,*.png,*.jpg,*.gif,*.swp
-set undofile
 set formatoptions=tcrqnb
 set ignorecase smartcase inccommand=nosplit
-set number
 set nolist listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
 set noshowcmd nofoldenable foldmethod=indent
-set completeopt=noinsert,menuone,noselect " set completeopt=menuone,preview
+set completeopt=noinsert,menuone,noselect
 set diffopt+=iwhite " No whitespace in vimdiff
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
@@ -53,7 +44,7 @@ set shortmess+=c
 set shortmess-=F
 set grepprg=rg\ --no-heading\ --vimgrep
 set grepformat=%f:%l:%c:%m
-set cursorline termguicolors
+set cursorline termguicolors number
 set autoindent autoread
 " guifont=DejaVu\ Sans\ Mono:h13
 filetype plugin indent on
@@ -65,6 +56,7 @@ colorscheme codedark
 " =============================================================================
 let g:buftabline_indicators = 1
 let g:rooter_silent_chdir = 1
+let g:NERDTreeWinSize=23
 let NERDTreeQuitOnOpen=1
 let base16colorspace=256
 let g:sneak#s_next = 1
@@ -74,42 +66,33 @@ let g:vim_markdown_frontmatter = 1
 :command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 " =============================================================================
-" # completion
-" =============================================================================
-" au BufEnter * call ncm2#enable_for_buffer()
-" let g:deoplete#enable_at_startup = 1
-" call deoplete#custom#option('auto_complete_delay', 200)
-" =============================================================================
 " # RUST
 " =============================================================================
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_save= 1
-let g:ale_virtualtext_cursor = 1
+let g:ale_virtualtext_cursor = 0
 let g:ale_virtualtext_prefix = '»'
 let g:ale_linters = {'rust': ['rls']}
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
 let g:ale_fix_on_save = 0
 let g:ale_rust_cargo_use_check = 1
 let g:ale_completion_enabled = 1
-" let g:ale_set_loclist = 1
 let g:ale_rust_rls_toolchain = "stable"
 set omnifunc=ale#completion#OmniFunc
-" let g:racer_experimental_completer = 1
 let g:rustfmt_autosave = 1
-let g:lsc_server_commands = {'rust': 'rls'}
 au FileType rust noremap gd :ALEGoToDefinition<cr>
-au FileType rust map <F3> :ALEGoToDefinition<cr>
 au FileType rust map <F1> :ALEHover<cr>
 au FileType rust noremap <leader>i :ALEHover<cr>
 au FileType rust nmap K :ALEHover<cr>
-" au FileType rust nmap <F1> <Plug>(rust-doc)
-" au FileType rust nmap K <Plug>(rust-doc)
 au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
 au FileType rust nmap <leader>c :w<cr>:silent :make<cr>
 au FileType rust nmap <leader>t :w<cr>:!cargo test --bin %:t:r<cr>
 au FileType rust nmap <leader>r :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
+au FileType rust nmap <f5> :w<cr>:silent :make<cr>
+au FileType rust nmap <f6> :w<cr>:!cargo test --bin %:t:r<cr>
+au FileType rust nmap <f8> :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
 au FileType rust map <M-j> :cp<cr>
 au FileType rust map <M-k> :cn<cr>
 au FileType rust :iabbrev prn println!("{}",&);<ESC>2h
@@ -147,9 +130,8 @@ let g:fzf_colors =
 " # Global shortcuts
 " =============================================================================
 nmap <TAB> :bn<cr>
-nmap <C-TAB> :bn<cr>
 nmap <S-TAB> :bp<cr>
-map <F8> :%s/\<<C-r><C-w>\>//gc<left><left><left>
+map <F2> :%s/\<<C-r><C-w>\>//gc<left><left><left>
 nmap :Q :q
 nmap ; :
 map <f9> :nohl<cr>
@@ -160,8 +142,7 @@ inoremap kj <ESC>
 tnoremap jk <C-\><C-n>
 tnoremap kj <C-\><C-n>
 nmap q <Esc>
-cmap <C-g> <Esc>
-map f <Plug>(easymotion-bd-f)
+nmap f <Plug>(easymotion-bd-f)
 tnoremap <Esc> <C-\><C-n>
 nnoremap j gj
 nnoremap k gk
@@ -169,7 +150,7 @@ nnoremap k gk
 " =============================================================================
 " # ALT/Meta shortcuts
 " =============================================================================
-map <M-x> <Esc>:
+map <M-x> <nop>
 
 " =============================================================================
 " # <leader> shortcuts
@@ -181,12 +162,8 @@ map <leader>f :Files <CR>
 map <leader>h :History <CR>
 map <leader>j :BTags<CR>
 map <leader>b :Buffers<CR>
-map <leader>g :Rg<space>
+map <leader>g :Rg<space><C-r><C-w>
 nmap <leader>w :w<CR>
-nmap <leader>x :bd<CR>
-map <leader>q :bd<CR>
-" nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-" nnoremap <leader><tab> <c-^>
 nnoremap <leader>, :set invlist<cr>
 
 " =============================================================================
@@ -198,10 +175,9 @@ map <C-M-q> :x!<cr>
 noremap <C-f> :BLines<space><cr>
 map <C-q> :bd!<CR>
 tnoremap <C-q> <C-\><C-n>:bd!<CR>
+tnoremap <C-g> <C-\><C-n>:bd!<CR>
 tnoremap <Esc> <C-\><C-n>:bd!<CR>
 tmap <C-g> <C-\><C-n>:bd!<CR>
-map <C-p> :Files<CR>
-nmap <C-b> :Buffers<CR>
 noremap <C-j> 10j
 noremap <C-k> 10k
 inoremap <C-j> <Esc>
@@ -211,7 +187,7 @@ noremap <C-x><C-s> :w<cr>
 noremap <C-s> :w<cr>
 nnoremap <silent><C-t> :call TermToggle(15)<CR>
 inoremap <silent><C-t> <Esc>:call TermToggle(15)<CR>
-tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(12)<CR>
+tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(15)<CR>
 
 " =============================================================================
 " # Completion shortcuts
@@ -267,7 +243,7 @@ autocmd FileType netrw setl bufhidden=wipe " allow netrw buffer close
 " =============================================================================
 " # My colors
 " =============================================================================
-hi link BufTabLineCurrent CursorLineNR
+hi link BufTabLineCurrent Title
 hi link BufTabLineActive SignColumn
 hi link BufTabLineHidden SignColumn
 hi fzf1 guifg=gray
@@ -281,9 +257,13 @@ hi ALEError gui=undercurl guisp=#608B4E
 hi ALEErrorSign guifg=#F44747 gui=bold
 hi ALEWarningSign guifg=yellow
 hi link QuickFixLine WildMenu
-hi link rustFuncCall Normal
+hi link rustFuncCall Keyword
+hi link rustMacro NonText
+hi link rustDerive NonText
+hi link rustMacroVariable NonText
 hi link rustMacro Normal
-hi link rustFuncName Normal
+hi link rustAttribute NonText
+hi link rustFuncName Keyword
 hi link rustKeyword Type
 hi link rustConditional Type
 hi link rustRepeat Type

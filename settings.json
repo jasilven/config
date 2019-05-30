@@ -1,5 +1,37 @@
 {
   "vim.insertModeKeyBindings": [],
+  "vim.normalModeKeyBindings": [
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "after": [
+        "<leader>",
+        "<leader>",
+        "s",
+      ],
+      "when": "editorFocus",
+    },
+    {
+      "before": [
+        "<C-k>",
+      ],
+      "after": [
+        "{",
+      ],
+      "when": "editorFocus",
+    },
+    {
+      "before": [
+        "<C-j>",
+      ],
+      "after": [
+        "}",
+      ],
+      "when": "editorFocus",
+    },
+  ],
   "vim.insertModeKeyBindingsNonRecursive": [
     {
       "before": [
@@ -12,67 +44,11 @@
     },
     {
       "before": [
-        "<C-ö>",
-      ],
-      "after": [
-        "<"
-      ]
-    },
-    {
-      "before": [
-        "<C-ä>",
-      ],
-      "after": [
-        ">"
-      ]
-    },
-    {
-      "before": [
         "k",
         "j"
       ],
       "after": [
         "<Esc>"
-      ]
-    },
-    {
-      "before": [
-        "å",
-      ],
-      "after": [
-        "{"
-      ]
-    },
-    {
-      "before": [
-        "Å",
-      ],
-      "after": [
-        "}"
-      ]
-    },
-    {
-      "before": [
-        "§",
-      ],
-      "after": [
-        "&"
-      ]
-    },
-    {
-      "before": [
-        "°",
-      ],
-      "after": [
-        "~"
-      ]
-    },
-    {
-      "before": [
-        "¨"
-      ],
-      "after": [
-        "}"
       ]
     },
     {
@@ -157,7 +133,7 @@
     {
       "before": [
         "<leader>",
-        "f"
+        "b"
       ],
       "commands": [
         "workbench.action.quickOpen",
@@ -166,7 +142,7 @@
     {
       "before": [
         "<leader>",
-        "r"
+        "e"
       ],
       "commands": [
         {
@@ -177,7 +153,7 @@
     {
       "before": [
         "<leader>",
-        "t"
+        "c"
       ],
       "commands": [
         {
@@ -204,24 +180,6 @@
       ],
       "commands": [
         "workbench.action.gotoSymbol",
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "a"
-      ],
-      "commands": [
-        "cursorHome",
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "e"
-      ],
-      "commands": [
-        "cursorEnd",
       ]
     },
     {
@@ -263,15 +221,15 @@
   "editor.minimap.enabled": false,
   "window.zoomLevel": 0,
   "workbench.startupEditor": "newUntitledFile",
-  "go.autocompleteUnimportedPackages": true,
-  "go.formatTool": "goimports",
-  "editor.fontSize": 16,
-  "editor.fontFamily": "'Menlo', 'Hack', 'Monaco', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+  // "go.autocompleteUnimportedPackages": true,
+  // "go.formatTool": "goimports",
+  "editor.fontSize": 18,
+  "editor.fontFamily": "'Fira Code', 'Menlo', 'Hack', 'Monaco', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
   "vim.leader": "<space>",
   "editor.renderControlCharacters": false,
   "breadcrumbs.enabled": false,
   "editor.renderWhitespace": "none",
-  "go.useLanguageServer": true,
+  // "go.useLanguageServer": true,
   "workbench.colorCustomizations": {
     "statusBar.noFolderBackground": "#BF616A",
     "editorLineNumber.activeForeground": "#5fd45f",
@@ -279,13 +237,19 @@
     "editorBracketMatch.border": "#5fd45f"
     // "statusBar.background": "#6199bf",
   },
+  "editor.tokenColorCustomizations": {
+    "functions": "#C586C0",
+    "keywords": "#569CD6",
+    "types": "#C586C0",
+  },
   "workbench.view.alwaysShowHeaderActions": true,
-  "workbench.colorTheme": "Visual Studio Dark",
   "editor.formatOnSave": true,
   "terminal.integrated.fontSize": 14,
-  "rest-client.enableTelemetry": false,
-  "rest-client.timeoutinmilliseconds": 20000,
+  // "rest-client.enableTelemetry": false,
+  // "rest-client.timeoutinmilliseconds": 20000,
   "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
-  "window.menuBarVisibility": "toggle"
+  "window.menuBarVisibility": "toggle",
+  "rust.build_on_save": true,
+  "rust.jobs": 2
 }
