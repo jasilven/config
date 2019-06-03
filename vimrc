@@ -16,13 +16,14 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'airblade/vim-rooter'
 Plug 'ap/vim-buftabline'
 Plug 'w0rp/ale'
+Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 call plug#end()
 
 " =============================================================================
 " # Editor settings
 " =============================================================================
-set undofile noswapfile nobackup noshowmode hidden nowrap nojoinspaces
+set undofile noswapfile nobackup noshowmode hidden wrap nojoinspaces
 set timeoutlen=700 scrolloff=2 ttyfast lazyredraw synmaxcol=500
 set laststatus=2 signcolumn=yes colorcolumn=80
 set clipboard=unnamed,unnamedplus mouse=a
@@ -57,21 +58,23 @@ colorscheme codedark
 let g:buftabline_indicators = 1
 let g:rooter_silent_chdir = 1
 let g:NERDTreeWinSize=23
-let NERDTreeQuitOnOpen=1
+let NERDTreeQuitOnOpen=0
 let base16colorspace=256
 let g:sneak#s_next = 1
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_frontmatter = 1
 :command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " =============================================================================
 " # RUST
 " =============================================================================
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_save= 1
+let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_save = 1
+let g:ale_cursor_detail= 0
 let g:ale_virtualtext_cursor = 0
 let g:ale_virtualtext_prefix = '»'
 let g:ale_linters = {'rust': ['rls']}
@@ -82,14 +85,15 @@ let g:ale_completion_enabled = 1
 let g:ale_rust_rls_toolchain = "stable"
 set omnifunc=ale#completion#OmniFunc
 let g:rustfmt_autosave = 1
-au FileType rust noremap gd :ALEGoToDefinition<cr>
-au FileType rust map <F1> :ALEHover<cr>
-au FileType rust noremap <leader>i :ALEHover<cr>
-au FileType rust nmap K :ALEHover<cr>
-au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
-au FileType rust nmap <leader>c :w<cr>:silent :make<cr>
+au FileType rust noremap gd :ALEGoToDefinition<CR>
+au FileType rust map <F1> <Plug>(rust-doc)
+au FileType rust noremap <leader>i :ALEDetail<cr><C-w>k
+au FileType rust nmap K <Plug>(rust-doc)
+" au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
+au FileType rust set makeprg=cargo
+au FileType rust nmap <leader>c :w<cr>:silent :make check<cr>
 au FileType rust nmap <leader>t :w<cr>:!cargo test --bin %:t:r<cr>
-au FileType rust nmap <leader>r :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
+au FileType rust nmap <leader>r :w<cr>:!time RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
 au FileType rust nmap <f5> :w<cr>:silent :make<cr>
 au FileType rust nmap <f6> :w<cr>:!cargo test --bin %:t:r<cr>
 au FileType rust nmap <f8> :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
@@ -101,7 +105,7 @@ au FileType rust :iabbrev dbg dbg!(&);<ESC>2h
 " =============================================================================
 " # FZF
 " =============================================================================
-let g:fzf_tags_command = 'ctags -R'
+let g:fzf_tags_command = 'ctags -R --exclude=.git --exclude=.vscode --exclude=target'
 let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'down': '~20%' }
 let $FZF_DEFAULT_COMMAND = "find * -path '*/\.*' -path 'tags' -prune -o -path '.rustup' -prune -o -path 'classes' -prune -o -path 'target' -prune -o -path 'dist' -prune -o -path '*.jar' -prune -o -path '*.zip' -prune -o -path '*.jpeg' -prune -o -path '*.png' -prune -o -path '*.gif' -prune -o -path '*.jpg'  -prune -o -path '*.1' -prune -o -path '*.ico' -prune -o  -type f -print -o -type l -print 2> /dev/null"
@@ -150,7 +154,8 @@ nnoremap k gk
 " =============================================================================
 " # ALT/Meta shortcuts
 " =============================================================================
-map <M-x> <nop>
+noremap <M-x> :Commands<cr>
+inoremap <M-x> <esc>:Commands<cr>
 
 " =============================================================================
 " # <leader> shortcuts
@@ -170,20 +175,20 @@ nnoremap <leader>, :set invlist<cr>
 " # CTRL  (control) shortcuts
 " =============================================================================
 noremap <C-q> :confirm qall<CR>
-nmap <C-n> :NERDTreeToggle<CR>
-map <C-M-q> :x!<cr>
-noremap <C-f> :BLines<space><cr>
-map <C-q> :bd!<CR>
+inoremap <C-q> <esc>:bd!<CR>
 tnoremap <C-q> <C-\><C-n>:bd!<CR>
-tnoremap <C-g> <C-\><C-n>:bd!<CR>
-tnoremap <Esc> <C-\><C-n>:bd!<CR>
+noremap <C-q> :bd!<CR>
+map <C-M-q> :x!<cr>
 tmap <C-g> <C-\><C-n>:bd!<CR>
+tnoremap <C-g> <C-\><C-n>:bd!<CR>
+inoremap <C-g> <ESC>
+nmap <C-n> :NERDTreeToggle<CR>
+noremap <C-f> :BLines<space><cr>
+tnoremap <Esc> <C-\><C-n>:bd!<CR>
 noremap <C-j> 10j
 noremap <C-k> 10k
-inoremap <C-j> <Esc>
-vnoremap <C-j> <Esc>
-inoremap <C-g> <ESC>
 noremap <C-x><C-s> :w<cr>
+inoremap <C-s> <esc>:w<cr>
 noremap <C-s> :w<cr>
 nnoremap <silent><C-t> :call TermToggle(15)<CR>
 inoremap <silent><C-t> <Esc>:call TermToggle(15)<CR>
@@ -276,7 +281,7 @@ let g:gitgutter_sign_modified = '|'
 let g:gitgutter_sign_removed = '|'
 let g:gitgutter_sign_removed_first_line = '-'
 let g:gitgutter_sign_modified_removed = '-'
-hi Cursor guifg=#000000 guibg=#afdf00
+" hi Cursor guifg=#000000 guibg=#afdf00
 hi iCursor guifg=#000000 guibg=#ff2222
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver75-iCursor

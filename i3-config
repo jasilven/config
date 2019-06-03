@@ -2,7 +2,7 @@ set $mod Mod4
 font pango:Menlo 12
 floating_modifier $mod
 # Use Mouse+$mod to drag floating windows to their wanted position
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec termite
 
 # kill focused window
 bindsym $mod+Shift+x kill
@@ -121,6 +121,6 @@ exec --no-startup-id "xmodmap ~/config/Xmodmap"
 exec nm-applet
 exec xfce4-power-manager
 exec onboard
-exec kitty
+exec termite
 exec onboard
 exec firefox
