@@ -234,7 +234,7 @@
     "statusBar.noFolderBackground": "#BF616A",
     "editorLineNumber.activeForeground": "#5fd45f",
     "statusBar.debuggingBackground": "#BF616A",
-    "editorBracketMatch.border": "#5fd45f"
+    "editorBracketMatch.border": "#5fd45f",
     // "statusBar.background": "#6199bf",
   },
   "editor.tokenColorCustomizations": {
@@ -244,12 +244,17 @@
   },
   "workbench.view.alwaysShowHeaderActions": true,
   "editor.formatOnSave": true,
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 18,
   // "rest-client.enableTelemetry": false,
   // "rest-client.timeoutinmilliseconds": 20000,
   "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
   "window.menuBarVisibility": "toggle",
   "rust.build_on_save": true,
-  "rust.jobs": 2
+  "rust.jobs": 2,
+  "[clojure]": {
+    "editor.matchBrackets": true
+  },
+  "debug.console.fontSize": 16,
+  "calva.lintOnSave": true
 }

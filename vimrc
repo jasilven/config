@@ -18,6 +18,11 @@ Plug 'ap/vim-buftabline'
 Plug 'w0rp/ale'
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'flazz/vim-colorschemes'
+Plug 'tpope/vim-fireplace'
+Plug 'venantius/vim-cljfmt'
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 call plug#end()
 
 " =============================================================================
@@ -66,6 +71,15 @@ let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_frontmatter = 1
 :command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" =============================================================================
+" # Clojure
+" =============================================================================
+au Filetype clojure nmap <c-x><c-k> :Require<cr><Paste>
+au Filetype clojure nmap <C-x><C-x> :Eval<cr>
+au Filetype clojure nmap <C-x><C-e> cpp<cr>
+au Filetype clojure nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
+au Filetype clojure nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
 
 " =============================================================================
 " # RUST
@@ -174,6 +188,7 @@ nnoremap <leader>, :set invlist<cr>
 " =============================================================================
 " # CTRL  (control) shortcuts
 " =============================================================================
+noremap <c-c> <nop>
 noremap <C-q> :confirm qall<CR>
 inoremap <C-q> <esc>:bd!<CR>
 tnoremap <C-q> <C-\><C-n>:bd!<CR>
@@ -248,7 +263,7 @@ autocmd FileType netrw setl bufhidden=wipe " allow netrw buffer close
 " =============================================================================
 " # My colors
 " =============================================================================
-hi link BufTabLineCurrent Title
+hi link BufTabLineCurrent CursorLineNr
 hi link BufTabLineActive SignColumn
 hi link BufTabLineHidden SignColumn
 hi fzf1 guifg=gray

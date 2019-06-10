@@ -1,2 +1,1 @@
-xmodmap config/Xmodmap
 exec i3
