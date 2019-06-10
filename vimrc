@@ -63,7 +63,7 @@ colorscheme codedark
 let g:buftabline_indicators = 1
 let g:rooter_silent_chdir = 1
 let g:NERDTreeWinSize=23
-let NERDTreeQuitOnOpen=0
+let NERDTreeQuitOnOpen=1
 let base16colorspace=256
 let g:sneak#s_next = 1
 let g:vim_markdown_new_list_item_indent = 0
@@ -84,6 +84,8 @@ au Filetype clojure nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
 " =============================================================================
 " # RUST
 " =============================================================================
+" let g:racer_experimental_completer = 1
+" let g:racer_insert_paren = 1
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 'always'
@@ -92,7 +94,7 @@ let g:ale_cursor_detail= 0
 let g:ale_virtualtext_cursor = 0
 let g:ale_virtualtext_prefix = '»'
 let g:ale_linters = {'rust': ['rls']}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
+let g:ale_fixers = {'XXXXX': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
 let g:ale_fix_on_save = 0
 let g:ale_rust_cargo_use_check = 1
 let g:ale_completion_enabled = 1
@@ -102,12 +104,14 @@ let g:rustfmt_autosave = 1
 au FileType rust noremap gd :ALEGoToDefinition<CR>
 au FileType rust map <F1> <Plug>(rust-doc)
 au FileType rust noremap <leader>i :ALEDetail<cr><C-w>k
-au FileType rust nmap K <Plug>(rust-doc)
+" au FileType rust nmap K <Plug>(rust-doc)
+au FileType rust nmap K :ALEHover<cr>
 " au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
 au FileType rust set makeprg=cargo
 au FileType rust nmap <leader>c :w<cr>:silent :make check<cr>
 au FileType rust nmap <leader>t :w<cr>:!cargo test --bin %:t:r<cr>
-au FileType rust nmap <leader>r :w<cr>:!time RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
+" au FileType rust nmap <leader>r :w<cr>:!time RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
+au FileType rust nmap <leader>r :w<cr>:!time cargo run -q --bin %:t:r<cr>
 au FileType rust nmap <f5> :w<cr>:silent :make<cr>
 au FileType rust nmap <f6> :w<cr>:!cargo test --bin %:t:r<cr>
 au FileType rust nmap <f8> :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
@@ -149,10 +153,10 @@ let g:fzf_colors =
 " =============================================================================
 nmap <TAB> :bn<cr>
 nmap <S-TAB> :bp<cr>
-map <F2> :%s/\<<C-r><C-w>\>//gc<left><left><left>
+map <F2> :%s/\<<C-r><C-w>\>//c<left><left>
 nmap :Q :q
-nmap ; :
-map <f9> :nohl<cr>
+nmap ; <nop>
+map <f9> :nohl<CR>
 nnoremap d4 d$
 nnoremap y4 y$
 inoremap jk <ESC>
@@ -168,17 +172,19 @@ nnoremap k gk
 " =============================================================================
 " # ALT/Meta shortcuts
 " =============================================================================
-noremap <M-x> :Commands<cr>
-inoremap <M-x> <esc>:Commands<cr>
+noremap <M-x> :Commands<CR>
+inoremap <M-x> <esc>:Commands<CR>
+noremap <C-p> :Commands<CR>
+inoremap <C-p> <esc>:Commands<CR>
 
 " =============================================================================
 " # <leader> shortcuts
 " =============================================================================
 let mapleader = "\<Space>"
 nmap <leader>n :NERDTreeToggle<CR>
-nmap <leader>o :only<cr>
-map <leader>f :Files <CR>
-map <leader>h :History <CR>
+nmap <leader>o :only<CR>
+map <leader>f :Files<CR>
+map <leader>h :History<CR>
 map <leader>j :BTags<CR>
 map <leader>b :Buffers<CR>
 map <leader>g :Rg<space><C-r><C-w>
@@ -202,9 +208,9 @@ noremap <C-f> :BLines<space><cr>
 tnoremap <Esc> <C-\><C-n>:bd!<CR>
 noremap <C-j> 10j
 noremap <C-k> 10k
-noremap <C-x><C-s> :w<cr>
-inoremap <C-s> <esc>:w<cr>
-noremap <C-s> :w<cr>
+noremap <C-x><C-s> :w<CR>
+inoremap <C-s> <esc>:w<CR>
+noremap <C-s> :w<CR>
 nnoremap <silent><C-t> :call TermToggle(15)<CR>
 inoremap <silent><C-t> <Esc>:call TermToggle(15)<CR>
 tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(15)<CR>
@@ -212,7 +218,7 @@ tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(15)<CR>
 " =============================================================================
 " # Completion shortcuts
 " =============================================================================
-inoremap <expr><Tab> (pumvisible()?"\<C-n>":"\<Tab>")
+inoremap <expr><TAB> (pumvisible()?"\<C-n>":"\<Tab>")
 inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
 " =============================================================================

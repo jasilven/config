@@ -3,7 +3,6 @@
   "vim.normalModeKeyBindings": [
     {
       "before": [
-        "<leader>",
         "f"
       ],
       "after": [
@@ -223,7 +222,7 @@
   "workbench.startupEditor": "newUntitledFile",
   // "go.autocompleteUnimportedPackages": true,
   // "go.formatTool": "goimports",
-  "editor.fontSize": 18,
+  "editor.fontSize": 16,
   "editor.fontFamily": "'Fira Code', 'Menlo', 'Hack', 'Monaco', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
   "vim.leader": "<space>",
   "editor.renderControlCharacters": false,
