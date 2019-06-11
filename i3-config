@@ -120,7 +120,6 @@ exec --no-startup-id "xmodmap ~/config/Xmodmap"
 # exec dropbox start
 exec nm-applet
 exec xfce4-power-manager
-exec onboard
 exec termite
 exec onboard
 exec firefox

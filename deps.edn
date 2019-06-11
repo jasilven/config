@@ -9,11 +9,14 @@
 ;; For all attributes other than :paths, these config files are merged left to right.
 ;; Only the last :paths is kept and others are dropped.
 
-{:paths ["src" "."]
+{:paths ["src" "." "test"]
  :aliases {
-           :cider {:extra-deps {cider/cider-nrepl {:mvn/version "0.21.2-SNAPSHOT"}
+           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "0.6.0"}}}
+           :cider {:extra-deps {cljfmt {:mvn/version "0.5.1"}
+                                cider/cider-nrepl {:mvn/version "0.21.2-SNAPSHOT"}
                                 nrepl {:mvn/version "0.6.0"}}
-                   :main-opts ["-m" "nrepl.cmdline" "--interactive" "--middleware" "[cider.nrepl/cider-middleware]"]}
+                   :main-opts ["-m" "nrepl.cmdline" "--interactive" "--middleware" "[cider.nrepl/cider-middleware]"]
+                   :extra-paths ["test"]}
            :eastwood {:main-opts ["-m" "eastwood.lint" {:source-paths ["src"]}]
                       :extra-deps {jonase/eastwood {:mvn/version "0.3.5"}}}
            }

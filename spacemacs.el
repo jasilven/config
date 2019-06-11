@@ -71,7 +71,7 @@ values."
    dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes '(doom-vibrant doom-one sanityinc-tomorrow-night  sanityinc-tomorrow-day doom-one doom-one-light idea-darkula leuven solarized-dark doom-opera-light)
    dotspacemacs-colorize-cursor-according-to-state t
-   dotspacemacs-default-font '("Noto Mono" :size 19)
+   dotspacemacs-default-font '("Fira Code" :size 17)
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-command-key ";"
    dotspacemacs-ex-command-key ":"
@@ -94,7 +94,7 @@ values."
    dotspacemacs-helm-position 'bottom
    dotspacemacs-helm-use-fuzzy 'always
    dotspacemacs-enable-paste-transient-state nil
-   dotspacemacs-which-key-delay 0.7
+   dotspacemacs-which-key-delay 0.6
    dotspacemacs-which-key-position 'bottom
    dotspacemacs-loading-progress-bar t
    dotspacemacs-fullscreen-at-startup nil
@@ -199,6 +199,7 @@ you should place your code here."
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-transparency)
   (setq-default
+   vc-follow-symlinks t
    flycheck-pos-tip-timeout 20
    eldoc-echo-area-use-multiline-p nil
    evil-move-cursor-back nil
@@ -223,13 +224,13 @@ you should place your code here."
    )
   ;; helm
   (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 20)
-  (setq helm-autoresize-min-height 20)
+  (setq helm-autoresize-max-height 23)
+  (setq helm-autoresize-min-height 23)
   (setq helm-split-window-in-side-p t)
   ;; doom
   (doom-modeline-mode 1)
   (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
-  (setq doom-modeline-height 22)
+  (setq doom-modeline-height 20)
   (setq doom-modeline-bar-width 5)
   (setq doom-modeline-percent-position nil)
   (setq doom-modeline-icon t)
