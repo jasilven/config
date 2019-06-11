@@ -250,5 +250,6 @@
   "outline.problems.enabled": false,
   "window.menuBarVisibility": "toggle",
   "rust.build_on_save": true,
-  "rust.jobs": 2
+  "rust.jobs": 2,
+  "calva.lintOnSave": true
 }
