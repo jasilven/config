@@ -230,7 +230,7 @@ you should place your code here."
   ;; doom
   (doom-modeline-mode 1)
   (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
-  (setq doom-modeline-height 20)
+  (setq doom-modeline-height 15)
   (setq doom-modeline-bar-width 5)
   (setq doom-modeline-percent-position nil)
   (setq doom-modeline-icon t)
@@ -240,6 +240,7 @@ you should place your code here."
   ;; global keys
   (spacemacs/set-leader-keys "SPC" 'helm-descbinds)
   (global-set-key (kbd "C-s") 'save-buffer)
+  (global-set-key (kbd "C-q") 'delete-window)
   (global-set-key (kbd "C-*") 'spacemacs/shell-pop-ansi-term)
   (global-set-key (kbd "M-w") 'next-multiframe-window)
   (global-set-key (kbd "C-M-k") 'my/kill-buffer-and-window)
@@ -252,6 +253,9 @@ you should place your code here."
   (global-set-key (kbd "C-s-<down>") 'shrink-window)
   (global-set-key (kbd "C-s-<right>") 'enlarge-window-horizontally)
   (global-set-key (kbd "C-s-<left>") 'shrink-window-horizontally)
+  (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+  (define-key evil-normal-state-map (kbd "C-f") 'helm-swoop)
+  (define-key evil-normal-state-map (kbd "C-n") 'neotree-toggle)
   (define-key evil-normal-state-map (kbd "ä") 'evil-forward-paragraph)
   (define-key evil-normal-state-map (kbd "ö") 'evil-backward-paragraph)
   ;; evil
