@@ -196,6 +196,7 @@ you should place your code here."
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-transparency)
   (setq-default
+   powerline-default-separator 'bar
    truncate-lines t
    scalable-fonts-allowed t
    popwin-mode t
