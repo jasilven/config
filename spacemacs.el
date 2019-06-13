@@ -12,12 +12,10 @@ values."
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     vimscript
      rust
      javascript
      clojure
      clojure-lint
-     markdown
      evil-cleverparens
      restclient
      html
@@ -47,9 +45,9 @@ values."
           (quote (("n" "note" entry (file "~/Notes/notes.org") "* %? %T\n"))))
      (shell)
      )
-   dotspacemacs-additional-packages '(doom-themes beacon idea-darkula-theme doom-modeline all-the-icons doom-themes)
+   dotspacemacs-additional-packages '(doom-themes doom-modeline beacon idea-darkula-theme)
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '(persp-mode eyebrowse spaceline highlight-parentheses python-mode yasnippet rainbow-delimiters emoji)
+   dotspacemacs-excluded-packages '(persp-mode eyebrowse spaceline highlight-parentheses python-mode yasnippet rainbow-delimiters emoji org-projectile)
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
@@ -105,7 +103,7 @@ values."
    dotspacemacs-inactive-transparency 100
    dotspacemacs-show-transient-state-title t
    dotspacemacs-show-transient-state-color-guide t
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers t
    dotspacemacs-folding-method 'evil
@@ -113,7 +111,7 @@ values."
    dotspacemacs-smart-closing-parenthesis nil
    dotspacemacs-highlight-delimiters 'all
    dotspacemacs-persistent-server nil
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "pt" "ack" "grep")
    dotspacemacs-default-package-repository nil
    dotspacemacs-whitespace-cleanup nil))
 (defun dotspacemacs/user-init ()
@@ -232,18 +230,18 @@ you should place your code here."
   ;; doom
   (doom-modeline-mode 1)
   (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
-  (setq doom-modeline-height 20)
+  (setq doom-modeline-height 5)
   (setq doom-modeline-bar-width 5)
   (setq doom-modeline-percent-position nil)
-  (setq doom-modeline-icon t)
+  (setq doom-modeline-icon nil)
   (setq doom-modeline-minor-modes nil)
   (setq doom-modeline-persp-name nil)
   (doom-themes-neotree-config)
   ;; global keys
   (spacemacs/set-leader-keys "SPC" 'helm-descbinds)
   (global-set-key (kbd "C-s") 'save-buffer)
-  (global-set-key (kbd "C-q") 'delete-window)
-  (global-set-key (kbd "C-*") 'spacemacs/shell-pop-ansi-term)
+  (global-set-key (kbd "C-q") 'my/kill-buffer-and-window)
+  (global-set-key (kbd "C-\"") 'spacemacs/shell-pop-ansi-term)
   (global-set-key (kbd "M-w") 'next-multiframe-window)
   (global-set-key (kbd "C-M-k") 'my/kill-buffer-and-window)
   (global-set-key (kbd "M-j") 'avy-goto-char)
@@ -255,11 +253,8 @@ you should place your code here."
   (global-set-key (kbd "C-s-<down>") 'shrink-window)
   (global-set-key (kbd "C-s-<right>") 'enlarge-window-horizontally)
   (global-set-key (kbd "C-s-<left>") 'shrink-window-horizontally)
-  (define-key evil-normal-state-map (kbd "ä") 'evil-forward-paragraph)
-  (define-key evil-normal-state-map (kbd "ö") 'evil-backward-paragraph)
-  ;; evil
-  (define-key evil-insert-state-map "\C-e" 'end-of-line)
-  (define-key evil-normal-state-map "\C-e" 'end-of-line)
+  (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+  (define-key evil-normal-state-map (kbd "C-f") 'helm-swoop)
   ;; neotree
   (setq neo-window-width 26)
   (setq neo-show-hidden-files nil)
@@ -340,4 +335,4 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (vimrc-mode dactyl-mode zenburn-theme zen-and-art-theme xterm-color ws-butler winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toml-mode toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme restclient-helm restart-emacs rebecca-theme railscasts-theme racer purple-haze-theme pug-mode professional-theme popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el paradox orgit organic-green-theme org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient ob-http noctilux-theme neotree naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide idea-darkula-theme hungry-delete htmlize hl-todo highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme fuzzy flycheck-rust flycheck-pos-tip flycheck-joker flx-ido flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery expand-region exotica-theme exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump dracula-theme ndoom-themes doom-modeline django-theme diminish diff-hl define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme company-web company-tern company-statistics company-restclient company-go column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme cargo busybee-theme bubbleberry-theme birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet auto-highlight-symbol auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (flycheck-clojure shrink-path org-plus-contrib helm vimrc-mode dactyl-mode zenburn-theme zen-and-art-theme xterm-color ws-butler winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toml-mode toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme restclient-helm restart-emacs rebecca-theme railscasts-theme racer purple-haze-theme pug-mode professional-theme popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el paradox orgit organic-green-theme org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient ob-http noctilux-theme neotree naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide idea-darkula-theme hungry-delete htmlize hl-todo highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme fuzzy flycheck-rust flycheck-pos-tip flycheck-joker flx-ido flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery expand-region exotica-theme exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump dracula-theme ndoom-themes doom-modeline django-theme diminish diff-hl define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme company-web company-tern company-statistics company-restclient company-go column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme cargo busybee-theme bubbleberry-theme birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet auto-highlight-symbol auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
