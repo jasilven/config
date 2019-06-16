@@ -18,11 +18,15 @@
 (show-paren-mode 1)
 (hl-line-mode 0)
 (global-eldoc-mode -1)
+(pixel-scroll-mode 1)
+(line-number-mode -1)
 
 ;; editor settings
 (set-frame-font "Fira Code-14")
 (set-frame-name "Editor")
 (defalias 'yes-or-no-p 'y-or-n-p)
+(setq eshell-scroll-show-maximum-output t)
+(setq confirm-kill-processes nil)
 (setq blink-cursor-blinks 500)
 (setq clean-buffer-list-delay-general 1)
 (setq coding-system-for-read 'utf-8)
@@ -62,6 +66,10 @@
 ;; themes
 (use-package solarized-theme :ensure t)
 (use-package doom-themes :ensure t)
+(use-package zenburn-theme :ensure t)
+(use-package gruvbox-theme :ensure t)
+(use-package color-theme-sanityinc-tomorrow :ensure t)
+(load-theme 'sanityinc-tomorrow-night)
 
 ;; disable minor modes in modeline
 (use-package rich-minority
@@ -69,6 +77,9 @@
   :config 
   (rich-minority-mode 1)
   (setf rm-blacklist ""))
+
+;; restclient
+(use-package restclient :ensure t)
 
 ;; company
 (use-package company
@@ -239,14 +250,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-echo-delay 0 t)
- '(company-idle-delay 0 t)
- '(company-minimum-prefix-length 1 t)
+ '(company-idle-delay 0)
+ '(company-minimum-prefix-length 1)
  '(custom-safe-themes
    (quote
-    ("9954ed41d89d2dcf601c8e7499b6bb2778180bfcaeb7cdfc648078b8e05348c6" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "43c808b039893c885bdeec885b4f7572141bd9392da7f0bd8d8346e02b2ec8da" "a8c210aa94c4eae642a34aaf1c5c0552855dfca2153fa6dd23f3031ce19453d4" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" default)))
+    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "8e797edd9fa9afec181efbfeeebf96aeafbd11b69c4c85fa229bb5b9f7f7e66c" "2b9dc43b786e36f68a9fd4b36dd050509a0e32fe3b0a803310661edb7402b8b6" "b583823b9ee1573074e7cbfd63623fe844030d911e9279a7c8a5d16de7df0ed0" "585942bb24cab2d4b2f74977ac3ba6ddbd888e3776b9d2f993c5704aa8bb4739" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "a22f40b63f9bc0a69ebc8ba4fbc6b452a4e3f84b80590ba0a92b4ff599e53ad0" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1436d643b98844555d56c59c74004eb158dc85fc55d2e7205f8d9b8c860e177f" "9954ed41d89d2dcf601c8e7499b6bb2778180bfcaeb7cdfc648078b8e05348c6" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "43c808b039893c885bdeec885b4f7572141bd9392da7f0bd8d8346e02b2ec8da" "a8c210aa94c4eae642a34aaf1c5c0552855dfca2153fa6dd23f3031ce19453d4" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" default)))
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
+ '(global-hl-line-mode t)
  '(package-selected-packages
    (quote
     (flycheck-pos-tip flycheck-clojure flycheck-joker helm-rg cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package))))
@@ -255,6 +267,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight normal :height 128 :width normal))))
  '(git-gutter:added ((t (:foreground "#50fa7b" :background "#50fa7b"))))
  '(git-gutter:deleted ((t (:foreground "#ff79c6" :background "#ff79c6"))))
  '(git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c")))))
