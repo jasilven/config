@@ -255,5 +255,6 @@
     "editor.matchBrackets": true
   },
   "debug.console.fontSize": 16,
-  "calva.lintOnSave": true
+  "calva.lintOnSave": true,
+  "workbench.colorTheme": "Default Light+"
 }

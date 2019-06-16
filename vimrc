@@ -3,7 +3,7 @@
 " =============================================================================
 call plug#begin()
 Plug 'tpope/vim-surround'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tomasiser/vim-code-dark'
@@ -21,7 +21,8 @@ Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'flazz/vim-colorschemes'
 Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
-Plug 'guns/vim-sexp'
+Plug 'guns/vim-clojure-static'
+Plug 'guns/vim-sexp', {'for': 'clojure'}
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 call plug#end()
 
@@ -38,6 +39,7 @@ set guioptions+=c guioptions-=T guioptions+=a  guioptions-=m gdefault "vb t_vb= 
 set splitright splitbelow wildignorecase
 set wildmode=longest:list,full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,.directory,target,*.zip,*.jar,*~,*.png,*.jpg,*.gif,*.swp
+set wildignore+=.git,classes
 set formatoptions=tcrqnb
 set ignorecase smartcase inccommand=nosplit
 set nolist listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
@@ -174,8 +176,6 @@ nnoremap k gk
 " =============================================================================
 noremap <M-x> :Commands<CR>
 inoremap <M-x> <esc>:Commands<CR>
-noremap <C-p> :Commands<CR>
-inoremap <C-p> <esc>:Commands<CR>
 
 " =============================================================================
 " # <leader> shortcuts
