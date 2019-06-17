@@ -22,46 +22,48 @@
 (line-number-mode -1)
 
 ;; editor settings
-(set-frame-font "Fira Code-14")
+(set-frame-font "Fira Code-16")
 (set-frame-name "Editor")
 (defalias 'yes-or-no-p 'y-or-n-p)
-(setq blink-cursor-blinks 500)
-(setq clean-buffer-list-delay-general 1)
-(setq coding-system-for-read 'utf-8)
-(setq coding-system-for-write 'utf-8)
-(setq confirm-kill-processes nil)
-(setq cursor-in-non-selected-windows nil)
-(setq custom-safe-themes t) 
-(setq default-fill-column 80)
-(setq delete-old-versions -1)
-(setq eldoc-echo-area-use-multiline-p nil)
-(setq eshell-scroll-show-maximum-output t)
-(setq font-lock-builtin-face nil)
-(setq font-lock-type-face nil)
-(setq font-lock-variable-name-face nil)
-(setq indent-tabs-mode nil)
-(setq inhibit-startup-screen t)
-(setq initial-scratch-message nil)
-(setq mac-right-option-modifier nil)
-(setq make-backup-files nil) 
-(setq midnight-period 7200) ;; 2 hours
-(setq mouse-wheel-progressive-speed nil)
-(setq mouse-wheel-scroll-amount '(6))
-(setq ring-bell-function 'ignore)
-(setq scalable-fonts-allowed t)
-(setq scroll-conservatively 10000)
-(setq scroll-step 1)
-(setq sentence-end-double-space nil)
-(setq set-default-coding-systems 'utf-8)
-(setq set-language-environment "UTF-8")
-(setq shell-file-name "zsh")
-(setq show-paren-style 'parentheses)
-(setq tab-width 4)
-(setq truncate-lines t)
-(setq vc-follow-symlinks t)
-(setq vc-make-backup-files -1)
-(setq version-control t)
+(setq blink-cursor-blinks 500
+      clean-buffer-list-delay-general 1
+      coding-system-for-read 'utf-8
+      coding-system-for-write 'utf-8
+      confirm-kill-processes nil
+      cursor-in-non-selected-windows nil
+      custom-safe-themes t 
+      default-fill-column 80
+      delete-old-versions -1
+      eldoc-echo-area-use-multiline-p nil
+      eshell-scroll-show-maximum-output t
+      font-lock-builtin-face nil
+      font-lock-type-face nil
+      font-lock-variable-name-face nil
+      indent-tabs-mode nil
+      inhibit-startup-screen t
+      initial-scratch-message nil
+      mac-right-option-modifier nil
+      make-backup-files nil 
+      midnight-period 7200 ;; 2 hours
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-scroll-amount '(3)
+      ring-bell-function 'ignore
+      scalable-fonts-allowed t
+      scroll-conservatively 10000
+      scroll-step 1
+      sentence-end-double-space nil
+      set-default-coding-systems 'utf-8
+      set-language-environment "UTF-8"
+      shell-file-name "zsh"
+      show-paren-style 'parentheses
+      tab-width 4
+      truncate-lines t
+      vc-follow-symlinks t
+      vc-make-backup-files -1
+      version-control t)
 (global-set-key (kbd "C-q") 'kill-buffer-and-window)
+(global-unset-key (kbd "C-w"))
+(global-set-key (kbd "C-w C-w") 'other-window)
 
 ;; themes
 (use-package solarized-theme :ensure t)
@@ -149,6 +151,7 @@
   (use-package flycheck-joker :ensure t)
   :init 
   (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-mode-hook #'hs-minor-mode)
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'clj-refactor-mode))
@@ -185,6 +188,7 @@
     )
   (use-package flycheck :ensure t)
   (add-hook 'rustic-mode-hook #'eglot-ensure)
+  (add-hook 'rustic-mode-hook #'hs-minor-mode)
   (add-hook 'rustic-mode-hook #'flycheck-mode))
 
 
@@ -218,6 +222,12 @@
    "TAB" '(switch-to-other-buffer)
    ))
 
+
+(use-package magit
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status))
+
 ;; git gutter
 (use-package git-gutter
     :ensure t
@@ -231,6 +241,7 @@
     (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
     :config
     (global-git-gutter-mode +1))
+
 
 ;; ivy counsel
 (use-package ivy
@@ -259,9 +270,11 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(global-hl-line-mode t)
+ '(line-number-mode nil)
  '(package-selected-packages
    (quote
-    (flycheck-pos-tip flycheck-clojure flycheck-joker helm-rg cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package))))
+    (magit flycheck-pos-tip flycheck-clojure flycheck-joker cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package)))
+ '(pixel-scroll-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
