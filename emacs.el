@@ -85,6 +85,7 @@
 
 ;; company
 (use-package company
+  :ensure t
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :bind
   (:map company-active-map
