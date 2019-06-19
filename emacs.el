@@ -19,51 +19,53 @@
 (hl-line-mode 0)
 (global-eldoc-mode -1)
 (pixel-scroll-mode 1)
-(line-number-mode -1)
+(display-line-numbers-mode -1)
 
 ;; editor settings
-(set-frame-font "Fira Code-16")
+(set-frame-font "Fira Code-14")
 (set-frame-name "Editor")
 (defalias 'yes-or-no-p 'y-or-n-p)
-(setq blink-cursor-blinks 500
-      clean-buffer-list-delay-general 1
-      coding-system-for-read 'utf-8
-      coding-system-for-write 'utf-8
-      confirm-kill-processes nil
-      cursor-in-non-selected-windows nil
-      custom-safe-themes t 
-      default-fill-column 80
-      delete-old-versions -1
-      eldoc-echo-area-use-multiline-p nil
-      eshell-scroll-show-maximum-output t
-      font-lock-builtin-face nil
-      font-lock-type-face nil
-      font-lock-variable-name-face nil
-      indent-tabs-mode nil
-      inhibit-startup-screen t
-      initial-scratch-message nil
-      mac-right-option-modifier nil
-      make-backup-files nil 
-      midnight-period 7200 ;; 2 hours
-      mouse-wheel-progressive-speed nil
-      mouse-wheel-scroll-amount '(3)
-      ring-bell-function 'ignore
-      scalable-fonts-allowed t
-      scroll-conservatively 10000
-      scroll-step 1
-      sentence-end-double-space nil
-      set-default-coding-systems 'utf-8
-      set-language-environment "UTF-8"
-      shell-file-name "zsh"
-      show-paren-style 'parentheses
-      tab-width 4
-      truncate-lines t
-      vc-follow-symlinks t
-      vc-make-backup-files -1
-      version-control t)
-(global-set-key (kbd "C-q") 'kill-buffer-and-window)
-(global-unset-key (kbd "C-w"))
-(global-set-key (kbd "C-w C-w") 'other-window)
+(setq-default
+ blink-cursor-blinks 500
+ clean-buffer-list-delay-general 1
+ coding-system-for-read 'utf-8
+ coding-system-for-write 'utf-8
+ confirm-kill-processes nil
+ cursor-in-non-selected-windows nil
+ custom-safe-themes t 
+ default-fill-column 80
+ delete-old-versions -1
+ eldoc-echo-area-use-multiline-p nil
+ eshell-scroll-show-maximum-output t
+ eshell-cmpl-cycle-completions nil
+ font-lock-builtin-face nil
+ font-lock-type-face nil
+ font-lock-variable-name-face nil
+ indent-tabs-mode nil
+ inhibit-startup-screen t
+ initial-scratch-message nil
+ mac-right-option-modifier nil
+ make-backup-files nil 
+ midnight-period 7200
+ mouse-wheel-progressive-speed nil
+ mouse-wheel-scroll-amount '(3)
+ ring-bell-function 'ignore
+ scalable-fonts-allowed t
+ scroll-conservatively 10000
+ scroll-step 1
+ sentence-end-double-space nil
+ set-default-coding-systems 'utf-8
+ set-language-environment "UTF-8"
+ shell-file-name "zsh"
+ show-paren-style 'parentheses
+ tab-width 4
+ truncate-lines t
+ vc-follow-symlinks t
+ vc-make-backup-files -1
+ version-control t
+ indicate-empty-lines t
+ x-select-enable-clipboard t
+ ) 
 
 ;; themes
 (use-package solarized-theme :ensure t)
@@ -88,28 +90,35 @@
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :bind
   (:map company-active-map
-   ("C-n" . company-select-next)
-   ("C-p" . company-select-previous)
-   ("<tab>" . company-complete-common-or-cycle)
-   :map company-search-map
-   ("C-p" . company-select-previous)
-   ("C-n" . company-select-next))
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        ("<tab>" . company-complete-common-or-cycle)
+        :map company-search-map
+        ("C-p" . company-select-previous)
+        ("C-n" . company-select-next))
   :custom
   (company-idle-delay 0)
   (company-echo-delay 0)
-  (company-minimum-prefix-length 1)
+  (company-minimum-prefix-length 3)
   :hook (after-init . global-company-mode))
 
 ;; evil
 (use-package evil
   :ensure t
-  :init (evil-mode)
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (evil-mode 1)
   :config
   (use-package key-chord
     :ensure t
     :config
     (key-chord-mode 1)
     (key-chord-define evil-insert-state-map "jk" 'evil-normal-state))
+  (use-package evil-collection
+    :ensure t
+    :after evil
+    :config (evil-collection-init))
   (setq evil-escape-unordered-key-sequence t)
   (setq evil-move-cursor-back nil))
 
@@ -191,18 +200,20 @@
   (add-hook 'rustic-mode-hook #'hs-minor-mode)
   (add-hook 'rustic-mode-hook #'flycheck-mode))
 
-
 ;; general keys
 (use-package general
   :ensure t
   :config
+  (global-set-key (kbd "RET") 'newline-and-indent)
+  (global-unset-key (kbd "C-w"))
+  (global-set-key (kbd "C-q") 'kill-buffer-and-window)
+  (global-set-key (kbd "C-w C-w") 'other-window)
   (general-define-key
    :states '(normal visual insert emacs)
    "C-s"   'save-buffer
-   "C-q"   'kill-buffer-and-window
    "C-f"   'swiper
    "C-\""  '(lambda () (interactive (term "zsh")))
-   "M-x"   'counsel-M-x
+   "M-x"   'helm-M-x
    "M-a"   'counsel-ag
    "M-g"   'counsel-git
    "C-b"   'ivy-switch-buffer
@@ -230,17 +241,17 @@
 
 ;; git gutter
 (use-package git-gutter
-    :ensure t
-    :custom
-    (git-gutter:modified-sign "~")
-    (git-gutter:added-sign    "+")
-    (git-gutter:deleted-sign  "-")
-    :custom-face
-    (git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c"))))
-    (git-gutter:added    ((t (:foreground "#50fa7b" :background "#50fa7b"))))
-    (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
-    :config
-    (global-git-gutter-mode +1))
+  :ensure t
+  :custom
+  (git-gutter:modified-sign "~")
+  (git-gutter:added-sign    "+")
+  (git-gutter:deleted-sign  "-")
+  :custom-face
+  ;; (git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c"))))
+  ;; (git-gutter:added    ((t (:foreground "#50fa7b" :background "#50fa7b"))))
+  ;; (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
+  :config
+  (global-git-gutter-mode +1))
 
 
 ;; ivy counsel
@@ -248,7 +259,7 @@
   :ensure t
   :config
   (setq ivy-use-virtual-buffers t
-	ivy-count-format "(%d/%d) "
+        ivy-count-format "(%d/%d) "
         enable-recursive-minibuffers t)
   (ivy-mode 1)
   (use-package counsel
@@ -269,7 +280,6 @@
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
- '(global-hl-line-mode t)
  '(line-number-mode nil)
  '(package-selected-packages
    (quote
@@ -280,7 +290,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight normal :height 128 :width normal))))
  '(git-gutter:added ((t (:foreground "#50fa7b" :background "#50fa7b"))))
  '(git-gutter:deleted ((t (:foreground "#ff79c6" :background "#ff79c6"))))
  '(git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c")))))
