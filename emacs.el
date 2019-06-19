@@ -87,6 +87,7 @@
 
 ;; company
 (use-package company
+  :ensure t
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :bind
   (:map company-active-map
@@ -156,7 +157,7 @@
     (setq cider-save-file-on-load t)
     (general-define-key :keymaps 'cider-mode-map :states '(normal) "K" 'cider-doc)
     )
-  (use-package clj-refactor)
+  (use-package clj-refactor :ensure t)
   (use-package flycheck-joker :ensure t)
   :init 
   (add-hook 'cider-mode-hook #'eldoc-mode)
