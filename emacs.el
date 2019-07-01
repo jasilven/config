@@ -10,6 +10,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;; editor modes
 (menu-bar-mode -1)
@@ -22,7 +24,7 @@
 (display-line-numbers-mode -1)
 
 ;; editor settings
-(set-frame-font "Fira Code-15")
+(set-frame-font "Fira Code-17")
 (set-frame-name "Editor")
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default
@@ -89,6 +91,9 @@
 (use-package company
   :ensure t
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
+  :hook (prog-mode . company-mode)
+  :config (setq company-tooltip-align-annotations t)
+  (setq company-minimum-prefix-length 1)
   :bind
   (:map company-active-map
         ("C-n" . company-select-next)
@@ -100,8 +105,7 @@
   :custom
   (company-idle-delay 0)
   (company-echo-delay 0)
-  (company-minimum-prefix-length 3)
-  :hook (after-init . global-company-mode))
+  (company-minimum-prefix-length 3))
 
 ;; evil
 (use-package evil
@@ -149,6 +153,7 @@
     :bind
     (:map cider-mode-map ("C-x C-x" . cider-eval-last-sexp))
     (:map cider-mode-map ("C-c h" . cider-doc))
+    (:map clojure-mode-map ("C-=" . cider-format-buffer))
     (:map cider-mode-map ("<f1>" . cider-doc))
     :config
     (setq cider-prompt-for-symbol nil)
@@ -175,6 +180,38 @@
   (require 'smartparens-config))
 
 ;; rust
+(use-package rust-mode
+  :ensure t
+  :defer t
+  :hook (rust-mode . lsp)
+  :bind
+  (:map rust-mode-map ("C-c C-k" . cargo-process-check))
+  (:map rust-mode-map ("C-c k" . cargo-process-check))
+  :config
+  (add-hook 'rust-mode-hook #'hs-minor-mode)
+  (setq rust-format-on-save t)
+  (use-package company-lsp
+    :ensure t
+    :config
+    (push 'company-lsp company-backends))
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :config
+    (setq lsp-enable-snippet nil)
+    (require 'lsp-clients))
+  (use-package lsp-ui
+    :ensure t)
+  (use-package cargo
+    :ensure t
+    :defer t
+    :hook (rust-mode . cargo-minor-mode)
+    :config (setq compilation-ask-about-save nil))
+  (use-package flycheck-rust
+    :ensure t
+    :defer t
+    :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+
 ;; (use-package rust-mode
 ;;     :mode "\\.rs\\'"
 ;;     :init
@@ -190,33 +227,33 @@
 ;;     :after lsp-mode)
 
 ;; rustic
-(use-package rustic
-  :ensure t
-  :defer t
-  :bind
-  (:map rustic-mode-map ("C-c C-k" . rustic-cargo-check))
-  (:map rustic-mode-map ("C-c k" . rustic-cargo-check))
-  :config
-  (setq rustic-rls-pkg 'lsp-mode)
-  (setq rustic-format-on-save t)
-  (setq buffer-save-without-query t)
-  (setq lsp-enable-snippet nil)
-  (use-package lsp-mode
-    :ensure t)
-  ;; (use-package eglot
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;;(general-define-key :keymaps 'eglot-mode-map :states '(normal) "K" 'eglot-help-at-point)
-  ;;   ;;(general-define-key :keymaps 'rustic-mode-map :states '(normal) "K" 'eglot-help-at-point)
-  ;;   :bind
-  ;;   ;;(:map eglot-mode-map ("<f2>" . eglot-rename))
-  ;;   ;;(:map eglot-mode-map ("<f3>" . xref-find-definitions))
-  ;;   )
-  (use-package flycheck :ensure t)
-  ;;(add-hook 'rustic-mode-hook #'eglot-ensure)
-  (add-hook 'rustic-mode-hook #'hs-minor-mode)
-  (add-hook 'rustic-mode-hook #'flycheck-mode)
-  (rustic-mode))
+;; (use-package rustic
+;;   :ensure t
+;;   :defer t
+;;   :bind
+;;   (:map rustic-mode-map ("C-c C-k" . rustic-cargo-check))
+;;   (:map rustic-mode-map ("C-c k" . rustic-cargo-check))
+;;   :config
+;;   (setq rustic-rls-pkg 'lsp-mode)
+;;   (setq rustic-format-on-save t)
+;;   (setq buffer-save-without-query t)
+;;   (setq lsp-enable-snippet nil)
+;;   (use-package lsp-mode
+;;     :ensure t)
+;;   ;; (use-package eglot
+;;   ;;   :ensure t
+;;   ;;   :config
+;;   ;;   ;;(general-define-key :keymaps 'eglot-mode-map :states '(normal) "K" 'eglot-help-at-point)
+;;   ;;   ;;(general-define-key :keymaps 'rustic-mode-map :states '(normal) "K" 'eglot-help-at-point)
+;;   ;;   :bind
+;;   ;;   ;;(:map eglot-mode-map ("<f2>" . eglot-rename))
+;;   ;;   ;;(:map eglot-mode-map ("<f3>" . xref-find-definitions))
+;;   ;;   )
+;;   (use-package flycheck :ensure t)
+;;   ;;(add-hook 'rustic-mode-hook #'eglot-ensure)
+;;   (add-hook 'rustic-mode-hook #'hs-minor-mode)
+;;   (add-hook 'rustic-mode-hook #'flycheck-mode)
+;;   (rustic-mode))
 
 ;; general keys
 (use-package general
@@ -229,6 +266,8 @@
   (general-define-key
    :states '(normal visual insert emacs)
    "C-s"   'save-buffer
+   "C-x C-d"   'dired-jump
+   "C-x d"   'dired-jump
    "C-f"   'swiper
    "C-\""  '(lambda () (interactive (term "zsh")))
    "M-x"   'helm-M-x
@@ -247,11 +286,11 @@
    "w"   'save-buffer
    "e"   'next-error
    "o"   'delete-other-windows
-   "f"   'counsel-find-files
-   "f"   'counsel-git-grep
+   "f"   'counsel-find-file
+   "s"   'swiper
+   "g"   'counsel-git-grep
    "j"   'counsel-imenu
    ))
-
 
 (use-package magit
   :ensure t
@@ -302,7 +341,7 @@
  '(line-number-mode nil)
  '(package-selected-packages
    (quote
-    (lsp-mode magit flycheck-pos-tip flycheck-clojure flycheck-joker cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package)))
+    (company-lsp yasnippt flycheck-rust cargo lsp-ui lsp-mode magit flycheck-pos-tip flycheck-clojure flycheck-joker cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package)))
  '(pixel-scroll-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
