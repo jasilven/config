@@ -18,9 +18,8 @@ Plug 'ap/vim-buftabline'
 Plug 'w0rp/ale'
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-" Plug 'flazz/vim-colorschemes'
-Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fireplace'
+Plug 'morhetz/gruvbox'
 Plug 'venantius/vim-cljfmt'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp', {'for': 'clojure'}
@@ -62,6 +61,7 @@ set background=dark
 " colorscheme codedark
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'medium'
+
 " =============================================================================
 " # Misc
 " =============================================================================
@@ -85,11 +85,12 @@ au Filetype clojure nmap <c-c><c-k> :Require<cr>
 au Filetype clojure nmap <C-x><C-x> :Eval<cr>
 au Filetype clojure nmap <C-x><C-e> cpp<cr>
 au FileType clojure nmap <leader>e <Plug>(ale_next_wrap)<C-r><C-w>
-au Filetype * nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
-au Filetype * nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
+au FileType clojure nnoremap gd :Djump<space><C-r><C-w><cr>
+au Filetype clojure nmap <buffer> <C-left> <Plug>(sexp_emit_tail_element)
+au Filetype clojure nmap <buffer> <C-right> <Plug>(sexp_capture_next_element)
 
 " =============================================================================
-" # RUST
+" # ALE
 " =============================================================================
 " let g:racer_experimental_completer = 1
 " let g:racer_insert_paren = 1
@@ -106,10 +107,14 @@ let g:ale_linters = {'clojure': ['joker']}
 let g:ale_fixers = {'XXXXX': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
 let g:ale_fix_on_save = 0
 let g:ale_rust_cargo_use_check = 1
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
+" set omnifunc=ale#completion#OmniFunc
 let g:ale_rust_rls_toolchain = "stable"
 let g:ale_rust_rls_config = {'rust': {'all_targets': 1,'build_on_save': 1,'clippy_preference': 'on'}}
-set omnifunc=ale#completion#OmniFunc
+
+" =============================================================================
+" # RUST
+" =============================================================================
 let g:rustfmt_autosave = 1
 au FileType rust map <F1> <Plug>(rust-doc)
 au FileType rust nmap gd <Plug>(ale_go_to_definition)
@@ -230,7 +235,7 @@ inoremap <silent><C-t> <Esc>:call TermToggle(15)<CR>
 tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(15)<CR>
 
 " =============================================================================
-" # Completion shortcuts
+" # Completion
 " =============================================================================
 inoremap <expr><TAB> (pumvisible()?"\<C-n>":"\<Tab>")
 inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
@@ -283,7 +288,7 @@ autocmd FileType netrw setl bufhidden=wipe " allow netrw buffer close
 " =============================================================================
 " # My colors
 " =============================================================================
-hi link BufTabLineCurrent CursorLineNr
+hi link BufTabLineCurrent DiffText
 hi link BufTabLineActive SignColumn
 hi link BufTabLineHidden SignColumn
 hi fzf1 guifg=gray

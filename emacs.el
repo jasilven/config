@@ -11,8 +11,7 @@
   (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell
-  :ensure t
-  :defer t)
+  :ensure t)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
@@ -27,7 +26,7 @@
 (display-line-numbers-mode -1)
 
 ;; editor settings
-(set-frame-font "Fira Code-14")
+(set-frame-font "Fira Code-16")
 (set-frame-name "Editor")
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default
@@ -80,22 +79,13 @@
 (use-package color-theme-sanityinc-tomorrow :ensure t)
 (load-theme 'sanityinc-tomorrow-night)
 
-;; disable minor modes in modeline
-(use-package rich-minority
-  :ensure t
-  :config 
-  (rich-minority-mode 1)
-  (setf rm-blacklist ""))
-
-;; restclient
-(use-package restclient :ensure t)
-
 ;; company
 (use-package company
   :ensure t
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :hook (prog-mode . company-mode)
-  :config (setq company-tooltip-align-annotations t)
+  :config
+  (setq company-tooltip-align-annotations t)
   (setq company-minimum-prefix-length 1)
   :bind
   (:map company-active-map
@@ -109,6 +99,25 @@
   (company-idle-delay 0)
   (company-echo-delay 0)
   (company-minimum-prefix-length 3))
+
+;; lsp
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config
+  (setq lsp-enable-snippet nil)
+  (require 'lsp-clients))
+(use-package lsp-ui
+  :ensure t
+  :config
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-doc-enable nil))
+
+;; company lsp
+(use-package company-lsp
+  :ensure t
+  :config
+  (push 'company-lsp company-backends))
 
 ;; evil
 (use-package evil
@@ -130,8 +139,71 @@
   (setq evil-escape-unordered-key-sequence t)
   (setq evil-move-cursor-back nil))
 
+;; flycheck
+(use-package flycheck :ensure t)
+(use-package flycheck-pos-tip :ensure t)
+(use-package flycheck-joker :ensure t)
+(use-package flycheck-rust
+  :ensure t
+  :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; clojure and cider
+(use-package clj-refactor :ensure t)
+(use-package clojure-mode
+  :ensure t
+  :config
+  (use-package cider
+    :ensure t
+    :bind
+    (:map cider-mode-map ("C-x C-x" . cider-eval-last-sexp))
+    (:map cider-mode-map ("C-c h" . cider-doc))
+    (:map clojure-mode-map ("C-=" . cider-format-buffer))
+    (:map cider-mode-map ("<f1>" . cider-doc))
+    :config
+    (setq cider-prompt-for-symbol nil)
+    (setq nrepl-hide-special-buffers t)
+    (setq cider-repl-display-help-banner nil)
+    (setq cider-save-file-on-load t)
+    (general-define-key :keymaps 'cider-mode-map :states '(normal) "K" 'cider-doc))
+  :init 
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-mode-hook #'hs-minor-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'clj-refactor-mode))
+
+;; rust
+(use-package rust-mode
+  :ensure t
+  :hook
+  (rust-mode . lsp)
+  :bind
+  (:map rust-mode-map ("C-c C-k" . cargo-process-check))
+  (:map rust-mode-map ("C-c k" . cargo-process-check))
+  (:map rust-mode-map ("<f1>" . lsp-ui-doc-show))
+  :config
+  (general-define-key :keymaps 'rust-mode-map :states '(normal) "K" 'lsp-ui-doc-show)
+  (add-hook 'rust-mode-hook #'hs-minor-mode)
+  (add-hook 'rust-mode-hook #'flycheck-mode)
+  (add-hook 'rust-mode-hook #'flycheck-pos-tip-mode)
+  (setq rust-format-on-save t))
+(use-package cargo
+    :ensure t
+    :hook (rust-mode . cargo-minor-mode)
+    :config (setq compilation-ask-about-save nil))
+
 ;; avy
 (use-package avy :ensure t)
+
+;; restclient
+(use-package restclient :ensure t)
+
+;; disable minor modes in modeline
+(use-package rich-minority
+  :ensure t
+  :config 
+  (rich-minority-mode 1)
+  (setf rm-blacklist ""))
 
 ;; helm
 (use-package helm
@@ -146,33 +218,24 @@
   (use-package helm-rg :ensure t)
   (use-package helm-swoop :ensure t))
 
-;; clojure and cider
-(use-package clojure-mode
+;; ivy counsel
+(use-package ivy
   :ensure t
-  :defer t
   :config
-  (use-package cider
-    :ensure t
-    :bind
-    (:map cider-mode-map ("C-x C-x" . cider-eval-last-sexp))
-    (:map cider-mode-map ("C-c h" . cider-doc))
-    (:map clojure-mode-map ("C-=" . cider-format-buffer))
-    (:map cider-mode-map ("<f1>" . cider-doc))
-    :config
-    (setq cider-prompt-for-symbol nil)
-    (setq nrepl-hide-special-buffers t)
-    (setq cider-repl-display-help-banner nil)
-    (setq cider-save-file-on-load t)
-    (general-define-key :keymaps 'cider-mode-map :states '(normal) "K" 'cider-doc)
-    )
-  (use-package clj-refactor :ensure t)
-  (use-package flycheck-joker :ensure t)
-  :init 
-  (add-hook 'cider-mode-hook #'eldoc-mode)
-  (add-hook 'cider-mode-hook #'hs-minor-mode)
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'clj-refactor-mode))
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "(%d/%d) "
+        enable-recursive-minibuffers t)
+  (ivy-mode 1)
+  (use-package counsel
+    :ensure t))
+
+;; projectile
+(use-package projectile
+  :ensure t
+  :config
+  (setq projectile-completion-system 'ivy))
+(use-package projectile-ripgrep :ensure t)
+(use-package counsel-projectile :ensure t)
 
 ;; smartparens
 (use-package smartparens
@@ -181,86 +244,6 @@
   (setq sp-show-pair-from-inside t)
   (smartparens-global-mode)
   (require 'smartparens-config))
-
-;; rust
-(use-package rust-mode
-  :ensure t
-  :defer t
-  :hook (rust-mode . lsp)
-  :bind
-  (:map rust-mode-map ("C-c C-k" . cargo-process-check))
-  (:map rust-mode-map ("C-c k" . cargo-process-check))
-  (:map rust-mode-map ("<f1>" . lsp-ui-doc-show))
-  :config
-  (general-define-key :keymaps 'rust-mode-map :states '(normal) "K" 'lsp-ui-doc-show)
-  (add-hook 'rust-mode-hook #'hs-minor-mode)
-  (add-hook 'rust-mode-hook #'flycheck-mode)
-  (add-hook 'rust-mode-hook #'flycheck-pos-tip-mode)
-  (setq rust-format-on-save t)
-  (use-package company-lsp
-    :ensure t
-    :config
-    (push 'company-lsp company-backends))
-  (use-package lsp-mode
-    :ensure t
-    :commands lsp
-    :config
-    (setq lsp-enable-snippet nil)
-    (require 'lsp-clients))
-  (use-package lsp-ui
-    :ensure t)
-  (use-package cargo
-    :ensure t
-    :defer t
-    :hook (rust-mode . cargo-minor-mode)
-    :config (setq compilation-ask-about-save nil))
-  (use-package flycheck-rust
-    :ensure t
-    :defer t
-    :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
-
-;; (use-package rust-mode
-;;     :mode "\\.rs\\'"
-;;     :init
-;;     (setq rust-format-on-save t))
-;; (use-package lsp-mode
-;;     :init
-;;     (add-hook 'prog-mode-hook 'lsp-mode)
-;;     :config
-;; (use-package lsp-flycheck
-;;     :ensure f ; comes with lsp-mode
-;;     :after flycheck))
-;; (use-package lsp-rust
-;;     :after lsp-mode)
-
-;; rustic
-;; (use-package rustic
-;;   :ensure t
-;;   :defer t
-;;   :bind
-;;   (:map rustic-mode-map ("C-c C-k" . rustic-cargo-check))
-;;   (:map rustic-mode-map ("C-c k" . rustic-cargo-check))
-;;   :config
-;;   (setq rustic-rls-pkg 'lsp-mode)
-;;   (setq rustic-format-on-save t)
-;;   (setq buffer-save-without-query t)
-;;   (setq lsp-enable-snippet nil)
-;;   (use-package lsp-mode
-;;     :ensure t)
-;;   ;; (use-package eglot
-;;   ;;   :ensure t
-;;   ;;   :config
-;;   ;;   ;;(general-define-key :keymaps 'eglot-mode-map :states '(normal) "K" 'eglot-help-at-point)
-;;   ;;   ;;(general-define-key :keymaps 'rustic-mode-map :states '(normal) "K" 'eglot-help-at-point)
-;;   ;;   :bind
-;;   ;;   ;;(:map eglot-mode-map ("<f2>" . eglot-rename))
-;;   ;;   ;;(:map eglot-mode-map ("<f3>" . xref-find-definitions))
-;;   ;;   )
-;;   (use-package flycheck :ensure t)
-;;   ;;(add-hook 'rustic-mode-hook #'eglot-ensure)
-;;   (add-hook 'rustic-mode-hook #'hs-minor-mode)
-;;   (add-hook 'rustic-mode-hook #'flycheck-mode)
-;;   (rustic-mode))
 
 ;; general keys
 (use-package general
@@ -276,10 +259,10 @@
    "C-x C-d"   'dired-jump
    "C-x d"   'dired-jump
    "C-f"   'swiper
-   "C-\""  '(lambda () (interactive (term "zsh")))
+   "C-\""  '(lambda () (interactive (ansi-term "zsh")))
    "M-x"   'helm-M-x
    "C-f"   'swiper
-   "C-S-f"   'counsel-rg
+   "C-S-f"   'counsel-projectile-rg
    "M-g"   'counsel-git
    "C-b"   'ivy-switch-buffer
    "C-<tab>"   'ivy-switch-buffer
@@ -294,8 +277,7 @@
    "w"   'save-buffer
    "e"   'next-error
    "o"   'delete-other-windows
-   "f"   'counsel-find-file
-   "s"   'swiper
+   "f"   'counsel-git
    "g"   'swiper
    "j"   'counsel-imenu
    ))
@@ -312,24 +294,8 @@
   (git-gutter:modified-sign "~")
   (git-gutter:added-sign    "+")
   (git-gutter:deleted-sign  "-")
-  :custom-face
-  ;; (git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c"))))
-  ;; (git-gutter:added    ((t (:foreground "#50fa7b" :background "#50fa7b"))))
-  ;; (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
   :config
   (global-git-gutter-mode +1))
-
-
-;; ivy counsel
-(use-package ivy
-  :ensure t
-  :config
-  (setq ivy-use-virtual-buffers t
-        ivy-count-format "(%d/%d) "
-        enable-recursive-minibuffers t)
-  (ivy-mode 1)
-  (use-package counsel
-    :ensure t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; end
 (custom-set-variables
@@ -338,8 +304,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-echo-delay 0 t)
- '(company-idle-delay 0 t)
- '(company-minimum-prefix-length 1 t)
+ '(company-idle-delay 0)
+ '(company-minimum-prefix-length 3)
  '(custom-safe-themes
    (quote
     ("10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "8e797edd9fa9afec181efbfeeebf96aeafbd11b69c4c85fa229bb5b9f7f7e66c" "2b9dc43b786e36f68a9fd4b36dd050509a0e32fe3b0a803310661edb7402b8b6" "b583823b9ee1573074e7cbfd63623fe844030d911e9279a7c8a5d16de7df0ed0" "585942bb24cab2d4b2f74977ac3ba6ddbd888e3776b9d2f993c5704aa8bb4739" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "a22f40b63f9bc0a69ebc8ba4fbc6b452a4e3f84b80590ba0a92b4ff599e53ad0" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1436d643b98844555d56c59c74004eb158dc85fc55d2e7205f8d9b8c860e177f" "9954ed41d89d2dcf601c8e7499b6bb2778180bfcaeb7cdfc648078b8e05348c6" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "43c808b039893c885bdeec885b4f7572141bd9392da7f0bd8d8346e02b2ec8da" "a8c210aa94c4eae642a34aaf1c5c0552855dfca2153fa6dd23f3031ce19453d4" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" default)))
@@ -349,7 +315,7 @@
  '(line-number-mode nil)
  '(package-selected-packages
    (quote
-    (company-lsp yasnippt flycheck-rust cargo lsp-ui lsp-mode magit flycheck-pos-tip flycheck-clojure flycheck-joker cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package)))
+    (counsel-projectile projectile-ripgrep projectile flychech-pos-tip company-lsp yasnippt flycheck-rust cargo lsp-ui lsp-mode magit flycheck-pos-tip flycheck-clojure flycheck-joker cider evil-leader paredit-mode clj-refactor clojure-mode helm avy general use-package)))
  '(pixel-scroll-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

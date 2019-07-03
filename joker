@@ -1,1 +1,1 @@
-{:known-macros [defroutes GET POST]}
+{:known-macros [routes defroutes GET POST]}
