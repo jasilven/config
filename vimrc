@@ -81,6 +81,7 @@ let g:clj_fmt_autosave = 1
 au Filetype clojure nmap <c-c><c-k> :Require<cr>
 au Filetype clojure nmap <C-x><C-x> :Eval<cr>
 au Filetype clojure nmap <C-x><C-e> cpp<cr>
+au FileType clojure nmap <leader>e <Plug>(ale_next_wrap)<C-r><C-w>
 au Filetype clojure nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
 au Filetype clojure nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
 
@@ -98,6 +99,7 @@ let g:ale_cursor_detail= 0
 let g:ale_virtualtext_cursor = 0
 let g:ale_virtualtext_prefix = '»'
 let g:ale_linters = {'rust': ['rls']}
+let g:ale_linters = {'clojure': ['joker']}
 let g:ale_fixers = {'XXXXX': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
 let g:ale_fix_on_save = 0
 let g:ale_rust_cargo_use_check = 1
