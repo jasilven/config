@@ -77,7 +77,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " =============================================================================
 " # Clojure
 " =============================================================================
-au Filetype clojure nmap <c-x><c-k> :Require<cr><Paste>
+let g:clj_fmt_autosave = 1
+au Filetype clojure nmap <c-c><c-k> :Require<cr>
 au Filetype clojure nmap <C-x><C-x> :Eval<cr>
 au Filetype clojure nmap <C-x><C-e> cpp<cr>
 au Filetype clojure nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
@@ -90,7 +91,8 @@ au Filetype clojure nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
 " let g:racer_insert_paren = 1
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
 let g:ale_cursor_detail= 0
 let g:ale_virtualtext_cursor = 0
@@ -101,26 +103,30 @@ let g:ale_fix_on_save = 0
 let g:ale_rust_cargo_use_check = 1
 let g:ale_completion_enabled = 1
 let g:ale_rust_rls_toolchain = "stable"
+let g:ale_rust_rls_config = {'rust': {'all_targets': 1,'build_on_save': 1,'clippy_preference': 'on'}}
 set omnifunc=ale#completion#OmniFunc
 let g:rustfmt_autosave = 1
-au FileType rust noremap gd :ALEGoToDefinition<CR>
 au FileType rust map <F1> <Plug>(rust-doc)
-au FileType rust noremap <leader>i :ALEDetail<cr><C-w>k
-" au FileType rust nmap K <Plug>(rust-doc)
-au FileType rust nmap K :ALEHover<cr>
-" au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
+au FileType rust nmap gd <Plug>(ale_go_to_definition)
+au FileType rust nmap <leader>i <Plug>(ale_detail)
+au FileType rust nmap <leader>e <Plug>(ale_next_wrap)<C-r><C-w>
+au FileType rust nmap K <Plug>(ale_hover)<C-r><C-w>
 au FileType rust set makeprg=cargo
 au FileType rust nmap <leader>c :w<cr>:silent :make check<cr>
 au FileType rust nmap <leader>t :w<cr>:!cargo test --bin %:t:r<cr>
-" au FileType rust nmap <leader>r :w<cr>:!time RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
 au FileType rust nmap <leader>r :w<cr>:!time cargo run -q --bin %:t:r<cr>
 au FileType rust nmap <f5> :w<cr>:silent :make<cr>
 au FileType rust nmap <f6> :w<cr>:!cargo test --bin %:t:r<cr>
 au FileType rust nmap <f8> :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
 au FileType rust map <M-j> :cp<cr>
 au FileType rust map <M-k> :cn<cr>
-au FileType rust :iabbrev prn println!("{}",&);<ESC>2h
-au FileType rust :iabbrev dbg dbg!(&);<ESC>2h
+" :ALEDetail<cr><C-w>k
+" au FileType rust nmap K :ALEHover<cr>
+" au FileType rust nmap <leader>r :w<cr>:!time RUST_BACKTRACE=1 cargo run -q --bin %:t:r<cr>
+" au FileType rust set makeprg=cargo\ check\ --bin\ %:t:r
+" au FileType rust nmap K <Plug>(rust-doc)
+" au FileType rust :iabbrev prn println!("{}",&);<ESC>2h
+" au FileType rust :iabbrev dbg dbg!(&);<ESC>2h
 
 " =============================================================================
 " # FZF
@@ -181,13 +187,14 @@ inoremap <M-x> <esc>:Commands<CR>
 " # <leader> shortcuts
 " =============================================================================
 let mapleader = "\<Space>"
-nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>o :only<CR>
 map <leader>f :Files<CR>
 map <leader>h :History<CR>
 map <leader>j :BTags<CR>
 map <leader>b :Buffers<CR>
-map <leader>g :Rg<space><C-r><C-w>
+map <leader>l :BLines<CR>
+" map <leader>g :Rg<space><C-r><C-w>
+map <leader>g :Rg<space>
 nmap <leader>w :w<CR>
 nnoremap <leader>, :set invlist<cr>
 
@@ -196,6 +203,7 @@ nnoremap <leader>, :set invlist<cr>
 " =============================================================================
 noremap <c-c> <nop>
 noremap <C-q> :confirm qall<CR>
+cnoremap <C-g> <esc><CR>
 inoremap <C-q> <esc>:bd!<CR>
 tnoremap <C-q> <C-\><C-n>:bd!<CR>
 noremap <C-q> :bd!<CR>
