@@ -18,7 +18,8 @@ Plug 'ap/vim-buftabline'
 Plug 'w0rp/ale'
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'flazz/vim-colorschemes'
+" Plug 'flazz/vim-colorschemes'
+Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
 Plug 'guns/vim-clojure-static'
@@ -57,8 +58,10 @@ set autoindent autoread
 " guifont=DejaVu\ Sans\ Mono:h13
 filetype plugin indent on
 syntax on
-colorscheme codedark
-
+set background=dark
+" colorscheme codedark
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'medium'
 " =============================================================================
 " # Misc
 " =============================================================================
@@ -82,8 +85,8 @@ au Filetype clojure nmap <c-c><c-k> :Require<cr>
 au Filetype clojure nmap <C-x><C-x> :Eval<cr>
 au Filetype clojure nmap <C-x><C-e> cpp<cr>
 au FileType clojure nmap <leader>e <Plug>(ale_next_wrap)<C-r><C-w>
-au Filetype clojure nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
-au Filetype clojure nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
+au Filetype * nmap <buffer> <C-left>  <Plug>(sexp_emit_tail_element)
+au Filetype * nmap <buffer> <C-right>  <Plug>(sexp_capture_next_element)
 
 " =============================================================================
 " # RUST
@@ -96,8 +99,8 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
 let g:ale_cursor_detail= 0
-let g:ale_virtualtext_cursor = 0
-let g:ale_virtualtext_prefix = '»'
+let g:ale_virtualtext_cursor = 1
+let g:ale_virtualtext_prefix = '  » '
 let g:ale_linters = {'rust': ['rls']}
 let g:ale_linters = {'clojure': ['joker']}
 let g:ale_fixers = {'XXXXX': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
@@ -182,6 +185,7 @@ nnoremap k gk
 " =============================================================================
 " # ALT/Meta shortcuts
 " =============================================================================
+noremap ≈ :Commands<CR>
 noremap <M-x> :Commands<CR>
 inoremap <M-x> <esc>:Commands<CR>
 
@@ -288,10 +292,12 @@ hi CursorLineNr gui=underline guifg=#9CDCFE
 hi CursorLineNr gui=bold guifg=#afdf00
 hi Search guifg=yellow
 hi IncSearch guifg=yellow gui=bold
-hi ALEWarning gui=undercurl guisp=#608B4E
-hi ALEError gui=undercurl guisp=#608B4E
-hi ALEErrorSign guifg=#F44747 gui=bold
-hi ALEWarningSign guifg=yellow
+hi link ALEVirtualTextError vimCommentTitle
+hi link ALEVirtualTextWarning vimCommentTitle
+" hi ALEWarning gui=undercurl guisp=#608B4E
+" hi ALEError gui=undercurl guisp=#608B4E
+" hi ALEErrorSign guifg=#F44747 gui=bold
+" hi ALEWarningSign guifg=yellow
 hi link QuickFixLine WildMenu
 hi link rustFuncCall Keyword
 hi link rustMacro NonText
@@ -304,12 +310,12 @@ hi link rustKeyword Type
 hi link rustConditional Type
 hi link rustRepeat Type
 hi link CursorLineNr Error
-hi GitGutterAdd    guifg=#009900
-hi GitGutterChange guifg=#bbbb00
-hi GitGutterDelete guifg=#ff2222
+hi link GitGutterAdd SignColumn
+hi link GitGutterChange SignColumn
+hi link GitGutterDelete SignColumn
 let g:gitgutter_sign_added = '|'
-let g:gitgutter_sign_modified = '|'
-let g:gitgutter_sign_removed = '|'
+let g:gitgutter_sign_modified = '“'
+let g:gitgutter_sign_removed = '•'
 let g:gitgutter_sign_removed_first_line = '-'
 let g:gitgutter_sign_modified_removed = '-'
 " hi Cursor guifg=#000000 guibg=#afdf00
