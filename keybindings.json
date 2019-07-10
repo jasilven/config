@@ -216,6 +216,15 @@
         "command": "-calva.clearInlineResults",
         "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'"
     },
+    {
+        "key": "ctrl+k ctrl+o",
+        "command": "workbench.action.files.openFileFolder"
+    },
+    // {
+    //     "key": "ctrl+k",
+    //     "command": "-extension.vim_ctrl+k",
+    //     "when": "editorTextFocus && vim.active && vim.use<C-k> && !inDebugRepl"
+    // },
     // {
     //     "key": "ctrl+v",
     //     "command": "editor.action.webvieweditor.paste",

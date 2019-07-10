@@ -1,1 +1,1 @@
-{:known-macros [routes defroutes GET POST]}
+{:known-macros [compojure.core/routes compojure.core/defroutes compojure.core/GET compojure.core/POST ]}
