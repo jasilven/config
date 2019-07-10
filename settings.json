@@ -12,35 +12,8 @@
       ],
       "when": "editorFocus",
     },
-    {
-      "before": [
-        "<C-k>",
-      ],
-      "after": [
-        "{",
-      ],
-      "when": "editorFocus",
-    },
-    {
-      "before": [
-        "<C-j>",
-      ],
-      "after": [
-        "}",
-      ],
-      "when": "editorFocus",
-    },
   ],
   "vim.insertModeKeyBindingsNonRecursive": [
-    {
-      "before": [
-        "<C-k>",
-      ],
-      "commands": [
-        "list.focusUp",
-      ],
-      "when": "listFocus && !inputFocus",
-    },
     {
       "before": [
         "k",
@@ -63,18 +36,18 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
-        ",",
+        "f1",
       ],
-      "after": [
-        ";",
+      "commands": [
+        "editor.action.showHover",
       ]
     },
     {
       "before": [
-        ";",
+        "K",
       ],
-      "after": [
-        ",",
+      "commands": [
+        "editor.action.showHover",
       ]
     },
     {
@@ -115,22 +88,6 @@
     },
     {
       "before": [
-        "/"
-      ],
-      "commands": [
-        "actions.find",
-      ]
-    },
-    {
-      "before": [
-        ":"
-      ],
-      "commands": [
-        "workbench.action.showCommands",
-      ]
-    },
-    {
-      "before": [
         "<leader>",
         "b"
       ],
@@ -166,15 +123,6 @@
     {
       "before": [
         "<leader>",
-        "i"
-      ],
-      "commands": [
-        "editor.action.showHover",
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
         "j"
       ],
       "commands": [
@@ -192,26 +140,24 @@
     }
   ],
   "vim.handleKeys": {
-    "<C-j>": true,
-    "<C-k>": true,
+    "<C-c>": false,
+    "<C-k>": false,
+    "<C-x>": false,
     "<C-a>": false,
     "<C-e>": false,
     "<C-w>": false,
     "<C-s>": false,
     "<C-n>": false,
     "<C-v>": false,
-    "¨": false,
-    "}": false,
     "<C-f>": false
   },
   "vim.easymotion": true,
-  "vim.easymotionMarkerFontSize": "17",
+  "vim.easymotionMarkerFontSize": "19",
   "vim.easymotionMarkerFontWeight": "bold",
-  // "vim.easymotionMarkerBackgroundColor": "#ffffff",
-  // "vim.easymotionMarkerForegroundColorOneChar": "#aa0000",
+  "vim.easymotionMarkerHeight": 14,
   "vim.visualstar": true,
   "vim.sneak": false,
-  "vim.incsearch": true,
+  "vim.incsearch": false,
   "vim.useSystemClipboard": true,
   "vim.useCtrlKeys": true,
   "vim.hlsearch": false,
@@ -220,26 +166,19 @@
   "editor.minimap.enabled": false,
   "window.zoomLevel": 0,
   "workbench.startupEditor": "newUntitledFile",
-  // "go.autocompleteUnimportedPackages": true,
-  // "go.formatTool": "goimports",
-  "editor.fontSize": 16,
+  "editor.fontSize": 18,
   "editor.fontFamily": "'Fira Code', 'Menlo', 'Hack', 'Monaco', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
   "vim.leader": "<space>",
   "editor.renderControlCharacters": false,
-  "breadcrumbs.enabled": false,
+  "breadcrumbs.enabled": true,
   "editor.renderWhitespace": "none",
-  // "go.useLanguageServer": true,
   "workbench.colorCustomizations": {
-    "statusBar.noFolderBackground": "#BF616A",
-    "editorLineNumber.activeForeground": "#5fd45f",
-    "statusBar.debuggingBackground": "#BF616A",
-    "editorBracketMatch.border": "#5fd45f",
     // "statusBar.background": "#6199bf",
   },
   "editor.tokenColorCustomizations": {
-    "functions": "#C586C0",
-    "keywords": "#569CD6",
-    "types": "#C586C0",
+    // "functions": "#C586C0",
+    // "keywords": "#569CD6",
+    // "types": "#C586C0",
   },
   "workbench.view.alwaysShowHeaderActions": true,
   "editor.formatOnSave": true,
@@ -250,11 +189,49 @@
   "outline.problems.enabled": false,
   "window.menuBarVisibility": "toggle",
   "rust.build_on_save": true,
-  "rust.jobs": 2,
+  "rust.jobs": 4,
   "[clojure]": {
     "editor.matchBrackets": true
   },
   "debug.console.fontSize": 16,
   "calva.lintOnSave": true,
-  "workbench.colorTheme": "Default Light+"
+  "calva.fmt.removeConsecutiveBlankLines": true,
+  "clojureWarrior.enableBracketColors": false,
+  "rust.clippy_preference": "on",
+  "editor.formatOnPaste": true,
+  "workbench.colorTheme": "Visual Studio Light"
 }
+// {
+//   "before": [
+//     "<C-k>",
+//   ],
+//   "after": [
+//     "{",
+//   ],
+//   "when": "editorFocus",
+// },
+// {
+//   "before": [
+//     "<C-k>",
+//   ],
+//   "commands": [
+//     "list.focusUp",
+//   ],
+//   "when": "listFocus && !inputFocus",
+// },
+// {
+//   "before": [
+//     "/"
+//   ],
+//   "commands": [
+//     "actions.find",
+//   ]
+// },
+// {
+//   "before": [
+//     ":"
+//   ],
+//   "commands": [
+//     "workbench.action.showCommands",
+//   ]
+// },

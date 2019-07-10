@@ -67,7 +67,7 @@ let g:gruvbox_contrast_dark = 'medium'
 " =============================================================================
 let g:buftabline_indicators = 1
 let g:rooter_silent_chdir = 1
-let g:NERDTreeWinSize=23
+let g:NERDTreeWinSize=25
 let NERDTreeQuitOnOpen=1
 let base16colorspace=256
 let g:sneak#s_next = 1
