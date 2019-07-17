@@ -1,0 +1,56 @@
+"*":
+  "atom-beautify":
+    clj:
+      beautify_on_save: true
+    general:
+      showLoadingView: false
+    rust:
+      beautify_on_save: true
+  "atom-ide-ui":
+    "atom-ide-code-format": {}
+  "autocomplete-plus":
+    confirmCompletion: "enter"
+    useCoreMovementCommands: false
+  chlorine:
+    "console-pos": "down"
+    "eval-mode": "clj"
+  core:
+    autoHideMenuBar: true
+    closeDeletedFileTabs: true
+    disabledPackages: [
+      "spell-check"
+      "atom-ide-ui"
+    ]
+    packagesWithKeymapsDisabled: [
+      "jumpy"
+    ]
+    telemetryConsent: "no"
+    themes: [
+      "one-dark-ui"
+      "base16-tomorrow-dark-theme"
+    ]
+  editor:
+    fontFamily: "Fira Code"
+    fontSize: 18
+    lineHeight: 1.4
+  "exception-reporting":
+    userId: "15be6368-06af-4df3-975d-ceeee30011aa"
+  ink:
+    terminal: {}
+  "linter-ui-default":
+    panelHeight: 300
+    showPanel: true
+  "lisp-paredit": {}
+  "plantuml-preview":
+    jarLocation: "/home/jari/bin/plantuml.jar"
+  "platformio-ide-terminal":
+    core: {}
+  "sync-settings":
+    _lastBackupHash: "52aff11948913e90bda864317b0463e462496959"
+    gistId: "4887c9996830c5e215b728b39c56e6c6"
+    personalAccessToken: "5cdccec7eeaeaa3321b07bd1097a73a0a6f0a0c2"
+  "vim-mode-plus":
+    ignoreCaseForFind: true
+    ignoreCaseForSearch: true
+  welcome:
+    showOnStartup: false

@@ -1,0 +1,74 @@
+
+'atom-text-editor:not([mini])':
+  'tab': 'editor:indent'
+
+'atom-text-editor.autocomplete-active':
+  'tab': 'autocomplete-plus:move-down'
+  'ctrl-p': 'autocomplete-plus:move-up'
+  'down': 'autocomplete-plus:move-down'
+  'up': 'autocomplete-plus:move-up'
+
+# 'atom-text-editor:not([mini, autocomplete-active, atom-text-editor.vim-mode-plus.insert-mode)':
+#   'tab': 'lisp-paredit:forward-sexp'
+#   'shift-tab': 'lisp-paredit:forward-sexp'
+
+'.platform-linux atom-workspace, .platform-win32 atom-workspace':
+  'ctrl-q': 'core:close'
+
+'workspace, body':
+  'ctrl-w': 'unset!'
+
+'atom-text-editor.vim-mode-plus.insert-mode':
+  'j k': 'vim-mode-plus:reset-normal-mode'
+  'k j': 'vim-mode-plus:reset-normal-mode'
+  'ctrl-x ctrl-e':'chlorine:evaluate-block'
+  'ctrl-x ctrl-x':'chlorine:evaluate-top-block'
+  'ctrl-x ctrl-k':'chlorine:load-file'
+
+'.platform-win32, .platform-linux':
+  'ctrl-f': 'find-and-replace:show'
+
+'atom-text-editor.vim-mode-plus[data-grammar="source clojure"]':
+  'ctrl-l': 'lisp-paredit:slurp-forwards'
+  'ctrl-h': 'lisp-paredit:barf-forwards'
+
+'atom-text-editor.vim-mode-plus:not(.insert-mode)[data-grammar="source clojure"]':
+  'tab': 'lisp-paredit:forward-sexp'
+  'shift-tab': 'lisp-paredit:backward-sexp'
+
+'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+  'g c': 'vim-mode-plus:toggle-line-comments'
+  'space e': 'linter-ui-default:next-error'
+
+'atom-text-editor.vim-mode-plus.normal-mode[data-grammar="source clojure"]':
+  'g d':          'chlorine:go-to-var-definition'
+  'K':            'chlorine:doc-for-var'
+  'space c':      'chlorine:connect-clojure-socket-repl'
+  'space l':      'chlorine:clear-console'
+  'shift-enter':  'chlorine:evaluate-block'
+  'ctrl-enter':   'chlorine:evaluate-top-block'
+  'ctrl-x ctrl-e':'chlorine:evaluate-block'
+  'ctrl-x ctrl-x':'chlorine:evaluate-top-block'
+  'ctrl-x ctrl-k':'chlorine:load-file'
+  'ctrl-g':       'chlorine:break-evaluation'
+  'space space':  'inline-results:clear-all'
+  'escape':  'inline-results:clear-all'
+  'space k':      'inline-results:clear.current'
+  'space x':      'chlorine:run-tests-in-ns'
+  'space t':      'chlorine:run-test-for-var'
+
+'atom-text-editor.vim-mode-plus.insert-mode[data-grammar="source clojure"]':
+  'shift-enter': 'chlorine:evaluate-block'
+  'ctrl-enter':  'chlorine:evaluate-top-block'
+  'ctrl-x e':    'chlorine:evaluate-block'
+  'ctrl-x x':    'chlorine:evaluate-top-block'
+  'ctrl-x ctrl-k':'chlorine:load-file'
+
+'atom-text-editor.vim-mode-plus.normal-mode':
+  'space w': 'core:save'
+  'space j': 'symbols-view:toggle-file-symbols'
+  'f': 'jumpy:toggle'
+  'g d': 'hyperclick:confirm-cursor'
+  'ctrl-f': 'find-and-replace:show'
+  'backspace': 'back-jumpy:back'
+  'escape': 'vim-mode-plus:clear-highlight-search'

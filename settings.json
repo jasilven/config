@@ -1,5 +1,15 @@
 {
   "vim.insertModeKeyBindings": [],
+  "vim.visualModeKeyBindings": [
+    {
+      "before": [
+        ":",
+      ],
+      "commands": [
+        "workbench.action.showCommands",
+      ]
+    },
+  ],
   "vim.normalModeKeyBindings": [
     {
       "before": [
@@ -34,6 +44,14 @@
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        ":",
+      ],
+      "commands": [
+        "workbench.action.showCommands",
+      ]
+    },
     {
       "before": [
         "f1",
@@ -84,6 +102,15 @@
       ],
       "commands": [
         "editor.unfoldRecursively",
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "x"
+      ],
+      "commands": [
+        "calva.evaluateCurrentTopLevelForm",
       ]
     },
     {
@@ -140,6 +167,7 @@
     }
   ],
   "vim.handleKeys": {
+    "<C-r>": true,
     "<C-c>": false,
     "<C-k>": false,
     "<C-x>": false,
@@ -170,7 +198,7 @@
   "editor.minimap.enabled": false,
   "window.zoomLevel": 0,
   "workbench.startupEditor": "newUntitledFile",
-  "editor.fontSize": 17,
+  "editor.fontSize": 18,
   "editor.fontFamily": "'Fira Code', 'Menlo', 'Hack', 'Monaco', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
   "vim.leader": "<space>",
   "editor.renderControlCharacters": false,
@@ -203,8 +231,11 @@
   // "clojureWarrior.enableBracketColors": false,
   "rust.clippy_preference": "on",
   "editor.formatOnPaste": true,
-  "workbench.colorTheme": "Visual Studio Light",
+  "workbench.colorTheme": "GitHub Plus",
   "rust-analyzer.enableEnhancedTyping": false,
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+  "clojureWarrior.enableBracketColors": false,
+  "explorer.confirmDelete": false,
 }
 // {
 //   "before": [

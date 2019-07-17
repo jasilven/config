@@ -1,5 +1,15 @@
 [
     {
+        "key": "ctrl+h",
+        "command": "paredit.barfSexpForward",
+        "when": "calva:activated && calva:pareditValid && !panelFocus && !sideBarFocus && paredit:keyMap =~ /original|strict/"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "paredit.slurpSexpForward",
+        "when": "calva:activated && calva:pareditValid && !panelFocus && !sideBarFocus && paredit:keyMap =~ /original|strict/"
+    },
+    {
         "key": "ctrl+alt+q",
         "command": "workbench.action.closeWindow",
         "when": "!editorIsOpen && !multipleEditorGroups"
@@ -111,7 +121,7 @@
         "when": "calva:activated && calva:pareditValid && paredit:keyMap =~ /original|strict/"
     },
     {
-        "key": "ctrl+c ctrl+k",
+        "key": "ctrl+x ctrl+k",
         "command": "calva.loadFile",
         "when": "calva:activated && calva:pareditValid && paredit:keyMap =~ /original|strict/"
     },
@@ -218,7 +228,11 @@
     },
     {
         "key": "ctrl+k ctrl+o",
-        "command": "workbench.action.files.openFileFolder"
+        "command": "workbench.action.files.openFolder"
+    },
+    {
+        "key": "ctrl+\\",
+        "command": "workbench.files.action.focusFilesExplorer"
     },
     // {
     //     "key": "ctrl+k",
