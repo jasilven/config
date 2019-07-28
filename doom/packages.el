@@ -7,4 +7,6 @@
 ;; (package! builtin-package :disable t)
 
 (package! evil-smartparens)
+(package! github-theme)
+(package! github-modern)
 ;; (package! evil-smartparens-keybindings)

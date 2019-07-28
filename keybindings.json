@@ -1,0 +1,63 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+\\",
+        "command": "workbench.action.toggleSidebarVisibility",
+    },
+    {
+        "key": "ctrl+q",
+        "command": "workbench.action.closeActiveEditor",
+    },
+    {
+        "key": "ctrl+w",
+        "command": "workbench.action.closeActiveEditor",
+    },
+    {
+        "key": "ctrl+x ctrl+e",
+        "command": "calva.evaluateSelection",
+        "when": "calva:activated"
+    },
+    {
+        "key": "ctrl+c ctrl+k",
+        "command": "calva.loadFile",
+        "when": "calva:activated"
+    },
+    {
+        "key": "ctrl+x ctrl+x",
+        "command": "calva.evaluateCurrentTopLevelForm",
+        "when": "calva:activated"
+    },
+    {
+        "key": "alt+l",
+        "command": "paredit.slurpSexpForward",
+        "when": "calva:activated"
+    },
+    {
+        "key": "alt+h",
+        "command": "paredit.barfSexpForward",
+        "when": "calva:activated"
+    },
+    {
+        "key": "tab",
+        "command": "selectNextSuggestion",
+        "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "shift+tab",
+        "command": "selectPrevSuggestion",
+        "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+/",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "-workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "ctrl+w",
+        "command": "-workbench.action.closeWindow",
+        "when": "!editorIsOpen && !multipleEditorGroups"
+    }
+]

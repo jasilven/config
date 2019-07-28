@@ -27,7 +27,7 @@
     telemetryConsent: "no"
     themes: [
       "one-dark-ui"
-      "base16-tomorrow-dark-theme"
+      "solarized-dark-syntax"
     ]
   editor:
     fontFamily: "Fira Code"

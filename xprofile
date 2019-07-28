@@ -1,1 +1,2 @@
 xset b off
+setxkbmap -option ctrl:nocaps

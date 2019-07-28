@@ -46,6 +46,14 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
+        "-"
+      ],
+      "commands": [
+        "workbench.action.navigateBack"
+      ]
+    },
+    {
+      "before": [
         ":",
       ],
       "commands": [
@@ -92,7 +100,7 @@
         "a"
       ],
       "commands": [
-        "editor.foldRecursively",
+        "editor.unfoldRecursively",
       ]
     },
     {
@@ -179,14 +187,16 @@
     "<C-v>": false,
     "<C-f>": false
   },
+  // "vim.easymotionMarkerWidthPerChar": 14,
   "vim.easymotion": true,
-  "vim.easymotionMarkerFontSize": "18",
+  "vim.easymotionKeys": "hklyuopnm,qwertzxcvbasdgjf",
+  "vim.easymotionMarkerFontSize": "19",
   "vim.easymotionMarkerFontWeight": "bold",
+  "vim.easymotionMarkerFontFamily": "Fira Code",
   "vim.easymotionMarkerHeight": 0,
-  // "vim.easymotionMarkerBackgroundColor": "#000000",
-  "vim.easymotionMarkerYOffset": 16,
-  "vim.easymotionMarkerForegroundColorOneChar": "#dd0000",
-  "vim.easymotionMarkerForegroundColorTwoChar": "#dd0000",
+  "vim.easymotionMarkerYOffset": 13,
+  "vim.easymotionMarkerForegroundColorOneChar": "#FF0000",
+  "vim.easymotionMarkerForegroundColorTwoChar": "#FF0000",
   "vim.visualstar": true,
   "vim.sneak": false,
   "vim.incsearch": true,
@@ -206,22 +216,39 @@
   "editor.renderWhitespace": "none",
   "workbench.colorCustomizations": {
     // "statusBar.background": "#6199bf",
+    "editorLineNumber.foreground": "#CBCBCD",
+    "list.activeSelectionBackground": "#C9DEEB"
   },
   "editor.tokenColorCustomizations": {
-    // "functions": "#C586C0",
+    "comments": "#6A737D",
+    //"functions": "#C586C0",
     // "keywords": "#569CD6",
     // "types": "#C586C0",
+    "textMateRules": [
+      {
+        "scope": [
+          "constant.keyword.clojure"
+        ],
+        "settings": {
+          "foreground": "#0366D6"
+        }
+      },
+      // {
+      //   "scope": [
+      //     "punctuation.section.expression.begin.clojure",
+      //     "punctuation.section.expression.end.trailing.clojure"
+      //   ],
+      //   "settings": {
+      //     "foreground": "#999"
+      //   }
+      // }
+    ]
   },
   "workbench.view.alwaysShowHeaderActions": true,
   "editor.formatOnSave": true,
   "terminal.integrated.fontSize": 16,
-  // "rest-client.enableTelemetry": false,
-  // "rest-client.timeoutinmilliseconds": 20000,
   "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
-  // "window.menuBarVisibility": "toggle",
-  "rust.build_on_save": true,
-  "rust.jobs": 4,
   "[clojure]": {
     "editor.matchBrackets": true
   },
@@ -229,13 +256,20 @@
   "calva.lintOnSave": true,
   "calva.fmt.removeConsecutiveBlankLines": true,
   // "clojureWarrior.enableBracketColors": false,
-  "rust.clippy_preference": "on",
   "editor.formatOnPaste": true,
-  "workbench.colorTheme": "GitHub Plus",
   "rust-analyzer.enableEnhancedTyping": false,
   "rust-analyzer.enableCargoWatchOnStartup": "enabled",
   "clojureWarrior.enableBracketColors": false,
   "explorer.confirmDelete": false,
+  "workbench.tree.indent": 20,
+  "workbench.editor.showTabs": true,
+  "workbench.colorTheme": "Visual Studio Light",
+  "window.menuBarVisibility": "toggle",
+  // "rest-client.enableTelemetry": false,
+  // "rest-client.timeoutinmilliseconds": 20000,
+  // "rust.build_on_save": true,
+  // "rust.jobs": 4,
+  // "rust.clippy_preference": "on",
 }
 // {
 //   "before": [
