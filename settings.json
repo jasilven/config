@@ -26,15 +26,6 @@
   "vim.insertModeKeyBindingsNonRecursive": [
     {
       "before": [
-        "k",
-        "j"
-      ],
-      "after": [
-        "<Esc>"
-      ]
-    },
-    {
-      "before": [
         "j",
         "k"
       ],
@@ -44,6 +35,12 @@
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "R"
+      ],
+      "after": []
+    },
     {
       "before": [
         "-"
@@ -247,6 +244,9 @@
   "workbench.view.alwaysShowHeaderActions": true,
   "editor.formatOnSave": true,
   "terminal.integrated.fontSize": 16,
+  "[Log]": {
+    "editor.fontSize": 16
+  },
   "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
   "[clojure]": {
