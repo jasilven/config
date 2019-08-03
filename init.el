@@ -37,7 +37,6 @@
       (mapcar (lambda (elem) (pcase elem (`(:propertize (,_ minor-mode-alist . ,_) . ,_) "") (t elem)))
               mode-line-modes))
 ;; defaults
-(setq x-gtk-use-system-tooltips t)
 (setq-default
  gc-cons-upper-limit 536870912
  gc-cons-threshold 16777216
@@ -98,6 +97,8 @@
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
+  (push '("*cider-result*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '("*cider-error*" :height 15 :position bottom) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '(cider-repl-mode :height 12 :stick t) popwin:special-display-config))
 
@@ -193,12 +194,6 @@
   :init
   (add-hook 'prog-mode-hook #'flycheck-mode))
 
-;; (use-package flycheck-inline
-;;   :after flycheck
-;;   :ensure t
-;;   :init
-;;   (add-hook 'prog-mode-hook #'flycheck-inline-mode))
-
 (use-package flycheck-pos-tip
   :after flycheck
   :ensure t
@@ -215,26 +210,24 @@
 (use-package clojure-mode
   :ensure t
   :init
-  (add-hook 'clojure-mode-hook #'cider-mode)
-  :config
-  (define-key clojure-mode-map (kbd "C-s") #'my/save-buffer)
-  )
+  (add-hook 'clojure-mode-hook #'cider-mode))
 
 (use-package cider
   :after clojure-mode
   :ensure t
   :config
+  (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (setq cider-print-fn (quote fipp))
   (setq cider-print-quota 100000)
   (setq cider-prompt-for-symbol nil)
   (setq nrepl-hide-special-buffers t)
   (setq cider-repl-display-help-banner nil)
-  (setq cider-show-error-buffer nil)
+  (setq cider-show-error-buffer t)
   (setq cider-auto-select-error-buffer t)
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (setq cider-clojure-cli-global-options "-A:bench")
+  (setq cider-clojure-cli-global-options "-A:bench:dev")
   (define-key evil-normal-state-map (kbd "C-x C-x")
     (lambda () (interactive) (end-of-line) (cider-eval-last-sexp)))
   :init
@@ -270,24 +263,11 @@
   :init
   (add-hook 'rust-mode-hook #'hs-minor-mode))
 
-;; (use-package helm
-;;   :ensure t
-;;   :config
-;;   (set-face-attribute 'helm-source-header nil :height 1.0 :inherit 'font-lock-preprocessor-face)
-;;   (helm-autoresize-mode t)
-;;   (setq helm-display-source-at-screen-top nil)
-;;   (setq helm-display-header-line nil)
-;;   (setq helm-autoresize-max-height 23)
-;;   (setq helm-autoresize-min-height 23)
-;;   (use-package helm-ag :ensure t)
-;;   (use-package helm-swoop :ensure t))
-;; (use-package helm-projectile :after projectile :ensure t)
-
 (use-package ivy
   :ensure t
   :config
-  (setq ivy-use-virtual-buffers t
-        ivy-count-format "%d/%d "))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "%d/%d "))
 
 (use-package counsel :ensure t)
 (use-package counsel-projectile :ensure t)
@@ -383,8 +363,7 @@
   (setq treemacs-eldoc-display t)
   (treemacs-follow-mode 1)
   (setq treemacs-width 28)
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
-  )
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-projectile
   :after treemacs
@@ -392,7 +371,6 @@
 (use-package treemacs-evil
   :after treemacs
   :ensure t)
-
 
 ;; themes
 (use-package solarized-theme
@@ -414,6 +392,8 @@
 (set-face-attribute 'highlight-symbol-face nil :foreground "indianred")
 (set-face-attribute 'which-key-key-face nil :foreground (face-attribute 'error :foreground))
 (set-frame-font "Inconsolata-16")
+;; (set-frame-font "Monaco 13")
+;; (set-frame-font "Meslo LG M 13")
 (set-frame-name "Editor")
 
 ;; my stuff
@@ -421,10 +401,11 @@
   "Indent whole buffer."
   (interactive "*")
   (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max)))
+  (indent-region (point-min) (point-max))
+  (save-buffer))
 
 (defun my/date (arg)
-  (interactive "P")
+  (interactive "*")
   (insert (format-time-string "%Y-%m-%d %a %H:%M")))
 
 ;; end
@@ -439,9 +420,4 @@
  '(package-selected-packages
    (quote
     (so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
