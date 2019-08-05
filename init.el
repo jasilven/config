@@ -32,10 +32,6 @@
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; remove minor modes from modeline
-(setq mode-line-modes
-      (mapcar (lambda (elem) (pcase elem (`(:propertize (,_ minor-mode-alist . ,_) . ,_) "") (t elem)))
-              mode-line-modes))
 ;; defaults
 (setq-default
  gc-cons-upper-limit 536870912
@@ -82,14 +78,21 @@
  indicate-empty-lines t
  x-select-enable-clipboard t
  kill-buffer-query-functions nil
- mode-line-format '("%e" mode-line-front-space mode-line-client mode-line-modified
-                    mode-line-remote mode-line-frame-identification
-                    mode-line-buffer-identification "   "  evil-mode-line-tag
-                    (vc-mode vc-mode)
-                    " [" mode-name "]" mode-line-misc-info mode-line-end-spaces)
  )
 
+(use-package mood-line
+  :ensure t
+  :config
+  (set-face-attribute 'mood-line-status-warning nil :foreground "#002b36")
+  (set-face-attribute 'mood-line-status-success nil :foreground "#002b36")
+  (set-face-attribute 'mood-line-status-error nil :foreground "#002b36")
+  (set-face-attribute 'mood-line-status-grayed-out nil :foreground "#002b36")
+  (set-face-attribute 'mood-line-unimportant nil :foreground "#002b36")
+  (set-face-attribute 'mood-line-status-info nil :foreground "#002b36")
+  (mood-line-mode))
+
 (use-package key-chord :ensure t :config (key-chord-mode 1))
+
 (use-package popwin
   :ensure t
   :config
@@ -131,7 +134,6 @@
     :config
     (evil-collection-init))
   (setq evil-move-cursor-back nil))
-;; (setq evil-escape-unordered-key-sequence t)
 
 (use-package json-mode :ensure t)
 (use-package avy :ensure t)
@@ -405,6 +407,7 @@
   (save-buffer))
 
 (defun my/date (arg)
+  "Insert date"
   (interactive "*")
   (insert (format-time-string "%Y-%m-%d %a %H:%M")))
 
@@ -419,5 +422,4 @@
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
    (quote
-    (so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
-
+    (mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
