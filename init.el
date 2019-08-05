@@ -80,17 +80,6 @@
  kill-buffer-query-functions nil
  )
 
-;; (use-package mood-line
-;;   :ensure t
-;;   :config
-;;   (set-face-attribute 'mood-line-status-warning nil :foreground "#002b36")
-;;   (set-face-attribute 'mood-line-status-success nil :foreground "#002b36")
-;;   (set-face-attribute 'mood-line-status-error nil :foreground "#002b36")
-;;   (set-face-attribute 'mood-line-status-grayed-out nil :foreground "#002b36")
-;;   (set-face-attribute 'mood-line-unimportant nil :foreground "#002b36")
-;;   (set-face-attribute 'mood-line-status-info nil :foreground "#002b36")
-;;   (mood-line-mode))
-
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 
 (use-package popwin
@@ -422,26 +411,7 @@
                                  " »" mode-name "« "
                                  (vc-mode vc-mode)
                                  " " mode-line-misc-info
-                                 mode-line-end-spaces
-                                 ))
-
-(defun special-buffer-p (buffer-name)
-  "Check if buffer-name is the name of a special buffer."
-  (or (string-match-p "^\\*.+\\*$" buffer-name)
-      (string-match-p "^\\*magit.*:.+$" buffer-name)))
-
-(defun shorten-directory (dir max-length)
-  "Show up to `max-length' characters of a directory name `dir'."
-  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
-        (output ""))
-    (when (and path (equal "" (car path)))
-      (setq path (cdr path)))
-    (while (and path (< (length output) (- max-length 4)))
-      (setq output (concat (car path) "/" output))
-      (setq path (cdr path)))
-    (when path
-      (setq output (concat ".../" output)))
-    output))
+                                 mode-line-end-spaces))
 ;; end modeline
 
 (custom-set-variables
