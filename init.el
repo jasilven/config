@@ -311,6 +311,7 @@
   (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 
 (use-package magit :ensure t)
+(use-package evil-magit :after magit :ensure t)
 
 (use-package git-gutter
   :ensure t
@@ -422,4 +423,10 @@
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
    (quote
-    (mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
+    (evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
