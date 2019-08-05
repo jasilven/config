@@ -80,16 +80,16 @@
  kill-buffer-query-functions nil
  )
 
-(use-package mood-line
-  :ensure t
-  :config
-  (set-face-attribute 'mood-line-status-warning nil :foreground "#002b36")
-  (set-face-attribute 'mood-line-status-success nil :foreground "#002b36")
-  (set-face-attribute 'mood-line-status-error nil :foreground "#002b36")
-  (set-face-attribute 'mood-line-status-grayed-out nil :foreground "#002b36")
-  (set-face-attribute 'mood-line-unimportant nil :foreground "#002b36")
-  (set-face-attribute 'mood-line-status-info nil :foreground "#002b36")
-  (mood-line-mode))
+;; (use-package mood-line
+;;   :ensure t
+;;   :config
+;;   (set-face-attribute 'mood-line-status-warning nil :foreground "#002b36")
+;;   (set-face-attribute 'mood-line-status-success nil :foreground "#002b36")
+;;   (set-face-attribute 'mood-line-status-error nil :foreground "#002b36")
+;;   (set-face-attribute 'mood-line-status-grayed-out nil :foreground "#002b36")
+;;   (set-face-attribute 'mood-line-unimportant nil :foreground "#002b36")
+;;   (set-face-attribute 'mood-line-status-info nil :foreground "#002b36")
+;;   (mood-line-mode))
 
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 
@@ -407,12 +407,43 @@
   (indent-region (point-min) (point-max))
   (save-buffer))
 
-(defun my/date (arg)
-  "Insert date"
+(defun my/date ()
+  "Insert date."
   (interactive "*")
   (insert (format-time-string "%Y-%m-%d %a %H:%M")))
 
-;; end
+;; modeline
+(setq-default mode-line-format '("%e"
+                                 mode-line-front-space
+                                 mode-line-modified
+                                 evil-mode-line-tag
+                                 " "
+                                 mode-line-buffer-identification
+                                 " »" mode-name "« "
+                                 (vc-mode vc-mode)
+                                 " " mode-line-misc-info
+                                 mode-line-end-spaces
+                                 ))
+
+(defun special-buffer-p (buffer-name)
+  "Check if buffer-name is the name of a special buffer."
+  (or (string-match-p "^\\*.+\\*$" buffer-name)
+      (string-match-p "^\\*magit.*:.+$" buffer-name)))
+
+(defun shorten-directory (dir max-length)
+  "Show up to `max-length' characters of a directory name `dir'."
+  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+        (output ""))
+    (when (and path (equal "" (car path)))
+      (setq path (cdr path)))
+    (while (and path (< (length output) (- max-length 4)))
+      (setq output (concat (car path) "/" output))
+      (setq path (cdr path)))
+    (when path
+      (setq output (concat ".../" output)))
+    output))
+;; end modeline
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
