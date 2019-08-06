@@ -383,7 +383,12 @@
 (set-face-attribute 'font-lock-function-name-face nil :weight 'normal)
 (set-face-attribute 'highlight-symbol-face nil :foreground "indianred")
 (set-face-attribute 'which-key-key-face nil :foreground (face-attribute 'error :foreground))
-(set-frame-font "Inconsolata-16")
+
+;; font
+(if (memq window-system '(mac ns x))
+    (set-frame-font "Menlo-17")
+  (set-frame-font "Inconsolata-16"))
+;; (set-frame-font "Inconsolata-16")
 ;; (set-frame-font "Monaco 13")
 ;; (set-frame-font "Meslo LG M 13")
 (set-frame-name "Editor")

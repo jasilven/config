@@ -1,6 +1,26 @@
 // Place your key bindings in this file to override the defaults
 [
     {
+        "key": "shift+ctrl+f",
+        "command": "workbench.action.findInFiles"
+    },
+    {
+        "key": "ctrl+f",
+        "command": "actions.find",
+    },
+    {
+        "key": "ctrl+g",
+        "command": "editor.cancelOperation",
+    },
+    {
+        "key": "ctrl+p",
+        "command": "workbench.action.quickOpen",
+    },
+    {
+        "key": "ctrl+shift+p",
+        "command": "workbench.action.showCommands",
+    },
+    {
         "key": "ctrl+\\",
         "command": "workbench.action.toggleSidebarVisibility",
     },
@@ -52,12 +72,15 @@
         "command": "workbench.action.terminal.toggleTerminal"
     },
     {
-        "key": "ctrl+`",
-        "command": "-workbench.action.terminal.toggleTerminal"
+        "key": "ctrl+j",
+        "command": "workbench.action.terminal.toggleTerminal"
     },
     {
-        "key": "ctrl+w",
-        "command": "-workbench.action.closeWindow",
-        "when": "!editorIsOpen && !multipleEditorGroups"
-    }
+        "key": "ctrl+s",
+        "command": "workbench.action.files.save"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "workbench.action.toggleSidebarVisibility"
+    },
 ]
