@@ -38,7 +38,7 @@
  gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
- blink-cursor-blinks 500
+ blink-cursor-blinks 10
  clean-buffer-list-delay-general 1
  coding-system-for-read 'utf-8
  coding-system-for-write 'utf-8
@@ -96,8 +96,8 @@
 
 (use-package plantuml-mode
   :ensure t
-  :config
-  (setq plantuml-jar-path "~/bin/plantuml.jar")
+  :init
+  (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
   (setq plantuml-default-exec-mode 'jar))
 
 (use-package flycheck-plantuml
@@ -112,9 +112,6 @@
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
-  ;; (setq evil-insert-state-cursor '((bar . 3) "red"))
-  ;; (setq evil-normal-state-cursor '(box "black"))
-  ;; (setq evil-emacs-state-cursor '(box "blue"))
   (evil-mode 1)
   :config
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
@@ -316,8 +313,8 @@
 (global-set-key (kbd "C-x C-d") 'dired)
 (global-set-key (kbd "C-x d") 'dired)
 (global-set-key (kbd "C-x C-d") 'dired)
-(global-set-key (kbd "C-x b") 'counsel-switch-buffer)
-(global-set-key (kbd "C-<tab>") 'counsel-switch-buffer)
+(global-set-key (kbd "C-x b") 'counsel-ibuffer)
+(global-set-key (kbd "C-<tab>") 'counsel-ibuffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-S-f") 'counsel-projectile-ag)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
@@ -364,33 +361,24 @@
   :after treemacs
   :ensure t)
 
-;; themes
-(use-package solarized-theme
+(use-package all-the-icons :ensure t)
+
+(use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode))
+
+(use-package doom-themes
   :ensure t
   :config
-  (setq solarized-use-variable-pitch nil
-        solarized-use-less-bold t
-        solarized-use-more-italic nil
-        solarized-distinct-doc-face nil
-        solarized-high-contrast-mode-line t
-        solarized-height-minus-1 1.0
-        solarized-height-plus-1 1.0
-        solarized-height-plus-2 1.0
-        solarized-height-plus-3 1.0
-        solarized-height-plus-4 1.0))
-(load-theme (quote solarized-dark))
-(set-face-attribute 'font-lock-constant-face nil :weight 'normal)
-(set-face-attribute 'font-lock-function-name-face nil :weight 'normal)
-(set-face-attribute 'highlight-symbol-face nil :foreground "indianred")
-(set-face-attribute 'which-key-key-face nil :foreground (face-attribute 'error :foreground))
+  (custom-set-faces
+   '(mode-line ((t (:height 0.9))))
+   '(mode-line-inactive ((t (:height 0.9)))))
+  (load-theme 'doom-solarized-dark t))
 
 ;; font
 (if (memq window-system '(mac ns x))
-    (set-frame-font "Menlo-17")
+    (set-frame-font "Fira Code-17")
   (set-frame-font "Inconsolata-16"))
-;; (set-frame-font "Inconsolata-16")
-;; (set-frame-font "Monaco 13")
-;; (set-frame-font "Meslo LG M 13")
 (set-frame-name "Editor")
 
 ;; my stuff
@@ -406,18 +394,12 @@
   (interactive "*")
   (insert (format-time-string "%Y-%m-%d %a %H:%M")))
 
-;; modeline
-(setq-default mode-line-format '("%e"
-                                 mode-line-front-space
-                                 mode-line-modified
-                                 evil-mode-line-tag
-                                 " "
-                                 mode-line-buffer-identification
-                                 " »" mode-name "« "
-                                 (vc-mode vc-mode)
-                                 " " mode-line-misc-info
-                                 mode-line-end-spaces))
-;; end modeline
+(defun my/switch-to-last-buffer ()
+  "Switch to last buffer."
+  (interactive)
+  (switch-to-buffer nil))
+
+(global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -428,11 +410,11 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   (quote
-    (evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo))))
+   '(evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(mode-line ((t (:height 0.9))))
+ '(mode-line-inactive ((t (:height 0.9)))))
