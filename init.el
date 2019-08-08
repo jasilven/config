@@ -354,12 +354,8 @@
   (setq treemacs-width 28)
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
-(use-package treemacs-projectile
-  :after treemacs
-  :ensure t)
-(use-package treemacs-evil
-  :after treemacs
-  :ensure t)
+(use-package treemacs-projectile :after treemacs :ensure t)
+(use-package treemacs-evil :after treemacs :ensure t)
 
 (use-package all-the-icons :ensure t)
 
@@ -374,6 +370,13 @@
    '(mode-line ((t (:height 0.9))))
    '(mode-line-inactive ((t (:height 0.9)))))
   (load-theme 'doom-solarized-dark t))
+
+(use-package flycheck-posframe
+  :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+
+(use-package smex :ensure t)
 
 ;; font
 (if (memq window-system '(mac ns x))
@@ -410,7 +413,7 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
+   '(smex flycheck-posframe evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -418,3 +421,4 @@
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:height 0.9))))
  '(mode-line-inactive ((t (:height 0.9)))))
+(put 'downcase-region 'disabled nil)
