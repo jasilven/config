@@ -20,7 +20,7 @@
 (line-number-mode -1)
 (scroll-bar-mode -1)
 (show-paren-mode 1)
-(global-hl-line-mode -1)
+(global-hl-line-mode t)
 (global-eldoc-mode -1)
 (global-auto-revert-mode t)
 (global-display-line-numbers-mode -1)
@@ -30,6 +30,7 @@
 (add-hook 'shell-mode-hook (hl-line-mode -1))
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -310,11 +311,13 @@
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
 (global-set-key (kbd "C-x C-p") 'projectile-switch-project)
 (global-set-key (kbd "C-q") 'kill-buffer-and-window)
-(global-set-key (kbd "C-x C-d") 'dired)
+(global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x d") 'dired)
 (global-set-key (kbd "C-x C-d") 'dired)
-(global-set-key (kbd "C-x b") 'counsel-ibuffer)
-(global-set-key (kbd "C-<tab>") 'counsel-ibuffer)
+(global-set-key (kbd "C-x C-d") 'dired)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-S-f") 'counsel-projectile-ag)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
@@ -377,11 +380,19 @@
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
 (use-package smex :ensure t)
+(use-package ivy-rich
+  :after ivy
+  :ensure t
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (ivy-rich-mode 1))
 
 ;; font
-(if (memq window-system '(mac ns x))
+(if (memq window-system '(mac ns))
     (set-frame-font "Fira Code-17")
-  (set-frame-font "Inconsolata-16"))
+  (set-frame-font "Fira Code Medium-14"))
+
+;; (set-frame-font "-CYRE-Inconsolata-bold-normal-normal-*-20-*-*-*-m-0-iso8859-1")
 (set-frame-name "Editor")
 
 ;; my stuff
