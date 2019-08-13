@@ -2,6 +2,7 @@
 " # PLUGINS
 " =============================================================================
 call plug#begin()
+Plug 'flazz/vim-colorschemes'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -88,7 +89,8 @@ au FileType clojure nmap <leader>e <Plug>(ale_next_wrap)<C-r><C-w>
 au FileType clojure nnoremap gd :Djump<space><C-r><C-w><cr>
 au Filetype clojure nmap <buffer> <C-left> <Plug>(sexp_emit_tail_element)
 au Filetype clojure nmap <buffer> <C-right> <Plug>(sexp_capture_next_element)
-
+au Filetype clojure nmap <buffer> <M-h> <Plug>(sexp_emit_tail_element)
+au Filetype clojure nmap <buffer> <M-l> <Plug>(sexp_capture_next_element)
 " =============================================================================
 " # ALE
 " =============================================================================
@@ -343,7 +345,7 @@ set statusline+=%1*\ %<%F%m%r%h%w\                       " File
 set statusline+=%=                                       " Right Side
 set statusline+=%2*%{FugitiveStatusline()}\ \                " git status
 set statusline+=%2*%Y\ \ %{''.(&fenc!=''?&fenc:&enc).''} " Separator
-set statusline+=%2*\ \ %02v:%02l\ \                      " Line number / total lines
+" set line+=%2*\ \ %02v:%02l\ \                      " Line number / total lines
 
 " =============================================================================
 " # :Shell command with output to new buffer
