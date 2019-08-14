@@ -31,6 +31,9 @@
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+(add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -51,9 +54,6 @@
  eldoc-echo-area-use-multiline-p nil
  eshell-scroll-show-maximum-output t
  eshell-cmpl-cycle-completions nil
- font-lock-builtin-face nil
- font-lock-type-face nil
- font-lock-variable-name-face nil
  indent-tabs-mode nil
  inhibit-startup-screen t
  initial-scratch-message nil
@@ -91,7 +91,7 @@
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-result*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '("*cider-error*" :height 15 :position bottom) popwin:special-display-config)
+  (push '("*cider-error*" :height 16 :position bottom) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '(cider-repl-mode :height 12 :stick t) popwin:special-display-config))
 
@@ -217,8 +217,10 @@
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
   (setq cider-clojure-cli-global-options "-A:bench:dev")
+  (define-key evil-normal-state-map (kbd "<SPC> x")
+    (lambda () (interactive) (cider-eval-sexp-at-point)))
   (define-key evil-normal-state-map (kbd "C-x C-x")
-    (lambda () (interactive) (end-of-line) (cider-eval-last-sexp)))
+    (lambda () (interactive) (end-of-line) (cider-eval-sexp-at-point)))
   :init
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-mode-hook #'hl-line-mode)
@@ -258,7 +260,10 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "%d/%d "))
 
-(use-package counsel :ensure t)
+(use-package counsel
+  :ensure t
+  :config (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
+
 (use-package counsel-projectile :ensure t)
 
 (use-package projectile
@@ -308,6 +313,7 @@
   (git-gutter:deleted-sign  "-"))
 
 ;; global keys
+
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
 (global-set-key (kbd "C-x C-p") 'projectile-switch-project)
 (global-set-key (kbd "C-q") 'kill-buffer-and-window)
@@ -326,6 +332,7 @@
 (global-set-key (kbd "M-p") 'evil-paste-pop)
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "<f8>") 'shell-pop)
+(global-set-key (kbd "C-M-=") 'my/indent-buffer)
 (define-key evil-normal-state-map (kbd "C-f") 'swiper)
 (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
 (define-key evil-insert-state-map (kbd "M-h") 'paredit-forward-barf-sexp)
@@ -334,6 +341,12 @@
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+(define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
+(define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
+(define-key evil-normal-state-map (kbd "gh") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "ga") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "gl") 'end-of-line)
+(define-key evil-normal-state-map (kbd "ge") 'end-of-line)
 (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 (define-key evil-insert-state-map (kbd "C-p") 'projectile-find-file)
 (define-key evil-normal-state-map (kbd "C-n") 'evil-buffer-new)
@@ -342,7 +355,9 @@
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> e") 'flycheck-list-errors)
 (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
+(define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
+(global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
 
 (use-package which-key :ensure t :config (which-key-mode))
 (use-package avy :ensure t)
@@ -354,25 +369,38 @@
   ;; (setq treemacs-no-png-images t)
   (setq treemacs-eldoc-display t)
   (treemacs-follow-mode 1)
-  (setq treemacs-width 28)
+  (setq treemacs-width 25)
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-projectile :after treemacs :ensure t)
 (use-package treemacs-evil :after treemacs :ensure t)
-
 (use-package all-the-icons :ensure t)
+(use-package solaire-mode
+  :ensure t
+  :hook
+  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+  (minibuffer-setup . solaire-mode-in-minibuffer)
+  :config
+  (solaire-global-mode +1)
+  (solaire-mode-swap-bg))
 
 (use-package doom-modeline
-      :ensure t
-      :hook (after-init . doom-modeline-mode))
-
-(use-package doom-themes
   :ensure t
   :config
   (custom-set-faces
    '(mode-line ((t (:height 0.9))))
    '(mode-line-inactive ((t (:height 0.9)))))
-  (load-theme 'doom-solarized-dark t))
+  (setq doom-modeline-height 10)
+  (setq doom-modeline-icon nil)
+  :hook (after-init . doom-modeline-mode))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq font-lock-builtin-face nil)
+  (setq font-lock-type-face nil)
+  (setq font-lock-variable-name-face nil)
+  (load-theme 'doom-nord-light t))
 
 (use-package flycheck-posframe
   :ensure t
@@ -390,18 +418,23 @@
 ;; font
 (if (memq window-system '(mac ns))
     (set-frame-font "Fira Code-17")
-  (set-frame-font "Fira Code Medium-14"))
+  (set-frame-font "Fira Code Retina-14"))
 
 ;; (set-frame-font "-CYRE-Inconsolata-bold-normal-normal-*-20-*-*-*-m-0-iso8859-1")
 (set-frame-name "Editor")
 
 ;; my stuff
-(defun my/save-buffer()
+(defun my/save-buffer ()
   "Indent whole buffer."
   (interactive "*")
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max))
   (save-buffer))
+
+(defun my/indent-buffer ()
+  "Indent whole buffer."
+  (interactive "*")
+  (indent-region (point-min) (point-max)))
 
 (defun my/date ()
   "Insert date."
@@ -413,8 +446,6 @@
   (interactive)
   (switch-to-buffer nil))
 
-(global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -424,12 +455,13 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(smex flycheck-posframe evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
+   '(solaire-mode smex flycheck-posframe evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(highlight-symbol-face ((t (:inherit lazy-highlight))))
  '(mode-line ((t (:height 0.9))))
  '(mode-line-inactive ((t (:height 0.9)))))
 (put 'downcase-region 'disabled nil)
