@@ -400,7 +400,8 @@
   (setq font-lock-builtin-face nil)
   (setq font-lock-type-face nil)
   (setq font-lock-variable-name-face nil)
-  (load-theme 'doom-nord-light t))
+  (load-theme 'doom-nord-light t)
+  )
 
 (use-package flycheck-posframe
   :ensure t
@@ -446,6 +447,21 @@
   (interactive)
   (switch-to-buffer nil))
 
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#ffffff" :foreground "#3B4252" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 143 :width normal :foundry "CTDB" :family "Fira Code"))))
+ '(font-lock-comment-face ((t (:foreground "gray45"))))
+ '(font-lock-constant-face ((t (:foreground "#005cc5"))))
+ '(font-lock-keyword-face ((t (:foreground "firebrick"))))
+ '(font-lock-string-face ((t (:foreground "#22863a"))))
+ '(highlight-symbol-face ((t (:inherit lazy-highlight))))
+ '(hl-line ((t (:background "gray100"))))
+ '(mode-line ((t (:height 0.9))))
+ '(mode-line-inactive ((t (:height 0.9)))))
+(put 'downcase-region 'disabled nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -453,15 +469,4 @@
  ;; If there is more than one, they won't work right.
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
- '(git-gutter:modified-sign "~")
- '(package-selected-packages
-   '(solaire-mode smex flycheck-posframe evil-magit mood-line so-long almost-mono-themes which-key use-package treemacs-projectile treemacs-evil solarized-theme shell-pop rich-minority restclient projectile-ripgrep popwin magit lsp-ui key-chord json-mode highlight-symbol git-gutter flycheck-rust flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(highlight-symbol-face ((t (:inherit lazy-highlight))))
- '(mode-line ((t (:height 0.9))))
- '(mode-line-inactive ((t (:height 0.9)))))
-(put 'downcase-region 'disabled nil)
+ '(git-gutter:modified-sign "~"))
