@@ -1,6 +1,6 @@
 (setq package-enable-at-startup nil)
 
-(setq package-archives '(("org"          . "http://orgmode.org/elpa/")
+(setq package-archives '(
                          ("gnu"          . "http://elpa.gnu.org/packages/")
                          ("melpa"        . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -15,6 +15,7 @@
   (exec-path-from-shell-initialize))
 
 ;; editor modes
+(blink-cursor-mode -1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (line-number-mode -1)
@@ -42,7 +43,6 @@
  gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
- blink-cursor-blinks 10
  clean-buffer-list-delay-general 1
  coding-system-for-read 'utf-8
  coding-system-for-write 'utf-8
@@ -364,25 +364,27 @@
 (use-package treemacs
   :ensure t
   :config
+  (setq treemacs-show-cursor nil)
   (setq treemacs-project-follow-cleanup 1)
   (treemacs-resize-icons 17)
-  ;; (setq treemacs-no-png-images t)
   (setq treemacs-eldoc-display t)
-  (treemacs-follow-mode 1)
-  (setq treemacs-width 25)
+  (treemacs-follow-mode t)
+  (setq treemacs-width 22)
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-projectile :after treemacs :ensure t)
 (use-package treemacs-evil :after treemacs :ensure t)
 (use-package all-the-icons :ensure t)
-(use-package solaire-mode
-  :ensure t
-  :hook
-  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-  (minibuffer-setup . solaire-mode-in-minibuffer)
-  :config
-  (solaire-global-mode +1)
-  (solaire-mode-swap-bg))
+;; (use-package solaire-mode
+;;   :ensure t
+;;   :hook
+;;   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+;;   (minibuffer-setup . solaire-mode-in-minibuffer)
+;;   :config
+;;   ;; (setq solaire-mode-remap-modeline nil)
+;;   (setq solaire-mode-remap-fringe nil)
+;;   (solaire-global-mode +1)
+;;   (solaire-mode-swap-bg))
 
 (use-package doom-modeline
   :ensure t
@@ -394,13 +396,31 @@
   (setq doom-modeline-icon nil)
   :hook (after-init . doom-modeline-mode))
 
-(use-package doom-themes
+;; (use-package doom-themes
+
+(use-package almost-mono-themes
   :ensure t
   :config
-  (setq font-lock-builtin-face nil)
-  (setq font-lock-type-face nil)
-  (setq font-lock-variable-name-face nil)
-  (load-theme 'doom-nord-light t)
+  ;; (setq font-lock-builtin-face nil)
+  ;; (setq font-lock-type-face nil)
+  ;; (setq font-lock-variable-name-face nil)
+  (load-theme 'almost-mono-white t)
+  (custom-set-faces
+   ;; '(default ((t (:inherit nil :stipple nil :background "#ffffff" :foreground "#3B4252" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil))))
+   ;;  '(font-lock-comment-face ((t (:foreground "gray45"))))
+   ;; '(font-lock-constant-face ((t (:foreground "#005cc5"))))
+   '(font-lock-constant-face ((t (:foreground "#0065BB" :slant normal :weight bold))))
+   '(font-lock-type-face ((t (:foreground "#0065BB" :weight bold :slant normal))))
+   '(font-lock-doc-face ((t (:foreground nil :inherit 'font-lock-string-face))))
+   '(font-lock-function-name-face ((t (:foreground "Blue1"))))
+   '(font-lock-keyword-face ((t (:foreground "firebrick"))))
+   '(show-paren-match ((t (:weight bold :foreground "black" :background "#fda505"))))
+   ;;  '(font-lock-string-face ((t (:foreground "#22863a"))))
+   ;;  '(highlight-symbol-face ((t (:inherit lazy-highlight))))
+   ;; '(hl-line ((t (:background "gray95"))))
+   '(mode-line ((t (:height 0.9))))
+   '(mode-line-inactive ((t (:height 0.9))))
+   )
   )
 
 (use-package flycheck-posframe
@@ -418,8 +438,8 @@
 
 ;; font
 (if (memq window-system '(mac ns))
-    (set-frame-font "Fira Code-17")
-  (set-frame-font "Fira Code Retina-14"))
+    (set-frame-font "Fira Code-18")
+  (set-frame-font "Fira Code Retina-15"))
 
 ;; (set-frame-font "-CYRE-Inconsolata-bold-normal-normal-*-20-*-*-*-m-0-iso8859-1")
 (set-frame-name "Editor")
@@ -447,20 +467,6 @@
   (interactive)
   (switch-to-buffer nil))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#ffffff" :foreground "#3B4252" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 143 :width normal :foundry "CTDB" :family "Fira Code"))))
- '(font-lock-comment-face ((t (:foreground "gray45"))))
- '(font-lock-constant-face ((t (:foreground "#005cc5"))))
- '(font-lock-keyword-face ((t (:foreground "firebrick"))))
- '(font-lock-string-face ((t (:foreground "#22863a"))))
- '(highlight-symbol-face ((t (:inherit lazy-highlight))))
- '(hl-line ((t (:background "gray100"))))
- '(mode-line ((t (:height 0.9))))
- '(mode-line-inactive ((t (:height 0.9)))))
 (put 'downcase-region 'disabled nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -469,4 +475,7 @@
  ;; If there is more than one, they won't work right.
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
- '(git-gutter:modified-sign "~"))
+ '(git-gutter:modified-sign "~")
+ '(package-selected-packages
+   '(almost-mono-themes solaire-mode which-key use-package treemacs-projectile treemacs-evil smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
+
