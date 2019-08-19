@@ -24,17 +24,21 @@
 (global-hl-line-mode t)
 (global-eldoc-mode -1)
 (global-auto-revert-mode t)
-(global-display-line-numbers-mode -1)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'eshell-mode-hook (hl-line-mode -1))
-(add-hook 'shell-mode-hook (hl-line-mode -1))
-(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+(add-hook 'eshell-mode-hook (lambda () (hl-line-mode -1)))
+(add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
+(add-hook 'eshell-mode-hook (lambda ()
+                              (setq-local global-hl-line-mode nil)))
+(add-hook 'shell-mode-hook (lambda ()
+                             (setq-local global-hl-line-mode nil)))
+(add-hook 'term-mode-hook (lambda ()
+                            (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
-(add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)))
-(add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
+                                (setq-local display-line-numbers nil)))
+(add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
+                                  (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -313,7 +317,6 @@
   (git-gutter:deleted-sign  "-"))
 
 ;; global keys
-
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
 (global-set-key (kbd "C-x C-p") 'projectile-switch-project)
 (global-set-key (kbd "C-q") 'kill-buffer-and-window)
@@ -375,53 +378,13 @@
 (use-package treemacs-projectile :after treemacs :ensure t)
 (use-package treemacs-evil :after treemacs :ensure t)
 (use-package all-the-icons :ensure t)
-;; (use-package solaire-mode
-;;   :ensure t
-;;   :hook
-;;   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-;;   (minibuffer-setup . solaire-mode-in-minibuffer)
-;;   :config
-;;   ;; (setq solaire-mode-remap-modeline nil)
-;;   (setq solaire-mode-remap-fringe nil)
-;;   (solaire-global-mode +1)
-;;   (solaire-mode-swap-bg))
 
-(use-package doom-modeline
-  :ensure t
-  :config
-  (custom-set-faces
-   '(mode-line ((t (:height 0.9))))
-   '(mode-line-inactive ((t (:height 0.9)))))
-  (setq doom-modeline-height 10)
-  (setq doom-modeline-icon nil)
+(use-package doom-modeline :ensure t
+  :config (my/modeline-adjust)
   :hook (after-init . doom-modeline-mode))
 
-;; (use-package doom-themes
-
-(use-package almost-mono-themes
-  :ensure t
-  :config
-  ;; (setq font-lock-builtin-face nil)
-  ;; (setq font-lock-type-face nil)
-  ;; (setq font-lock-variable-name-face nil)
-  (load-theme 'almost-mono-white t)
-  (custom-set-faces
-   ;; '(default ((t (:inherit nil :stipple nil :background "#ffffff" :foreground "#3B4252" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil))))
-   ;;  '(font-lock-comment-face ((t (:foreground "gray45"))))
-   ;; '(font-lock-constant-face ((t (:foreground "#005cc5"))))
-   '(font-lock-constant-face ((t (:foreground "#0065BB" :slant normal :weight bold))))
-   '(font-lock-type-face ((t (:foreground "#0065BB" :weight bold :slant normal))))
-   '(font-lock-doc-face ((t (:foreground nil :inherit 'font-lock-string-face))))
-   '(font-lock-function-name-face ((t (:foreground "Blue1"))))
-   '(font-lock-keyword-face ((t (:foreground "firebrick"))))
-   '(show-paren-match ((t (:weight bold :foreground "black" :background "#fda505"))))
-   ;;  '(font-lock-string-face ((t (:foreground "#22863a"))))
-   ;;  '(highlight-symbol-face ((t (:inherit lazy-highlight))))
-   ;; '(hl-line ((t (:background "gray95"))))
-   '(mode-line ((t (:height 0.9))))
-   '(mode-line-inactive ((t (:height 0.9))))
-   )
-  )
+(use-package doom-themes :ensure t)
+;; (use-package almost-mono-themes :ensure t)
 
 (use-package flycheck-posframe
   :ensure t
@@ -439,12 +402,20 @@
 ;; font
 (if (memq window-system '(mac ns))
     (set-frame-font "Fira Code-18")
-  (set-frame-font "Fira Code Retina-15"))
+  (set-frame-font "Fira Code Retina-14"))
 
-;; (set-frame-font "-CYRE-Inconsolata-bold-normal-normal-*-20-*-*-*-m-0-iso8859-1")
 (set-frame-name "Editor")
 
 ;; my stuff
+(defun my/modeline-adjust ()
+  "Adjust modeline."
+  (interactive)
+  (setq doom-modeline-height 15)
+  (setq doom-modeline-bar-width 1)
+  (set-face-attribute 'mode-line nil :height 120)
+  (set-face-attribute 'mode-line-inactive nil :height 120)
+  (setq doom-modeline-icon t))
+
 (defun my/save-buffer ()
   "Indent whole buffer."
   (interactive "*")
@@ -468,14 +439,5 @@
   (switch-to-buffer nil))
 
 (put 'downcase-region 'disabled nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(git-gutter:added-sign "+")
- '(git-gutter:deleted-sign "-")
- '(git-gutter:modified-sign "~")
- '(package-selected-packages
-   '(almost-mono-themes solaire-mode which-key use-package treemacs-projectile treemacs-evil smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo)))
+
 
