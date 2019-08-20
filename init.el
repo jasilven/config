@@ -41,8 +41,10 @@
                                   (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(set-face-attribute 'font-lock-type-face nil :foreground nil)
 ;; defaults
 (setq-default
+
  gc-cons-upper-limit 536870912
  gc-cons-threshold 16777216
  term-scroll-show-maximum-output t

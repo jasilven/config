@@ -12,3 +12,4 @@ export LANG=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 export MOZ_USE_XINPUT2=1
+export XDG_CONFIG_HOME="$HOME/.config"
