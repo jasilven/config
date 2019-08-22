@@ -41,10 +41,9 @@
                                   (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(set-face-attribute 'font-lock-type-face nil :foreground nil)
 ;; defaults
 (setq-default
-
+ tramp-default-method "ssh"
  gc-cons-upper-limit 536870912
  gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
@@ -99,7 +98,7 @@
   (push '("*cider-result*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :height 16 :position bottom) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 15 :stick t :position bottom) popwin:special-display-config)
-  (push '(cider-repl-mode :height 12 :stick t) popwin:special-display-config))
+  (push '(cider-repl-mode :height 7 :stick t) popwin:special-display-config))
 
 (use-package plantuml-mode
   :ensure t
@@ -403,19 +402,23 @@
 
 ;; font
 (if (memq window-system '(mac ns))
-    (set-frame-font "Fira Code-18")
+    (set-frame-font "Fira Code-17")
   (set-frame-font "Fira Code Retina-14"))
 
 (set-frame-name "Editor")
 
 ;; my stuff
+(load-theme 'doom-one)
+(set-face-attribute 'font-lock-type-face nil :foreground nil)
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#268bd2")
+
 (defun my/modeline-adjust ()
   "Adjust modeline."
   (interactive)
   (setq doom-modeline-height 15)
-  (setq doom-modeline-bar-width 1)
-  (set-face-attribute 'mode-line nil :height 120)
-  (set-face-attribute 'mode-line-inactive nil :height 120)
+  (setq doom-modeline-bar-width 3)
+  (set-face-attribute 'mode-line nil :height 130)
+  (set-face-attribute 'mode-line-inactive nil :height 130)
   (setq doom-modeline-icon t))
 
 (defun my/save-buffer ()
@@ -441,5 +444,19 @@
   (switch-to-buffer nil))
 
 (put 'downcase-region 'disabled nil)
-
-
+(provide 'init)
+;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(git-gutter:added-sign "+")
+ '(git-gutter:deleted-sign "-")
+ '(git-gutter:modified-sign "~"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(hl-line ((t (:background "#32353c")))))
