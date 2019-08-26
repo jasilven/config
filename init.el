@@ -329,7 +329,7 @@
 (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
 (global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-S-f") 'counsel-projectile-ag)
+(global-set-key (kbd "C-S-f") 'counsel-projectile-rg)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
 (global-set-key (kbd "C-\\") 'treemacs)
 (global-set-key (kbd "C-s") 'save-buffer)
