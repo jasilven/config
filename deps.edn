@@ -9,7 +9,7 @@
 ;; For all attributes other than :paths, these config files are merged left to right.
 ;; Only the last :paths is kept and others are dropped.
 
-{ :aliases {
+{:aliases {
   :1.2 {:override-deps {org.clojure/clojure {:mvn/version "1.2.1"}}}
   :1.3 {:override-deps {org.clojure/clojure {:mvn/version "1.3.0"}}}
   :1.4 {:override-deps {org.clojure/clojure {:mvn/version "1.4.0"}}}

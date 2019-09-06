@@ -11,8 +11,7 @@ compinit
 autoload -Uz promptinit
 promptinit
 alias vim="nvim"
-alias ls="ls -l"
-alias ls="ls -l"
+alias ls="ls -Cp"
 alias nrepl="clj -R:nrepl -m nrepl.cmdline"
 alias cider="clj -A:cider"
 alias lrun="LEIN_FAST_TRAMPOLINE=y lein trampoline run -m"

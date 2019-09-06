@@ -93,11 +93,16 @@
   :config
   (popwin-mode 1)
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
+  (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-result*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :height 16 :position bottom) popwin:special-display-config)
-  (push '("*Flycheck errors*" :height 15 :stick t :position bottom) popwin:special-display-config)
+  (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
+  (push '("*Cargo Run*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
+  (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-repl-mode :height 7 :stick t) popwin:special-display-config))
 
 (use-package plantuml-mode
@@ -143,8 +148,10 @@
   :ensure t
   :config
   (setq highlight-symbol-idle-delay 0.7)
-  :init
-  (add-hook 'prog-mode-hook #'highlight-symbol-mode))
+  :hook (prog-mode . highlight-symbol-mode)
+  ;; :init
+  ;; (add-hook 'prog-mode-hook #'highlight-symbol-mode)
+  )
 
 (use-package company
   :ensure t
@@ -165,15 +172,21 @@
 
 (use-package lsp-mode
   :ensure t
+  :after evil
   :commands lsp
   :config
+  ;; (key-chord-define-local "gd" 'lsp-find-definition)
+  (require 'lsp-clients)
   (setq lsp-enable-snippet nil)
-  (require 'lsp-clients))
+  )
 
 (use-package lsp-ui
   :after lsp
   :ensure t
+  :hook (rust-mode . lsp-ui-mode)
   :config
+  (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
+  (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-doc-enable nil))
 
@@ -185,26 +198,31 @@
 
 (use-package flycheck
   :ensure t
-  :init
-  (add-hook 'prog-mode-hook #'flycheck-mode))
+  :hook (prog-mode . flycheck-mode))
 
 (use-package flycheck-pos-tip
   :after flycheck
   :ensure t
-  :init
-  (add-hook 'prog-mode-hook #'flycheck-pos-tip-mode))
+  :hook (prog-mode . flycheck-pos-tip-mode)
+  ;; :init
+  ;; (add-hook 'prog-mode-hook #'flycheck-pos-tip-mode)
+  )
 
 (use-package clj-refactor :ensure t
   :after cider
   :config
   (setq cljr-warn-on-eval nil)
-  :init
-  (add-hook 'cider-mode-hook #'clj-refactor-mode))
+  :hook (cider-mode . clj-refactor-mode)
+  ;; :init
+  ;; (add-hook 'cider-mode-hook #'clj-refactor-mode)
+  )
 
 (use-package clojure-mode
   :ensure t
-  :init
-  (add-hook 'clojure-mode-hook #'cider-mode))
+  :hook (clojure-mode . cider-mode)
+  ;; :init
+  ;; (add-hook 'clojure-mode-hook #'cider-mode)
+  )
 
 (use-package cider
   :after clojure-mode
@@ -236,27 +254,41 @@
   (add-hook 'cider-repl-mode-hook #'evil-smartparens-mode)
   (use-package flycheck-joker :ensure t))
 
+;; (use-package racer
+;;   :ensure t
+;;   :hook (rust-mode . racer-mode)
+;;   :after rust-mode)
+
 (use-package cargo
   :ensure t
   :after rust-mode
+  :hook (rust-mode . cargo-minor-mode)
   :config (setq compilation-ask-about-save nil)
-  :init
-  (add-hook 'rust-mode-hook #'cargo-minor-mode))
+  ;; :init
+  ;; (add-hook 'rust-mode-hook #'cargo-minor-mode)
+  )
 
 (use-package flycheck-rust
   :after rust-mode
   :ensure t
-  :config
-  (add-hook 'rust-mode-hook #'flycheck-rust-setup))
+  :hook (rust-mode . flycheck-rust-setup)
+  ;; :config
+  ;; (add-hook 'rust-mode-hook #'flycheck-rust-setup)
+  )
 
 (use-package rust-mode
   :ensure t
   :hook
   (rust-mode . lsp)
   :config
-  (highlight-symbol-mode t)
   (setq rust-format-on-save t)
+  (evil-local-set-key 'normal "gd" 'lsp-find-definition)
+  (evil-local-set-key 'normal (kbd "<SPC> r") 'lsp-find-references)
   :init
+  ;; (add-hook 'rust-mode-hook #'racer-mode)
+  ;; (add-hook 'rust-mode-hook #'lsp-ui-mode)
+  ;; (add-hook 'rust-mode-hook #'company-mode)
+  (add-hook 'rust-mode-hook #'eldoc-mode)
   (add-hook 'rust-mode-hook #'hs-minor-mode))
 
 (use-package ivy
@@ -282,9 +314,11 @@
 
 (use-package smartparens
   :ensure t
-  :init
-  (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-  (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+  :hook ((prog-mode . turn-on-smartparens-strict-mode)
+         (markdown-mode . turn-on-smartparens-strict-mode))
+  ;; :init
+  ;; (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+  ;; (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
   :config
   (require 'smartparens-config)
   (setq sp-show-pair-from-inside t)
@@ -329,7 +363,7 @@
 (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
 (global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-S-f") 'counsel-projectile-ag)
+(global-set-key (kbd "C-S-f") 'counsel-projectile-rg)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
 (global-set-key (kbd "C-\\") 'treemacs)
 (global-set-key (kbd "C-s") 'save-buffer)
@@ -359,6 +393,7 @@
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> e") 'flycheck-list-errors)
 (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
+(define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
 (define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
 (global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
@@ -385,7 +420,7 @@
   :hook (after-init . doom-modeline-mode))
 
 (use-package doom-themes :ensure t)
-;; (use-package almost-mono-themes :ensure t)
+(use-package almost-mono-themes :ensure t)
 
 (use-package flycheck-posframe
   :ensure t
@@ -418,6 +453,8 @@
   (setq doom-modeline-height 15)
   (setq doom-modeline-bar-width 3)
   (set-face-attribute 'mode-line nil :height 130)
+  (set-face-attribute 'mode-line nil :background "#000000")
+  (set-face-attribute 'mode-line-inactive nil :background "#000000")
   (set-face-attribute 'mode-line-inactive nil :height 130)
   (setq doom-modeline-icon t))
 
@@ -453,10 +490,13 @@
  ;; If there is more than one, they won't work right.
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
- '(git-gutter:modified-sign "~"))
+ '(git-gutter:modified-sign "~")
+ '(package-selected-packages
+   '(which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#171b23" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 143 :width normal :foundry "CTDB" :family "Fira Code"))))
  '(hl-line ((t (:background "#32353c")))))
