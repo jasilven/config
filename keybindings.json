@@ -1,6 +1,16 @@
 // Place your key bindings in this file to override the defaults
 [
     {
+        "key": "ctrl+e",
+        "command": "workbench.action.quickOpen",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "workbench.action.terminal.focus",
+        "when": "editorTextFocus"
+    },
+    {
         "key": "shift+ctrl+f",
         "command": "workbench.action.findInFiles"
     },
@@ -13,7 +23,7 @@
         "command": "editor.cancelOperation",
     },
     {
-        "key": "ctrl+p",
+        "key": "ctrl+alt+e",
         "command": "workbench.action.quickOpen",
     },
     {
@@ -83,4 +93,32 @@
         "key": "ctrl+b",
         "command": "workbench.action.toggleSidebarVisibility"
     },
+    {
+        "key": "ctrl+alt+o",
+        "command": "workbench.action.files.openFile"
+    },
+    {
+        "key": "ctrl+o",
+        "command": "workbench.action.navigateBack"
+    },
+    {
+        "key": "ctrl+alt+-",
+        "command": "-workbench.action.navigateBack"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "-workbench.action.quickOpen"
+    },
+    // {
+    //     "key": "ctrl+e",
+    //     "command": "-workbench.action.quickOpen"
+    // },
+    // {
+    //     "key": "ctrl+e",
+    //     "command": "-workbench.action.quickOpen"
+    // },
+    // {
+    //     "key": "ctrl+e",
+    //     "command": "-workbench.action.quickOpen"
+    // },
 ]
