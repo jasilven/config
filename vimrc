@@ -33,17 +33,13 @@ call plug#end()
 " # Editor settings
 " =============================================================================
 set undofile noswapfile nobackup hidden wrap nojoinspaces number
+set completeopt=noinsert,menuone,noselect
 set laststatus=2 shell=/bin/zsh clipboard=unnamed,unnamedplus mouse=a
 set shiftwidth=4 softtabstop=4 tabstop=4 expandtab
-set background=dark cursorline termguicolors
+set background=dark cursorline termguicolors signcolumn=yes
 filetype plugin indent on
 syntax on
-colorscheme gruvbox
-hi Normal guibg=#000000
-hi Type guifg=#ebdbb2
-" hi link Type Normal
-
-" colorscheme solarized
+colorscheme base16-tomorrow-night
 
 " =============================================================================
 " # Misc
@@ -63,8 +59,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " # Clojure
 " =============================================================================
 let g:clj_fmt_autosave = 1
-" au Filetype clojure nmap <c-c><c-k> :Require<cr>
-" au Filetype clojure nmap <C-x><C-x> :Eval<cr>
+au Filetype clojure nmap <c-c><c-k> :Require<cr>
+au Filetype clojure nmap <C-x><C-x> :Eval<cr>
 au FileType clojure nnoremap gd :Djump<space><C-r><C-w><cr>
 au Filetype clojure nmap <buffer> <M-h> <Plug>(sexp_emit_tail_element)
 au Filetype clojure nmap <buffer> <M-l> <Plug>(sexp_capture_next_element)
@@ -72,6 +68,24 @@ au Filetype clojure nmap <buffer> <M-l> <Plug>(sexp_capture_next_element)
 " =============================================================================
 " # RUST
 " =============================================================================
+
+set omnifunc=ale#completion#OmniFunc
+let g:ale_completion_enabled = 1
+let g:ale_cursor_detail= 0
+let g:ale_fix_on_save = 0
+let g:ale_fixers = {'XXXXX': ['remove_trailing_lines', 'trim_whitespace'],'rust': ['rustfmt'],}
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters = {'clojure': ['joker']}
+let g:ale_linters = {'rust': ['rls']}
+let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_rls_config = {'rust': {'all_targets': 1,'build_on_save': 1,'clippy_preference': 'on'}}
+let g:ale_rust_rls_toolchain = "stable"
+let g:ale_sign_error = '×'
+let g:ale_sign_warning = '⚠'
+let g:ale_virtualtext_cursor = 1
+let g:ale_virtualtext_prefix = '  » '
 let g:rustfmt_autosave = 1
 au FileType rust map <F1> <Plug>(rust-doc)
 au FileType rust nmap gd <Plug>(ale_go_to_definition)
@@ -93,11 +107,9 @@ au FileType rust map <M-k> :cn<cr>
 " =============================================================================
 " nmap <TAB> :bn<cr>
 " nmap <S-TAB> :bp<cr>
-map <F2> :%s/\<<C-r><C-w>\>//c<left><left>
-nmap :Q :q
 nmap ; <nop>
-nnoremap d4 d$
-nnoremap y4 y$
+nnoremap gh ^
+nnoremap gl $
 inoremap jk <ESC>
 inoremap kj <ESC>
 tnoremap jk <C-\><C-n>
@@ -105,8 +117,6 @@ tnoremap kj <C-\><C-n>
 nmap q <Esc>
 nmap f <Plug>(easymotion-bd-f)
 tnoremap <Esc> <C-\><C-n>
-" nnoremap j gj
-" nnoremap k gk
 
 " =============================================================================
 " # ALT/Meta shortcuts
@@ -150,9 +160,6 @@ noremap <C-k> 10k
 noremap <C-x><C-s> :w<CR>
 inoremap <C-s> <esc>:w<CR>
 noremap <C-s> :w<CR>
-" nnoremap <silent><C-t> :call TermToggle(15)<CR>
-" inoremap <silent><C-t> <Esc>:call TermToggle(15)<CR>
-" tnoremap <silent><C-t> <C-\><C-n>:call TermToggle(15)<CR>
 
 " =============================================================================
 " # Completion
