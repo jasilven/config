@@ -105,6 +105,8 @@
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-repl-mode :height 7 :stick t) popwin:special-display-config))
 
+(use-package deadgrep :ensure t)
+
 (use-package plantuml-mode
   :ensure t
   :init
@@ -220,8 +222,8 @@
 (use-package clojure-mode
   :ensure t
   :hook (clojure-mode . cider-mode)
-  ;; :init
-  ;; (add-hook 'clojure-mode-hook #'cider-mode)
+  :config
+  (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
   )
 
 (use-package cider
@@ -281,8 +283,11 @@
   :hook
   (rust-mode . lsp)
   :config
+  (set-face-attribute 'rust-string-interpolation-face nil :slant 'normal)
+  (set-face-attribute 'rust-string-interpolation-face nil :weight 'bold)
   (setq rust-format-on-save t)
   (evil-local-set-key 'normal "gd" 'lsp-find-definition)
+  (evil-local-set-key 'motion "gd" 'lsp-find-definition)
   (evil-local-set-key 'normal (kbd "<SPC> r") 'lsp-find-references)
   :init
   ;; (add-hook 'rust-mode-hook #'racer-mode)
@@ -371,6 +376,7 @@
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "<f8>") 'shell-pop)
 (global-set-key (kbd "C-M-=") 'my/indent-buffer)
+(define-key evil-motion-state-map (kbd "C-o") 'my/jump-back)
 (define-key evil-normal-state-map (kbd "C-f") 'swiper)
 (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
 (define-key evil-insert-state-map (kbd "M-h") 'paredit-forward-barf-sexp)
@@ -391,6 +397,7 @@
 (define-key evil-insert-state-map (kbd "C-n") 'evil-buffer-new)
 (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
+(define-key evil-normal-state-map (kbd "<SPC> b") 'ivy-switch-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> e") 'flycheck-list-errors)
 (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
@@ -435,28 +442,40 @@
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   (ivy-rich-mode 1))
 
-;; font
-(if (memq window-system '(mac ns))
-    (set-frame-font "Fira Code-17")
-  (set-frame-font "Fira Code Retina-14"))
-
-(set-frame-name "Editor")
-
 ;; my stuff
-(load-theme 'doom-one)
-(set-face-attribute 'font-lock-type-face nil :foreground nil)
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#268bd2")
+(if (memq window-system '(mac ns))
+    (set-frame-font "Monaco-15")
+  (set-frame-font "Fira Code Retina-16"))
+
+(defun my/jump-back ()
+  "Jump back based on mode."
+  (interactive)
+  (if (eq major-mode 'clojure-mode)
+      (cider-pop-back)
+    (evil-jump-backward)))
 
 (defun my/modeline-adjust ()
   "Adjust modeline."
   (interactive)
   (setq doom-modeline-height 15)
   (setq doom-modeline-bar-width 3)
-  (set-face-attribute 'mode-line nil :height 130)
-  (set-face-attribute 'mode-line nil :background "#000000")
-  (set-face-attribute 'mode-line-inactive nil :background "#000000")
-  (set-face-attribute 'mode-line-inactive nil :height 130)
+  (set-face-attribute 'mode-line nil :height 140)
+  (set-face-attribute 'mode-line-inactive nil :height 140)
   (setq doom-modeline-icon t))
+
+(defun my/theme ()
+  "Load my theme."
+  (interactive)
+  (set-frame-name "Editor")
+  (load-theme 'doom-one-light)
+  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
+  (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
+  (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
+  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+  (my/modeline-adjust))
+
+(my/theme)
 
 (defun my/save-buffer ()
   "Indent whole buffer."
@@ -488,15 +507,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(display-line-numbers-width 3)
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#171b23" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 143 :width normal :foundry "CTDB" :family "Fira Code"))))
- '(hl-line ((t (:background "#32353c")))))
+   '(deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+
