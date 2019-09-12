@@ -180,7 +180,7 @@
   ;; (key-chord-define-local "gd" 'lsp-find-definition)
   (require 'lsp-clients)
   (setq lsp-enable-snippet nil)
-  )
+  (set-face-attribute 'lsp-lens-face nil :height 0.9))
 
 (use-package lsp-ui
   :after lsp
@@ -423,7 +423,6 @@
 (use-package all-the-icons :ensure t)
 
 (use-package doom-modeline :ensure t
-  :config (my/modeline-adjust)
   :hook (after-init . doom-modeline-mode))
 
 (use-package doom-themes :ensure t)
@@ -443,9 +442,6 @@
   (ivy-rich-mode 1))
 
 ;; my stuff
-(if (memq window-system '(mac ns))
-    (set-frame-font "Monaco-15")
-  (set-frame-font "Fira Code Retina-16"))
 
 (defun my/jump-back ()
   "Jump back based on mode."
@@ -454,13 +450,15 @@
       (cider-pop-back)
     (evil-jump-backward)))
 
-(defun my/modeline-adjust ()
+(defun my/modeline-adjust (font-size)
   "Adjust modeline."
   (interactive)
-  (setq doom-modeline-height 15)
+  (setq doom-modeline-height 12)
   (setq doom-modeline-bar-width 3)
-  (set-face-attribute 'mode-line nil :height 140)
-  (set-face-attribute 'mode-line-inactive nil :height 140)
+  ;; (set-face-attribute 'mode-line nil :height (* 10 (- font-size 1)))
+  ;; (set-face-attribute 'mode-line-inactive nil :height (* 10 (- font-size 1)))
+  (set-face-attribute 'mode-line nil :height 0.9)
+  (set-face-attribute 'mode-line-inactive nil :height 0.9)
   (setq doom-modeline-icon t))
 
 (defun my/theme ()
@@ -473,7 +471,12 @@
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (my/modeline-adjust))
+  (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
+  (if (eq window-system 'x)
+    (progn (set-frame-font "Fira Code Medium-13")
+           (my/modeline-adjust 13))
+    (progn (set-frame-font "Monaco-15")
+           (my/modeline-adjust 15))))
 
 (my/theme)
 
@@ -514,3 +517,9 @@
  '(package-selected-packages
    '(deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
