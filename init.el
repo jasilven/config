@@ -43,6 +43,7 @@
 
 ;; defaults
 (setq-default
+ text-scale-mode-step 1.1
  tramp-default-method "ssh"
  gc-cons-upper-limit 536870912
  gc-cons-threshold 16777216
@@ -103,7 +104,7 @@
   (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '(cider-repl-mode :height 7 :stick t) popwin:special-display-config))
+  (push '(cider-repl-mode :height 7 :stick t :noselect t) popwin:special-display-config))
 
 (use-package deadgrep :ensure t)
 
@@ -300,7 +301,7 @@
   :ensure t
   :config
   (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "%d/%d "))
+  (setq ivy-count-format ""))
 
 (use-package counsel
   :ensure t
@@ -472,6 +473,8 @@
   (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
+  (set-face-attribute 'treemacs-root-face nil :inherit 'font-lock-keyword-face)
+  (set-face-attribute 'treemacs-root-face nil :height 1.1)
   (if (eq window-system 'x)
     (progn (set-frame-font "Fira Code Medium-13")
            (my/modeline-adjust 13))
