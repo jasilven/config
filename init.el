@@ -15,6 +15,7 @@
   (exec-path-from-shell-initialize))
 
 ;; editor modes
+(git-gutter-mode 1)
 (blink-cursor-mode -1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -43,6 +44,7 @@
 
 ;; defaults
 (setq-default
+ display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
  gc-cons-upper-limit 536870912
@@ -104,7 +106,8 @@
   (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '(cider-repl-mode :height 7 :stick t :noselect t) popwin:special-display-config))
+  (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '(cider-repl-mode :height 9 :stick t :noselect t) popwin:special-display-config))
 
 (use-package deadgrep :ensure t)
 
@@ -175,11 +178,10 @@
 
 (use-package lsp-mode
   :ensure t
-  :after evil
   :commands lsp
+  :hook (rust-mode . lsp)
   :config
-  ;; (key-chord-define-local "gd" 'lsp-find-definition)
-  (require 'lsp-clients)
+  ;; (require 'lsp-clients)
   (setq lsp-enable-snippet nil)
   (set-face-attribute 'lsp-lens-face nil :height 0.9))
 
@@ -231,6 +233,8 @@
   :after clojure-mode
   :ensure t
   :config
+  (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
+  (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (setq cider-print-fn (quote fipp))
   (setq cider-print-quota 100000)
@@ -372,6 +376,7 @@
 (global-set-key (kbd "C-S-f") 'counsel-projectile-rg)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
 (global-set-key (kbd "C-\\") 'treemacs)
+(global-set-key (kbd "C-<return>") 'treemacs)
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "M-p") 'evil-paste-pop)
 (global-set-key (kbd "C-s") 'save-buffer)
@@ -413,7 +418,7 @@
   :config
   (setq treemacs-show-cursor nil)
   (setq treemacs-project-follow-cleanup 1)
-  (treemacs-resize-icons 17)
+  (treemacs-resize-icons 15)
   (setq treemacs-eldoc-display t)
   (treemacs-follow-mode t)
   (setq treemacs-width 22)
@@ -456,17 +461,20 @@
   (interactive)
   (setq doom-modeline-height 12)
   (setq doom-modeline-bar-width 3)
-  ;; (set-face-attribute 'mode-line nil :height (* 10 (- font-size 1)))
-  ;; (set-face-attribute 'mode-line-inactive nil :height (* 10 (- font-size 1)))
-  (set-face-attribute 'mode-line nil :height 0.9)
-  (set-face-attribute 'mode-line-inactive nil :height 0.9)
+  (set-face-attribute 'mode-line nil :height (* 10 (- font-size 1)))
+  (set-face-attribute 'mode-line-inactive nil :height (* 10 (- font-size 1)))
+  ;; (set-face-attribute 'mode-line nil :height 0.9)
+  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   (setq doom-modeline-icon t))
 
 (defun my/theme ()
   "Load my theme."
   (interactive)
   (set-frame-name "Editor")
+  (set-frame-width nil 115)
+  (set-frame-height nil 45)
   (load-theme 'doom-one-light)
+  (set-face-attribute 'default nil :background "#faf8f7")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
@@ -513,7 +521,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(display-line-numbers-width 3)
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")

@@ -18,8 +18,8 @@ window:
   # Specified in number of columns/lines, not pixels.
   # If both are `0`, this setting is ignored.
   dimensions:
-    columns: 82
-    lines: 25
+    columns: 100
+    lines: 35
 
   # Window position (changes require restart)
   #
@@ -34,8 +34,10 @@ window:
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 2
-    y: 2
+    # x: 0
+    # y: 0
+    x: 0
+    y: 0
 
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: false
@@ -49,8 +51,8 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
-
+  decorations: full 
+ 
   # When true, alacritty starts maximized.
   # start_maximized: false
 
@@ -98,7 +100,7 @@ font:
     #   - (Windows) Consolas
     #family: Dejavu Sans mono
     #family: Menlo
-    family: Fira Code
+    family:  Monaco
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -126,7 +128,7 @@ font:
     #style: Italic
 
   # Point size
-  size: 16.0
+  size: 15.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -170,8 +172,8 @@ draw_bold_text_with_bright_colors: false
 colors:
   # Default colors
   primary:
-    background: '0x1e1e1e'
-    foreground: '0xeaeaea'
+    foreground: '0x1e1e1e'
+    background: '0xeaeaea'
 
     # Bright and dim foreground colors
     #

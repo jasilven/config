@@ -42,11 +42,11 @@ set background=dark cursorline termguicolors
 set completeopt=noinsert,menuone,noselect
 filetype plugin indent on
 syntax on
-colorscheme base16-tomorrow-night
+colorscheme base16-one-light
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver75-iCursor
 set guicursor+=n-v-c:blinkon1
-" hi Normal guibg=#000000
+hi link clojureParen Normal 
 " hi Type guifg=#ebdbb2
 " hi link Type Normal
 
@@ -115,7 +115,6 @@ au FileType rust nnoremap <f7> :w<cr>:!RUST_BACKTRACE=1 cargo run -q --bin %:t:r
 au FileType rust nnoremap <silent> K :ALEHover<CR>
 au FileType rust set makeprg=cargo
 " ### GLOBAL SHORTCUTS
-nnoremap :Q :q
 nmap ; <nop>
 nnoremap gh ^
 nnoremap gl $
