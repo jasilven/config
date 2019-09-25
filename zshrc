@@ -1,7 +1,7 @@
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory autocd extendedglob notify
+setopt appendhistory autocd extendedglob notify prompt_subst
 unsetopt prompt_cr prompt_sp
 bindkey -e
 
@@ -10,6 +10,28 @@ compinit
 
 autoload -Uz promptinit
 promptinit
+
+git_branch() {
+    git_status="$(git status 2> /dev/null)"
+    pattern="On branch ([^[:space:]]*)"
+    if [[ ! ${git_status} =~ "(working (tree|directory) clean)" ]]; then
+        state="*"
+    fi
+    if [[ ${git_status} =~ ${pattern} ]]; then
+      branch=${match[1]}
+      branch_cut=${branch:0:35}
+      if (( ${#branch} > ${#branch_cut} )); then
+          echo "[${branch_cut}…${state}]"
+      else
+          echo "[${branch}${state}]"
+      fi
+    fi
+}
+
+PROMPT='
+%F{blue}%d%f%F{yellow} $(git_branch)
+%F{none}%B $%b '
+
 alias vim="nvim"
 alias ls="ls -Cp"
 alias nrepl="clj -R:nrepl -m nrepl.cmdline"

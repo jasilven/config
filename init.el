@@ -15,6 +15,7 @@
   (exec-path-from-shell-initialize))
 
 ;; editor modes
+(global-so-long-mode 1)
 (git-gutter-mode 1)
 (blink-cursor-mode -1)
 (menu-bar-mode -1)
@@ -236,6 +237,7 @@
   (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
   (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
+  (setq cider-clojure-cli-global-options nil)
   (setq cider-print-fn (quote fipp))
   (setq cider-print-quota 100000)
   (setq cider-prompt-for-symbol nil)
@@ -246,7 +248,7 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (setq cider-clojure-cli-global-options "-A:bench:dev")
+  (setq cider-clojure-cli-global-options "")
   (define-key evil-normal-state-map (kbd "<SPC> x")
     (lambda () (interactive) (cider-eval-sexp-at-point)))
   (define-key evil-normal-state-map (kbd "C-x C-x")
@@ -313,6 +315,13 @@
 
 (use-package counsel-projectile :ensure t)
 
+;; (use-package ivy-postframe
+;;   :ensure t
+;;   :after ivy
+;;   :config
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;;   (ivy-postframe-mode 1))
+
 (use-package projectile
   :requires ivy
   :ensure t
@@ -371,7 +380,7 @@
 (global-set-key (kbd "C-x C-d") 'dired)
 (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
-(global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
+;; (global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-S-f") 'counsel-projectile-rg)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
@@ -403,11 +412,11 @@
 (define-key evil-insert-state-map (kbd "C-n") 'evil-buffer-new)
 (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
-(define-key evil-normal-state-map (kbd "<SPC> b") 'ivy-switch-buffer)
+(define-key evil-normal-state-map (kbd "<SPC> f") 'ivy-switch-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> e") 'flycheck-list-errors)
 (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
-(define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
+(define-key evil-normal-state-map (kbd "C-<tab>") 'my/switch-to-last-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
 (global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
 
@@ -525,7 +534,7 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

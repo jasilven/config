@@ -64,7 +64,7 @@ let g:vim_markdown_frontmatter = 1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ### COMPLETION
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" autocmd BufEnter * call ncm2#enable_for_buffer()
 au User Ncm2Plugin call ncm2#register_source({
         \ 'name' : 'css',
         \ 'priority': 9,
