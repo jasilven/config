@@ -112,15 +112,6 @@
     {
       "before": [
         "<leader>",
-        "x"
-      ],
-      "commands": [
-        "calva.evaluateCurrentTopLevelForm",
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
         "b"
       ],
       "commands": [
@@ -135,20 +126,6 @@
       "commands": [
         {
           "command": "editor.action.marker.next",
-        }
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "c"
-      ],
-      "commands": [
-        {
-          "command": "workbench.action.tasks.runTask",
-          "args": [
-            "cargo check"
-          ],
         }
       ]
     },
@@ -191,7 +168,7 @@
   "vim.easymotionMarkerFontSize": "15",
   "vim.easymotionMarkerFontWeight": "bold",
   "vim.easymotionMarkerFontFamily": "Fira Code",
-  "vim.easymotionMarkerHeight": 0,
+  "vim.easymotionMarkerHeight": 1,
   "vim.easymotionMarkerYOffset": 13,
   "vim.easymotionMarkerForegroundColorOneChar": "#FF0000",
   "vim.easymotionMarkerForegroundColorTwoChar": "#FF0000",
@@ -272,37 +249,3 @@
   // "rust.jobs": 4,
   // "rust.clippy_preference": "on",
 }
-// {
-//   "before": [
-//     "<C-k>",
-//   ],
-//   "after": [
-//     "{",
-//   ],
-//   "when": "editorFocus",
-// },
-// {
-//   "before": [
-//     "<C-k>",
-//   ],
-//   "commands": [
-//     "list.focusUp",
-//   ],
-//   "when": "listFocus && !inputFocus",
-// },
-// {
-//   "before": [
-//     "/"
-//   ],
-//   "commands": [
-//     "actions.find",
-//   ]
-// },
-// {
-//   "before": [
-//     ":"
-//   ],
-//   "commands": [
-//     "workbench.action.showCommands",
-//   ]
-// },
