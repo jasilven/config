@@ -1,14 +1,13 @@
-(setq package-enable-at-startup nil)
+;;(setq package-enable-at-startup nil)
 
 (setq package-archives '(
                          ("gnu"          . "http://elpa.gnu.org/packages/")
                          ("melpa"        . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell :ensure t)
 (when (memq window-system '(mac ns x))
@@ -16,7 +15,6 @@
 
 ;; editor modes
 (global-so-long-mode 1)
-(git-gutter-mode 1)
 (blink-cursor-mode -1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -48,8 +46,8 @@
  display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
- gc-cons-upper-limit 536870912
- gc-cons-threshold 16777216
+ ;; gc-cons-upper-limit 536870912
+ ;; gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
  clean-buffer-list-delay-general 1
@@ -71,7 +69,7 @@
  midnight-period 7200
  mouse-wheel-progressive-speed nil
  mouse-wheel-scroll-amount '(3)
- ring-bell-function 'ignore
+ ring-bell-function #'ignore
  scalable-fonts-allowed t
  scroll-conservatively 10000
  scroll-step 1
@@ -88,6 +86,7 @@
  indicate-empty-lines t
  x-select-enable-clipboard t
  kill-buffer-query-functions nil
+ dired-listing-switches "-aoht"
  )
 
 (use-package key-chord :ensure t :config (key-chord-mode 1))
@@ -110,19 +109,17 @@
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-repl-mode :height 9 :stick t :noselect t) popwin:special-display-config))
 
-(use-package deadgrep :ensure t)
+;; (use-package plantuml-mode
+;;   :ensure t
+;;   :init
+;;   (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+;;   (setq plantuml-default-exec-mode 'jar))
 
-(use-package plantuml-mode
-  :ensure t
-  :init
-  (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
-  (setq plantuml-default-exec-mode 'jar))
-
-(use-package flycheck-plantuml
-  :after (flycheck plantuml)
-  :ensure t
-  :config
-  (flycheck-plantuml-setup))
+;; (use-package flycheck-plantuml
+;;   :after (flycheck plantuml)
+;;   :ensure t
+;;   :config
+;;   (flycheck-plantuml-setup))
 
 (use-package evil
   :after key-chord
@@ -141,8 +138,8 @@
 
 (use-package json-mode :ensure t)
 (use-package avy :ensure t)
-(use-package restclient :ensure t)
-(use-package expand-region :ensure t)
+;; (use-package restclient :ensure t)
+;; (use-package expand-region :ensure t)
 
 (use-package shell-pop
   :ensure t
@@ -154,10 +151,8 @@
 (use-package highlight-symbol
   :ensure t
   :config
-  (setq highlight-symbol-idle-delay 0.7)
+  (setq highlight-symbol-idle-delay 0.9)
   :hook (prog-mode . highlight-symbol-mode)
-  ;; :init
-  ;; (add-hook 'prog-mode-hook #'highlight-symbol-mode)
   )
 
 (use-package company
@@ -177,41 +172,38 @@
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
 
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook (rust-mode . lsp)
-  :config
-  ;; (require 'lsp-clients)
-  (setq lsp-enable-snippet nil)
-  (set-face-attribute 'lsp-lens-face nil :height 0.9))
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands lsp
+;;   :hook (rust-mode . lsp)
+;;   :config
+;;   (setq lsp-enable-snippet nil)
+;;   (set-face-attribute 'lsp-lens-face nil :height 0.9))
 
-(use-package lsp-ui
-  :after lsp
-  :ensure t
-  :hook (rust-mode . lsp-ui-mode)
-  :config
-  (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
-  (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
-  (setq lsp-ui-sideline-enable nil)
-  (setq lsp-ui-doc-enable nil))
+;; (use-package lsp-ui
+;;   :after lsp
+;;   :ensure t
+;;   :hook (rust-mode . lsp-ui-mode)
+;;   :config
+;;   (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
+;;   (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
+;;   (setq lsp-ui-sideline-enable nil)
+;;   (setq lsp-ui-doc-enable nil))
 
-(use-package company-lsp
-  :after company
-  :ensure t
-  :config
-  (push 'company-lsp company-backends))
+;; (use-package company-lsp
+;;   :after company
+;;   :ensure t
+;;   :config
+;;   (push 'company-lsp company-backends))
 
-(use-package flycheck
-  :ensure t
-  :hook (prog-mode . flycheck-mode))
+;; (use-package flycheck
+;;   :ensure t
+;;   :hook (prog-mode . flycheck-mode))
 
 (use-package flycheck-pos-tip
   :after flycheck
   :ensure t
   :hook (prog-mode . flycheck-pos-tip-mode)
-  ;; :init
-  ;; (add-hook 'prog-mode-hook #'flycheck-pos-tip-mode)
   )
 
 (use-package clj-refactor :ensure t
@@ -219,8 +211,6 @@
   :config
   (setq cljr-warn-on-eval nil)
   :hook (cider-mode . clj-refactor-mode)
-  ;; :init
-  ;; (add-hook 'cider-mode-hook #'clj-refactor-mode)
   )
 
 (use-package clojure-mode
@@ -237,22 +227,24 @@
   (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
   (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
+  (setq clojure-toplevel-inside-comment-form t)
   (setq cider-clojure-cli-global-options nil)
   (setq cider-print-fn (quote fipp))
   (setq cider-print-quota 100000)
   (setq cider-prompt-for-symbol nil)
   (setq nrepl-hide-special-buffers t)
   (setq cider-repl-display-help-banner nil)
-  (setq cider-show-error-buffer t)
-  (setq cider-auto-select-error-buffer t)
+  (setq cider-show-error-buffer nil)
+  (setq cider-auto-select-error-buffer nil)
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (setq cider-clojure-cli-global-options "")
-  (define-key evil-normal-state-map (kbd "<SPC> x")
+  (define-key evil-normal-state-map (kbd "<SPC> <SPC>")
     (lambda () (interactive) (cider-eval-sexp-at-point)))
+  (define-key evil-normal-state-map (kbd "<SPC> e")
+    (lambda () (interactive) (cider-eval-last-sexp)))
   (define-key evil-normal-state-map (kbd "C-x C-x")
-    (lambda () (interactive) (end-of-line) (cider-eval-sexp-at-point)))
+    (lambda () (interactive) (cider-eval-sexp-at-point)))
   :init
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-mode-hook #'hl-line-mode)
@@ -263,26 +255,17 @@
   (add-hook 'cider-repl-mode-hook #'evil-smartparens-mode)
   (use-package flycheck-joker :ensure t))
 
-;; (use-package racer
-;;   :ensure t
-;;   :hook (rust-mode . racer-mode)
-;;   :after rust-mode)
-
 (use-package cargo
   :ensure t
   :after rust-mode
   :hook (rust-mode . cargo-minor-mode)
   :config (setq compilation-ask-about-save nil)
-  ;; :init
-  ;; (add-hook 'rust-mode-hook #'cargo-minor-mode)
   )
 
 (use-package flycheck-rust
   :after rust-mode
   :ensure t
   :hook (rust-mode . flycheck-rust-setup)
-  ;; :config
-  ;; (add-hook 'rust-mode-hook #'flycheck-rust-setup)
   )
 
 (use-package rust-mode
@@ -297,9 +280,6 @@
   (evil-local-set-key 'motion "gd" 'lsp-find-definition)
   (evil-local-set-key 'normal (kbd "<SPC> r") 'lsp-find-references)
   :init
-  ;; (add-hook 'rust-mode-hook #'racer-mode)
-  ;; (add-hook 'rust-mode-hook #'lsp-ui-mode)
-  ;; (add-hook 'rust-mode-hook #'company-mode)
   (add-hook 'rust-mode-hook #'eldoc-mode)
   (add-hook 'rust-mode-hook #'hs-minor-mode))
 
@@ -315,13 +295,6 @@
 
 (use-package counsel-projectile :ensure t)
 
-;; (use-package ivy-postframe
-;;   :ensure t
-;;   :after ivy
-;;   :config
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;;   (ivy-postframe-mode 1))
-
 (use-package projectile
   :requires ivy
   :ensure t
@@ -335,9 +308,6 @@
   :ensure t
   :hook ((prog-mode . turn-on-smartparens-strict-mode)
          (markdown-mode . turn-on-smartparens-strict-mode))
-  ;; :init
-  ;; (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-  ;; (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
   :config
   (require 'smartparens-config)
   (setq sp-show-pair-from-inside t)
@@ -365,6 +335,8 @@
 
 (use-package git-gutter
   :ensure t
+  :config
+  (git-gutter-mode 1)
   :custom
   (git-gutter:modified-sign "~")
   (git-gutter:added-sign    "+")
@@ -380,7 +352,6 @@
 (global-set-key (kbd "C-x C-d") 'dired)
 (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
-;; (global-set-key (kbd "C-<tab>") 'ivy-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-S-f") 'counsel-projectile-rg)
 (global-set-key (kbd "C-S-r") 'projectile-replace)
@@ -413,7 +384,6 @@
 (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> f") 'ivy-switch-buffer)
-(define-key evil-normal-state-map (kbd "<SPC> e") 'flycheck-list-errors)
 (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
 (define-key evil-normal-state-map (kbd "C-<tab>") 'my/switch-to-last-buffer)
@@ -441,7 +411,6 @@
   :hook (after-init . doom-modeline-mode))
 
 (use-package doom-themes :ensure t)
-(use-package almost-mono-themes :ensure t)
 
 (use-package flycheck-posframe
   :ensure t
@@ -480,9 +449,10 @@
   "Load my theme."
   (interactive)
   (set-frame-name "Editor")
-  (set-frame-width nil 115)
-  (set-frame-height nil 45)
+  (set-frame-width nil 87)
+  (set-frame-height nil 30)
   (load-theme 'doom-one-light)
+  ;; (load-theme 'doom-solarized-dark)
   (set-face-attribute 'default nil :background "#faf8f7")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
@@ -534,7 +504,7 @@
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

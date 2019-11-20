@@ -1,15 +1,5 @@
 {
   "vim.insertModeKeyBindings": [],
-  "vim.visualModeKeyBindings": [
-    {
-      "before": [
-        ":",
-      ],
-      "commands": [
-        "workbench.action.showCommands",
-      ]
-    },
-  ],
   "vim.normalModeKeyBindings": [
     {
       "before": [
@@ -183,16 +173,15 @@
   "editor.minimap.enabled": false,
   "window.zoomLevel": 0,
   "workbench.startupEditor": "newUntitledFile",
-  "editor.fontSize": 16,
-  "editor.fontFamily": "'Monaco', 'Fira Code', 'Fira Code Retina', 'Menlo', 'Hack', 'DejaVu Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+  "editor.fontSize": 14,
   "vim.leader": "<space>",
   "editor.renderControlCharacters": false,
   "breadcrumbs.enabled": false,
   "editor.renderWhitespace": "none",
   "workbench.colorCustomizations": {
     // "statusBar.background": "#6199bf",
-    "editorLineNumber.foreground": "#CBCBCD",
-    "list.activeSelectionBackground": "#C9DEEB"
+    // "editorLineNumber.foreground": "#CBCBCD",
+    // "list.activeSelectionBackground": "#C9DEEB"
   },
   "editor.tokenColorCustomizations": {
     "comments": "#6A737D",
@@ -221,27 +210,37 @@
   },
   "workbench.view.alwaysShowHeaderActions": true,
   "editor.formatOnSave": true,
-  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontSize": 14,
   "[Log]": {
-    "editor.fontSize": 16
+    "editor.fontSize": 14
   },
   "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
   "[clojure]": {
     "editor.matchBrackets": true
   },
-  "debug.console.fontSize": 16,
-  "calva.lintOnSave": true,
+  "debug.console.fontSize": 14,
   "calva.fmt.removeConsecutiveBlankLines": true,
+  "calva.highlight.ignoredFormStyle": {
+    "textDecoration": "none; opacity: 0.6"
+  },
+  "calva.highlight.commentFormStyle": {
+    "textDecoration": "none; opacity: 0.6"
+  },
   "editor.formatOnPaste": true,
   "rust-analyzer.enableEnhancedTyping": false,
   "rust-analyzer.enableCargoWatchOnStartup": "enabled",
   "explorer.confirmDelete": false,
   "workbench.tree.indent": 20,
   "workbench.editor.showTabs": true,
-  "window.menuBarVisibility": "toggle",
-  "workbench.colorTheme": "Visual Studio Light",
-  "editor.hover.delay": 150,
+  "editor.hover.delay": 400,
+  "editor.maxTokenizationLineLength": 130000,
+  "editor.fontFamily": "Monaco, Fira Code, Menlo, 'Courier New', monospace",
+  "calva.highlight.bracketColors": [],
+  "calva.highlight.enableBracketColors": false,
+  "workbench.colorTheme": "Solarized Dark",
+  "editor.occurrencesHighlight": false,
+  "editor.hover.sticky": false,
   // "clojureWarrior.enableBracketColors": false,
   // "rest-client.enableTelemetry": false,
   // "rest-client.timeoutinmilliseconds": 20000,
