@@ -139,7 +139,7 @@
 (use-package json-mode :ensure t)
 (use-package avy :ensure t)
 ;; (use-package restclient :ensure t)
-;; (use-package expand-region :ensure t)
+(use-package expand-region :ensure t)
 
 (use-package shell-pop
   :ensure t
@@ -196,9 +196,9 @@
 ;;   :config
 ;;   (push 'company-lsp company-backends))
 
-;; (use-package flycheck
-;;   :ensure t
-;;   :hook (prog-mode . flycheck-mode))
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
 
 (use-package flycheck-pos-tip
   :after flycheck
@@ -224,13 +224,14 @@
   :after clojure-mode
   :ensure t
   :config
-  (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
-  (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
+  ;; (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
+  ;; (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
+  (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (setq clojure-toplevel-inside-comment-form t)
   (setq cider-clojure-cli-global-options nil)
   (setq cider-print-fn (quote fipp))
-  (setq cider-print-quota 100000)
+  (setq cider-print-quota 1000000)
   (setq cider-prompt-for-symbol nil)
   (setq nrepl-hide-special-buffers t)
   (setq cider-repl-display-help-banner nil)
@@ -239,8 +240,8 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (define-key evil-normal-state-map (kbd "<SPC> <SPC>")
-    (lambda () (interactive) (cider-eval-sexp-at-point)))
+  (define-key evil-normal-state-map (kbd "<SPC> h")
+    (lambda () (interactive) (cider-clojuredocs)))
   (define-key evil-normal-state-map (kbd "<SPC> e")
     (lambda () (interactive) (cider-eval-last-sexp)))
   (define-key evil-normal-state-map (kbd "C-x C-x")
@@ -449,8 +450,6 @@
   "Load my theme."
   (interactive)
   (set-frame-name "Editor")
-  (set-frame-width nil 87)
-  (set-frame-height nil 30)
   (load-theme 'doom-one-light)
   ;; (load-theme 'doom-solarized-dark)
   (set-face-attribute 'default nil :background "#faf8f7")
@@ -468,6 +467,8 @@
     (progn (set-frame-font "Monaco-15")
            (my/modeline-adjust 15))))
 
+(set-frame-width nil 87)
+(set-frame-height nil 30)
 (my/theme)
 
 (defun my/save-buffer ()
