@@ -89,6 +89,17 @@
  dired-listing-switches "-aoht"
  )
 
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :config
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+;;   (ivy-posframe-mode 1))
+
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 
 (use-package popwin
@@ -154,6 +165,12 @@
   (setq highlight-symbol-idle-delay 0.9)
   :hook (prog-mode . highlight-symbol-mode)
   )
+;; (use-package highlight-thing
+;;   :ensure t
+;;   :config
+;;   (set-face-attribute 'hi-yellow nil :background "#dddddd")
+;;   (setq highlight-thing-delay-seconds 0.8)
+;;   :hook (prog-mode . highlight-thing-mode))
 
 (use-package company
   :ensure t
@@ -334,14 +351,10 @@
 (use-package magit :ensure t)
 (use-package evil-magit :after magit :ensure t)
 
-(use-package git-gutter
+(use-package diff-hl
   :ensure t
   :config
-  (git-gutter-mode 1)
-  :custom
-  (git-gutter:modified-sign "~")
-  (git-gutter:added-sign    "+")
-  (git-gutter:deleted-sign  "-"))
+  (global-diff-hl-mode))
 
 ;; global keys
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
@@ -392,7 +405,6 @@
 (global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
 
 (use-package which-key :ensure t :config (which-key-mode))
-(use-package avy :ensure t)
 (use-package treemacs
   :ensure t
   :config
@@ -408,10 +420,16 @@
 (use-package treemacs-evil :after treemacs :ensure t)
 (use-package all-the-icons :ensure t)
 
-(use-package doom-modeline :ensure t
+(use-package doom-modeline
+  :ensure t
+  :config
+  (setq doom-modeline-buffer-modification-icon -1)
+  (setq doom-modeline-modal-icon nil)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-buffer-state-icon nil)
   :hook (after-init . doom-modeline-mode))
-
-(use-package doom-themes :ensure t)
+ 
+(use-package doom-themes :ensure t )
 
 (use-package flycheck-posframe
   :ensure t
@@ -419,6 +437,7 @@
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
 (use-package smex :ensure t)
+
 (use-package ivy-rich
   :after ivy
   :ensure t
@@ -444,7 +463,7 @@
   (set-face-attribute 'mode-line-inactive nil :height (* 10 (- font-size 1)))
   ;; (set-face-attribute 'mode-line nil :height 0.9)
   ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
-  (setq doom-modeline-icon t))
+  )
 
 (defun my/theme ()
   "Load my theme."
@@ -501,11 +520,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(git-gutter:added-sign "+")
- '(git-gutter:deleted-sign "-")
- '(git-gutter:modified-sign "~")
  '(package-selected-packages
-   '(deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
