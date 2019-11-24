@@ -14,6 +14,7 @@
   (exec-path-from-shell-initialize))
 
 ;; editor modes
+(undo-tree-mode 1)
 (global-so-long-mode 1)
 (blink-cursor-mode -1)
 (menu-bar-mode -1)
@@ -43,6 +44,7 @@
 
 ;; defaults
 (setq-default
+ undo-tree-auto-save-history t
  display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
@@ -88,17 +90,6 @@
  kill-buffer-query-functions nil
  dired-listing-switches "-aoht"
  )
-
-;; (use-package ivy-posframe
-;;   :ensure t
-;;   :config
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;;   (ivy-posframe-mode 1))
 
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 
@@ -165,12 +156,6 @@
   (setq highlight-symbol-idle-delay 0.9)
   :hook (prog-mode . highlight-symbol-mode)
   )
-;; (use-package highlight-thing
-;;   :ensure t
-;;   :config
-;;   (set-face-attribute 'hi-yellow nil :background "#dddddd")
-;;   (setq highlight-thing-delay-seconds 0.8)
-;;   :hook (prog-mode . highlight-thing-mode))
 
 (use-package company
   :ensure t
@@ -217,11 +202,10 @@
   :ensure t
   :hook (prog-mode . flycheck-mode))
 
-(use-package flycheck-pos-tip
-  :after flycheck
+(use-package flycheck-posframe
   :ensure t
-  :hook (prog-mode . flycheck-pos-tip-mode)
-  )
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
 (use-package clj-refactor :ensure t
   :after cider
@@ -247,7 +231,9 @@
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (setq clojure-toplevel-inside-comment-form t)
   (setq cider-clojure-cli-global-options nil)
-  (setq cider-print-fn (quote fipp))
+  (setq cider-print-fn (quote pprint))
+  (setq cider-repl-use-pretty-printing t)
+  (setq cider-repl-history-recenter nil)
   (setq cider-print-quota 1000000)
   (setq cider-prompt-for-symbol nil)
   (setq nrepl-hide-special-buffers t)
@@ -257,12 +243,12 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (define-key evil-normal-state-map (kbd "<SPC> h")
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h")
     (lambda () (interactive) (cider-clojuredocs)))
-  (define-key evil-normal-state-map (kbd "<SPC> e")
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e")
     (lambda () (interactive) (cider-eval-last-sexp)))
-  (define-key evil-normal-state-map (kbd "C-x C-x")
-    (lambda () (interactive) (cider-eval-sexp-at-point)))
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> x")
+    (lambda () (interactive) (cider-eval-defun-at-point)))
   :init
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-mode-hook #'hl-line-mode)
@@ -387,14 +373,20 @@
 (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
 (define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
+(define-key evil-normal-state-map (kbd "gw") 'ace-window)
+(define-key evil-normal-state-map (kbd "go") 'other-window)
+(define-key evil-normal-state-map (kbd "gq") nil)
 (define-key evil-normal-state-map (kbd "gh") 'beginning-of-line)
 (define-key evil-normal-state-map (kbd "ga") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "gj") 'forward-paragraph)
+(define-key evil-normal-state-map (kbd "gk") 'backward-paragraph)
 (define-key evil-normal-state-map (kbd "gl") 'end-of-line)
 (define-key evil-normal-state-map (kbd "ge") 'end-of-line)
 (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 (define-key evil-insert-state-map (kbd "C-p") 'projectile-find-file)
 (define-key evil-normal-state-map (kbd "C-n") 'evil-buffer-new)
 (define-key evil-insert-state-map (kbd "C-n") 'evil-buffer-new)
+(define-key evil-normal-state-map (kbd "<SPC> e") 'eval-last-sexp)
 (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "<SPC> f") 'ivy-switch-buffer)
@@ -423,6 +415,8 @@
 (use-package doom-modeline
   :ensure t
   :config
+  (set-face-attribute 'mode-line nil :height 0.9)
+  (set-face-attribute 'mode-line-inactive nil :height 0.9)
   (setq doom-modeline-buffer-modification-icon -1)
   (setq doom-modeline-modal-icon nil)
   (setq doom-modeline-major-mode-color-icon t)
@@ -430,11 +424,6 @@
   :hook (after-init . doom-modeline-mode))
  
 (use-package doom-themes :ensure t )
-
-(use-package flycheck-posframe
-  :ensure t
-  :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
 (use-package smex :ensure t)
 
@@ -471,7 +460,8 @@
   (set-frame-name "Editor")
   (load-theme 'doom-one-light)
   ;; (load-theme 'doom-solarized-dark)
-  (set-face-attribute 'default nil :background "#faf8f7")
+  ;; (set-face-attribute 'default nil :background "#faf8f7")
+  ;; (set-face-attribute 'default nil :background "#faf8f7")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
@@ -481,7 +471,7 @@
   (set-face-attribute 'treemacs-root-face nil :inherit 'font-lock-keyword-face)
   (set-face-attribute 'treemacs-root-face nil :height 1.1)
   (if (eq window-system 'x)
-    (progn (set-frame-font "Fira Code Medium-13")
+    (progn (set-frame-font "Fira Code Medium-14")
            (my/modeline-adjust 13))
     (progn (set-frame-font "Monaco-15")
            (my/modeline-adjust 15))))
@@ -489,6 +479,13 @@
 (set-frame-width nil 87)
 (set-frame-height nil 30)
 (my/theme)
+
+(defun my/solarized-dark ()
+  (interactive)
+  (load-theme 'doom-solarized-dark)
+  (my/modeline-adjust 13)
+  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
+  (set-face-attribute 'font-lock-constant-face nil :inherit 'normal))
 
 (defun my/save-buffer ()
   "Indent whole buffer."
