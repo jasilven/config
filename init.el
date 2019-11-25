@@ -243,6 +243,8 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> cp")
+    (lambda () (interactive) (cider-pprint-eval-last-sexp)))
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h")
     (lambda () (interactive) (cider-clojuredocs)))
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e")
@@ -370,6 +372,7 @@
 (define-key evil-normal-state-map "gcc" 'comment-line)
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+(define-key evil-normal-state-map (kbd "q") nil)
 (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
 (define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
@@ -454,7 +457,7 @@
   ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   )
 
-(defun my/theme ()
+(defun my/doom-one-theme ()
   "Load my theme."
   (interactive)
   (set-frame-name "Editor")
