@@ -5,18 +5,17 @@
                          ("melpa"        . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell :ensure t)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
 ;; editor modes
-(undo-tree-mode 1)
 (global-so-long-mode 1)
-(blink-cursor-mode -1)
+(blink-cursor-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (line-number-mode -1)
@@ -28,6 +27,7 @@
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'eshell-mode-hook (lambda () (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
@@ -35,14 +35,6 @@
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
-(add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
-                                (setq-local display-line-numbers nil)))
-(add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
-                                  (display-line-numbers-mode 1)
-                                  (setq-local global-hl-line-mode nil)))
-
-(add-hook 'cider-popup-buffer-mode-hook (lambda () (text-scale-decrease 1)
-                                          (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -96,24 +88,72 @@
  dired-listing-switches "-aoht"
  )
 
-(use-package magit
-  :ensure t
-  :config
-  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+(use-package restclient :ensure t)
+(use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
 (use-package which-key :ensure t :config (which-key-mode))
 (use-package json-mode :ensure t)
 (use-package avy :ensure t)
 (use-package expand-region :ensure t)
-(use-package treemacs-projectile :after treemacs :ensure t)
-(use-package treemacs-evil :after treemacs :ensure t)
+(use-package treemacs-projectile :after (treemacs projectile) :ensure t)
+(use-package treemacs-evil :after (treemacs evil) :ensure t)
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
 (use-package doom-themes :ensure t )
-(use-package aggressive-indent :ensure t :hook (prog-mode . aggressive-indent-mode))
 (use-package key-chord :ensure t :config (key-chord-mode 1))
-;; (use-package restclient :ensure t)
+(use-package projectile-ripgrep :after projectile :ensure t)
+(use-package counsel-projectile :after projectile :ensure t)
+(use-package flycheck :ensure t :init (global-flycheck-mode))
+(use-package flycheck-posframe :ensure t :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
+(use-package aggressive-indent :ensure t
+  :config
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package hide-mode-line :ensure t
+  :hook
+  ((cider-repl-mode imenu-list-minor-mode treemacs-mode) . hide-mode-line-mode))
+
+(use-package google-translate :ensure t
+  :bind
+  ("M-g t" . google-translate-at-point)
+  ("M-g T" . google-translate-at-point-reverse)
+  :custom
+  (google-translate-default-source-language "fi")
+  (google-translate-default-target-language "en"))
+
+(use-package ivy-posframe :ensure t
+  :config
+  (set-face-attribute 'internal-border nil :background "#999999")
+  (set-face-attribute 'ivy-posframe nil :height 120 :foreground "#000000" :weight 'normal)
+  (setq ivy-posframe-min-width 80
+        ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-12" "Monaco-12")
+        ivy-posframe-width 80
+        ivy-posframe-min-height 10
+        ivy-posframe-height 10
+        ivy-posframe-border-width 2
+        ivy-posframe-parameters '((left-fringe . 8) (right-fringe . 8))
+        ivy-posframe-display-functions-alist
+        '((swiper          . nil)
+          (counsel-company . ivy-posframe-display-at-point)
+          (complete-symbol . ivy-posframe-display-at-point)
+          (counsel-M-x     . ivy-posframe-display-at-window-center)
+          (t               . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  (ivy-posframe-mode 1))
+
+;; ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
 (use-package popwin
   :ensure t
   :config
@@ -142,12 +182,6 @@
   (evil-mode 1)
   :config
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-  ;; (use-package evil-collection
-  ;;   :ensure t
-  ;;   :init
-  ;;   (setq evil-want-keybinding nil)
-  ;;   :config
-  ;;   (evil-collection-init))
   )
 
 (use-package shell-pop
@@ -161,14 +195,16 @@
   :ensure t
   :config
   (setq highlight-symbol-idle-delay 0.9)
-  :hook (prog-mode . highlight-symbol-mode)
+  (add-hook 'emacs-elisp-mode-hook #'highlight-symbol-mode)
+  (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
   )
 
 (use-package company
   :ensure t
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
-  :hook (prog-mode . company-mode)
   :config
+  (add-hook 'emacs-elisp-mode-hook #'company-mode)
+  (add-hook 'prog-mode-hook #'company-mode)
   (setq company-tooltip-align-annotations t)
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0)
@@ -183,36 +219,26 @@
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
 
-(use-package flycheck
-  :ensure t
-  :hook
-  (prog-mode . flycheck-mode)
-  )
-
-(use-package flycheck-posframe
-  :ensure t
-  :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
-
-(use-package clj-refactor :ensure t
-  :after cider
-  :config
-  (setq cljr-warn-on-eval nil)
-  :hook (cider-mode . clj-refactor-mode)
-  )
+;; (use-package clj-refactor :ensure t
+;;   :config
+;;   (setq cljr-warn-on-eval nil)
+;;   :hook cider-mode)
 
 (use-package clojure-mode
   :ensure t
-  :hook (clojure-mode . cider-mode)
   :config
-  (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
-  )
+  (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face))
 
 (use-package cider
-  :after clojure-mode
   :ensure t
+  :pin melpa-stable
+  :init
+  (use-package flycheck-joker :ensure t)
   :config
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
   (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
+  (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (define-key cider-repl-mode-map (kbd "C-<return>") #'cider-repl-newline-and-indent)
   (setq cider-repl-pop-to-buffer-on-connect 'display-only)
@@ -231,6 +257,7 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
+  (evil-local-set-key 'normal "gd" 'cider-find-var)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> cp")
     (lambda () (interactive) (cider-pprint-eval-last-sexp)))
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> p")
@@ -241,33 +268,22 @@
     (lambda () (interactive) (cider-eval-last-sexp)))
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> x")
     (lambda () (interactive) (cider-eval-defun-at-point)))
-  :init
-  (add-hook 'cider-mode-hook #'eldoc-mode)
-  (add-hook 'cider-mode-hook #'hl-line-mode)
-  (add-hook 'cider-mode-hook #'highlight-symbol-mode)
-  (add-hook 'cider-mode-hook #'hs-minor-mode)
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-repl-mode-hook #'smartparens-mode)
-  (add-hook 'cider-repl-mode-hook #'evil-smartparens-mode)
-  (use-package flycheck-joker :ensure t))
+  (add-hook 'cider-repl-mode-hook
+            (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
+  (add-hook 'cider-popup-buffer-mode-hook
+            (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil))))
 
 (use-package cargo
   :ensure t
-  :after rust-mode
-  :hook (rust-mode . cargo-minor-mode)
-  :config (setq compilation-ask-about-save nil)
-  )
+  :hook rust-mode
+  :config (setq compilation-ask-about-save nil))
 
 (use-package flycheck-rust
-  :after rust-mode
   :ensure t
-  :hook (rust-mode . flycheck-rust-setup)
-  )
+  :hook (rust-mode . flycheck-rust-setup))
 
 (use-package rust-mode
   :ensure t
-  :hook
-  (rust-mode . lsp)
   :config
   (set-face-attribute 'rust-string-interpolation-face nil :slant 'normal)
   (set-face-attribute 'rust-string-interpolation-face nil :weight 'bold)
@@ -275,9 +291,7 @@
   (evil-local-set-key 'normal "gd" 'lsp-find-definition)
   (evil-local-set-key 'motion "gd" 'lsp-find-definition)
   (evil-local-set-key 'normal (kbd "<SPC> r") 'lsp-find-references)
-  :init
-  (add-hook 'rust-mode-hook #'eldoc-mode)
-  (add-hook 'rust-mode-hook #'hs-minor-mode))
+  :hook (lsp eldoc-mode))
 
 (use-package ivy
   :ensure t
@@ -289,8 +303,6 @@
   :ensure t
   :config (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
 
-(use-package counsel-projectile :ensure t)
-
 (use-package projectile
   :requires ivy
   :ensure t
@@ -298,14 +310,16 @@
   (projectile-mode 1)
   (setq projectile-completion-system 'ivy))
 
-(use-package projectile-ripgrep :after projectile :ensure t)
-
 (use-package smartparens
   :ensure t
-  :hook ((prog-mode . turn-on-smartparens-strict-mode)
-         (markdown-mode . turn-on-smartparens-strict-mode))
+  :hook
+  ((after-init . smartparens-global-mode)
+   (prog-mode . smartparens-mode)
+   (cider-repl-mode . smartparens-mode)
+   (prog-mode . turn-on-smartparens-strict-mode))
   :config
   (require 'smartparens-config)
+  (sp-pair "\"" "\"" :actions '(wrap))
   (setq sp-show-pair-from-inside t)
   :bind
   ("M-l" . sp-forward-slurp-sexp)
@@ -328,15 +342,64 @@
 
 (use-package diff-hl
   :ensure t
+  :hook ((prog-mode . diff-hl-margin-mode)
+         (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
+
+(use-package treemacs
+  :ensure t
+  :hook
+  (treemacs-mode . (lambda () (text-scale-decrease 1)
+                     (setq-local display-line-numbers nil)))
   :config
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  (global-diff-hl-mode))
+  (setq treemacs-show-cursor nil)
+  (setq treemacs-project-follow-cleanup 1)
+  (treemacs-resize-icons 15)
+  (setq treemacs-eldoc-display t)
+  (treemacs-follow-mode t)
+  (setq treemacs-width 22)
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+
+(use-package doom-modeline
+  :ensure t
+  :config
+  ;; (set-face-attribute 'mode-line nil :height 0.9)
+  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
+  (setq doom-modeline-major-mode-icon nil)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-buffer-modification-icon -1)
+  (setq doom-modeline-modal-icon nil)
+  (setq doom-modeline-buffer-state-icon nil)
+  :hook (after-init . doom-modeline-mode))
+
+(use-package ivy-rich
+  :ensure t
+  :after ivy
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (setq ivy-rich-display-transformers-list
+        '(ivy-switch-buffer
+          (:columns
+           ((ivy-rich-candidate (:width 30))  ; return the candidate itself
+            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+            (ivy-rich-switch-buffer-project (:width 15 :face success))
+            (ivy-rich-switch-buffer-path
+             (:width (lambda (x)
+                       (ivy-rich-switch-buffer-shorten-path
+                        x
+                        (ivy-rich-minibuffer-width 0.3))))))
+           :predicate
+           (lambda (cand) (get-buffer cand)))
+          counsel-M-x
+          (:columns
+           ((counsel-M-x-transformer (:width 33))
+            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
+  (ivy-rich-mode 1))
 
 ;; global keys
-(global-set-key (kbd "C-x C-o") 'company-complete)
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
 (global-set-key (kbd "C-x C-p") 'projectile-switch-project)
-(global-set-key (kbd "C-q") 'kill-buffer-and-window)
+(global-set-key (kbd "C-M-q") 'kill-buffer-and-window)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x d") 'dired)
 (global-set-key (kbd "C-x C-d") 'dired)
@@ -353,10 +416,13 @@
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "<f8>") 'shell-pop)
 (global-set-key (kbd "C-M-=") 'my/indent-buffer)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(define-key evil-emacs-state-map (kbd "<escape>") 'keyboard-escape-quit)
+(define-key evil-normal-state-map (kbd "<escape>") 'keyboard-quit)
 (define-key evil-normal-state-map (kbd "C-w k") 'ace-delete-window)
+(define-key evil-normal-state-map (kbd "C-w C-k") 'ace-delete-window)
 (define-key evil-motion-state-map (kbd "C-o") 'my/jump-back)
 (define-key evil-normal-state-map (kbd "C-f") 'swiper)
-(define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
 (define-key evil-insert-state-map (kbd "M-h") 'paredit-forward-barf-sexp)
 (define-key evil-visual-state-map "gc" 'comment-dwim)
 (define-key evil-normal-state-map "gcc" 'comment-line)
@@ -388,35 +454,6 @@
 (define-key evil-normal-state-map (kbd "C-<tab>") 'my/switch-to-last-buffer)
 (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
 (global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
-
-(use-package treemacs
-  :ensure t
-  :config
-  (setq treemacs-show-cursor nil)
-  (setq treemacs-project-follow-cleanup 1)
-  (treemacs-resize-icons 15)
-  (setq treemacs-eldoc-display t)
-  (treemacs-follow-mode t)
-  (setq treemacs-width 22)
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
-
-(use-package doom-modeline
-  :ensure t
-  :config
-  ;; (set-face-attribute 'mode-line nil :height 0.9)
-  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
-  (setq doom-modeline-buffer-modification-icon -1)
-  (setq doom-modeline-modal-icon nil)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-buffer-state-icon nil)
-  :hook (after-init . doom-modeline-mode))
-
-(use-package ivy-rich
-  :after ivy
-  :ensure t
-  :config
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-  (ivy-rich-mode 1))
 
 ;; (use-package plantuml-mode
 ;;   :ensure t
@@ -457,39 +494,39 @@
 ;; my stuff
 
 (defun my/jump-back ()
-  "Jump back based on mode."
+  "My jump back based on mode."
   (interactive)
   (if (eq major-mode 'clojure-mode)
       (cider-pop-back)
     (evil-jump-backward)))
 
 (defun my/modeline-adjust ()
-  "Adjust modeline."
+  "My adjust modeline."
   (interactive)
   ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
   (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
   (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
-  ;; (set-face-attribute 'mode-line nil :height 0.9)
-  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   )
 
 (defun my/theme-solarized-dark ()
-  "Solarized."
+  "My solarized dark."
   (interactive "*")
   (load-theme 'doom-solarized-dark)
+  (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#aaaaaa")
+  (set-face-attribute 'hl-line nil :background "#073642" :inherit nil)
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-constant-face nil :inherit 'normal)
   (my/modeline-adjust))
 
 (defun my/theme-doom-one-light ()
-  "Load my theme."
+  "My one light."
   (interactive)
   (load-theme 'doom-one-light)
-  ;; (load-theme 'doom-solarized-dark)
+  (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
-  (set-face-attribute 'default nil :background "#f0f0f0")
+  ;; (set-face-attribute 'default nil :background "#f0f0f0")
   (set-face-attribute 'hl-line nil :background "#CDFDC7" :inherit nil)
   (set-face-attribute 'show-paren-match nil :background "#F3FF4A")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
@@ -503,11 +540,12 @@
   (my/modeline-adjust))
 
 (defun my/set-font ()
-  "Set default font."
+  "My default font."
   (interactive)
   (if (eq window-system 'x)
       (set-frame-font "Fira Code Medium-13")
-    (set-frame-font "Monaco-15")))
+    (set-frame-font "Monaco-15"))
+  )
 
 (defun my/save-buffer ()
   "Indent whole buffer."
@@ -556,7 +594,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
