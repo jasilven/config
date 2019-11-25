@@ -28,10 +28,6 @@
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'cider-popup-buffer-hook (lambda ()
-                                     (setq-local display-line-numbers nil)
-                                     (setq global-hl-line-mode nil)
-                                     (display-line-numbers-mode -1)))
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'eshell-mode-hook (lambda () (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
@@ -42,6 +38,7 @@
 (add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
                                 (setq-local display-line-numbers nil)))
 (add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
+                                  (display-line-numbers-mode 1)
                                   (setq-local global-hl-line-mode nil)))
 
 (add-hook 'cider-popup-buffer-mode-hook (lambda () (text-scale-decrease 1)
@@ -99,7 +96,10 @@
  dired-listing-switches "-aoht"
  )
 
-(use-package magit :ensure t)
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 (use-package evil-magit :after magit :ensure t)
 (use-package which-key :ensure t :config (which-key-mode))
 (use-package json-mode :ensure t)
@@ -123,7 +123,7 @@
   (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
-  (push '("*cider-result*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '("*cider-result*" :width 0.35 :stick t :position right :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :height 16 :position bottom) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Run*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
@@ -214,6 +214,7 @@
   :config
   (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
+  (define-key cider-repl-mode-map (kbd "C-<return>") #'cider-repl-newline-and-indent)
   (setq cider-repl-pop-to-buffer-on-connect 'display-only)
   (setq cider-save-file-on-load t)
   (setq clojure-toplevel-inside-comment-form t)
@@ -352,6 +353,7 @@
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "<f8>") 'shell-pop)
 (global-set-key (kbd "C-M-=") 'my/indent-buffer)
+(define-key evil-normal-state-map (kbd "C-w k") 'ace-delete-window)
 (define-key evil-motion-state-map (kbd "C-o") 'my/jump-back)
 (define-key evil-normal-state-map (kbd "C-f") 'swiper)
 (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
@@ -534,11 +536,14 @@
   "Initialize."
   (interactive "*")
   (set-frame-name "Editor")
-  (my/doom-one-theme)
+  (my/theme-doom-one-light)
   (set-frame-width nil 87)
   (set-frame-height nil 30)
   (my/set-font)
   (my/modeline-adjust)
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:inherit ace-jump-face-foreground :height 3.0)))))
   (put 'downcase-region 'disabled nil))
 
 (my/initialize)
