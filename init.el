@@ -39,7 +39,7 @@
 (add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
                                 (setq-local display-line-numbers nil)))
 (add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
-                                  (setq-local global-hl-line-mode nil)))
+cornsilk3                                  (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -465,6 +465,7 @@
   ;; (load-theme 'doom-solarized-dark)
   ;; (set-face-attribute 'default nil :background "#faf8f7")
   ;; (set-face-attribute 'default nil :background "#faf8f7")
+  ;; (set-face-attribute 'hl-line nil :background "lightgreen")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
@@ -481,7 +482,7 @@
 
 (set-frame-width nil 87)
 (set-frame-height nil 30)
-(my/theme)
+(my/doom-one-theme)
 
 (defun my/solarized-dark ()
   (interactive)
