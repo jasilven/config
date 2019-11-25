@@ -5,9 +5,9 @@
                          ("melpa"        . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
-;; (unless (package-installed-p 'use-package)
-;;   (package-refresh-contents)
-;;   (package-install 'use-package))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell :ensure t)
 (when (memq window-system '(mac ns x))
@@ -91,7 +91,20 @@
  dired-listing-switches "-aoht"
  )
 
+(use-package magit :ensure t)
+(use-package evil-magit :after magit :ensure t)
+(use-package which-key :ensure t :config (which-key-mode))
+(use-package json-mode :ensure t)
+(use-package avy :ensure t)
+(use-package expand-region :ensure t)
+(use-package treemacs-projectile :after treemacs :ensure t)
+(use-package treemacs-evil :after treemacs :ensure t)
+(use-package all-the-icons :ensure t)
+(use-package smex :ensure t)
+(use-package doom-themes :ensure t )
+(use-package aggressive-indent :ensure t :config (aggressive-indent-mode 1))
 (use-package key-chord :ensure t :config (key-chord-mode 1))
+;; (use-package restclient :ensure t)
 
 (use-package popwin
   :ensure t
@@ -111,18 +124,6 @@
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-repl-mode :height 9 :stick t :noselect t) popwin:special-display-config))
 
-;; (use-package plantuml-mode
-;;   :ensure t
-;;   :init
-;;   (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
-;;   (setq plantuml-default-exec-mode 'jar))
-
-;; (use-package flycheck-plantuml
-;;   :after (flycheck plantuml)
-;;   :ensure t
-;;   :config
-;;   (flycheck-plantuml-setup))
-
 (use-package evil
   :after key-chord
   :ensure t
@@ -132,16 +133,13 @@
   (evil-mode 1)
   :config
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-  (use-package evil-collection
-    :ensure t
-    :config
-    (evil-collection-init))
-  (setq evil-move-cursor-back nil))
-
-(use-package json-mode :ensure t)
-(use-package avy :ensure t)
-;; (use-package restclient :ensure t)
-(use-package expand-region :ensure t)
+  ;; (use-package evil-collection
+  ;;   :ensure t
+  ;;   :init
+  ;;   (setq evil-want-keybinding nil)
+  ;;   :config
+  ;;   (evil-collection-init))
+  )
 
 (use-package shell-pop
   :ensure t
@@ -173,30 +171,6 @@
   (define-key company-search-map (kbd "C-n") 'company-select-next)
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
-
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :commands lsp
-;;   :hook (rust-mode . lsp)
-;;   :config
-;;   (setq lsp-enable-snippet nil)
-;;   (set-face-attribute 'lsp-lens-face nil :height 0.9))
-
-;; (use-package lsp-ui
-;;   :after lsp
-;;   :ensure t
-;;   :hook (rust-mode . lsp-ui-mode)
-;;   :config
-;;   (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
-;;   (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
-;;   (setq lsp-ui-sideline-enable nil)
-;;   (setq lsp-ui-doc-enable nil))
-
-;; (use-package company-lsp
-;;   :after company
-;;   :ensure t
-;;   :config
-;;   (push 'company-lsp company-backends))
 
 (use-package flycheck
   :ensure t
@@ -334,9 +308,6 @@
   (evil-smartparens-mode 1)
   (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 
-(use-package magit :ensure t)
-(use-package evil-magit :after magit :ensure t)
-
 (use-package diff-hl
   :ensure t
   :config
@@ -397,7 +368,6 @@
 (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
 (global-set-key (kbd "C-<backspace>") 'my/switch-to-last-buffer)
 
-(use-package which-key :ensure t :config (which-key-mode))
 (use-package treemacs
   :ensure t
   :config
@@ -409,10 +379,6 @@
   (setq treemacs-width 22)
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
-(use-package treemacs-projectile :after treemacs :ensure t)
-(use-package treemacs-evil :after treemacs :ensure t)
-(use-package all-the-icons :ensure t)
-
 (use-package doom-modeline
   :ensure t
   :config
@@ -423,10 +389,6 @@
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-buffer-state-icon nil)
   :hook (after-init . doom-modeline-mode))
- 
-(use-package doom-themes :ensure t )
-
-(use-package smex :ensure t)
 
 (use-package ivy-rich
   :after ivy
@@ -434,6 +396,42 @@
   :config
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   (ivy-rich-mode 1))
+
+;; (use-package plantuml-mode
+;;   :ensure t
+;;   :init
+;;   (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+;;   (setq plantuml-default-exec-mode 'jar))
+
+;; (use-package flycheck-plantuml
+;;   :after (flycheck plantuml)
+;;   :ensure t
+;;   :config
+;;   (flycheck-plantuml-setup))
+
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands lsp
+;;   :hook (rust-mode . lsp)
+;;   :config
+;;   (setq lsp-enable-snippet nil)
+;;   (set-face-attribute 'lsp-lens-face nil :height 0.9))
+
+;; (use-package lsp-ui
+;;   :after lsp
+;;   :ensure t
+;;   :hook (rust-mode . lsp-ui-mode)
+;;   :config
+;;   (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
+;;   (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
+;;   (setq lsp-ui-sideline-enable nil)
+;;   (setq lsp-ui-doc-enable nil))
+
+;; (use-package company-lsp
+;;   :after company
+;;   :ensure t
+;;   :config
+;;   (push 'company-lsp company-backends))
 
 ;; my stuff
 
@@ -483,7 +481,7 @@
 (my/doom-one-theme)
 
 (defun my/solarized-dark ()
-  (interactive)
+  (interactive "*")
   (load-theme 'doom-solarized-dark)
   (my/modeline-adjust 13)
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
@@ -520,7 +518,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
