@@ -39,7 +39,7 @@
 (add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
                                 (setq-local display-line-numbers nil)))
 (add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
-cornsilk3                                  (setq-local global-hl-line-mode nil)))
+(setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
@@ -225,8 +225,6 @@ cornsilk3                                  (setq-local global-hl-line-mode nil))
   :after clojure-mode
   :ensure t
   :config
-  ;; (set-face-attribute 'cider-fringe-good-face nil :foreground nil)
-  ;; (set-face-attribute 'cider-fringe-good-face nil :inherit 'font-lock-keyword-face)
   (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (setq clojure-toplevel-inside-comment-form t)
