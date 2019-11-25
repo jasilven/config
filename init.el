@@ -23,27 +23,35 @@
 (scroll-bar-mode -1)
 (show-paren-mode 1)
 (global-hl-line-mode t)
+(global-display-line-numbers-mode -1)
 (global-eldoc-mode -1)
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'cider-popup-buffer-hook (lambda ()
+                                     (setq-local display-line-numbers nil)
+                                     (setq global-hl-line-mode nil)
+                                     (display-line-numbers-mode -1)))
+(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'eshell-mode-hook (lambda () (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
-(add-hook 'eshell-mode-hook (lambda ()
-                              (setq-local global-hl-line-mode nil)))
-(add-hook 'shell-mode-hook (lambda ()
-                             (setq-local global-hl-line-mode nil)))
-(add-hook 'term-mode-hook (lambda ()
-                            (setq-local global-hl-line-mode nil)))
+(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+(add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
 (add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)
                                 (setq-local display-line-numbers nil)))
 (add-hook 'cider-repl-mode-hook (lambda () (text-scale-decrease 1)
-(setq-local global-hl-line-mode nil)))
+                                  (setq-local global-hl-line-mode nil)))
+
+(add-hook 'cider-popup-buffer-mode-hook (lambda () (text-scale-decrease 1)
+                                          (setq-local global-hl-line-mode nil)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; defaults
 (setq-default
+ hl-line-sticky-flag nil
+ global-hl-line-sticky-flag nil
  undo-tree-auto-save-history t
  display-line-numbers-width 3
  text-scale-mode-step 1.1
@@ -102,7 +110,7 @@
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
 (use-package doom-themes :ensure t )
-(use-package aggressive-indent :ensure t :config (aggressive-indent-mode 1))
+(use-package aggressive-indent :ensure t :hook (prog-mode . aggressive-indent-mode))
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 ;; (use-package restclient :ensure t)
 
@@ -110,6 +118,7 @@
   :ensure t
   :config
   (popwin-mode 1)
+  (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
@@ -168,13 +177,17 @@
   (define-key company-active-map (kbd "RET") 'company-complete-selection)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "TAB") 'company-select-next)
+  (define-key company-search-map (kbd "TAB") 'company-select-next)
   (define-key company-search-map (kbd "C-n") 'company-select-next)
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
 
 (use-package flycheck
   :ensure t
-  :hook (prog-mode . flycheck-mode))
+  :hook
+  (prog-mode . flycheck-mode)
+  )
 
 (use-package flycheck-posframe
   :ensure t
@@ -201,6 +214,8 @@
   :config
   (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
   (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
+  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
+  (setq cider-save-file-on-load t)
   (setq clojure-toplevel-inside-comment-form t)
   (setq cider-clojure-cli-global-options nil)
   (setq cider-print-fn (quote pprint))
@@ -216,6 +231,8 @@
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> cp")
+    (lambda () (interactive) (cider-pprint-eval-last-sexp)))
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> p")
     (lambda () (interactive) (cider-pprint-eval-last-sexp)))
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h")
     (lambda () (interactive) (cider-clojuredocs)))
@@ -311,9 +328,11 @@
 (use-package diff-hl
   :ensure t
   :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (global-diff-hl-mode))
 
 ;; global keys
+(global-set-key (kbd "C-x C-o") 'company-complete)
 (global-set-key (kbd "C-x p") 'projectile-switch-project)
 (global-set-key (kbd "C-x C-p") 'projectile-switch-project)
 (global-set-key (kbd "C-q") 'kill-buffer-and-window)
@@ -382,8 +401,8 @@
 (use-package doom-modeline
   :ensure t
   :config
-  (set-face-attribute 'mode-line nil :height 0.9)
-  (set-face-attribute 'mode-line-inactive nil :height 0.9)
+  ;; (set-face-attribute 'mode-line nil :height 0.9)
+  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   (setq doom-modeline-buffer-modification-icon -1)
   (setq doom-modeline-modal-icon nil)
   (setq doom-modeline-major-mode-color-icon t)
@@ -445,20 +464,32 @@
 (defun my/modeline-adjust ()
   "Adjust modeline."
   (interactive)
-  (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
+  ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
-  (set-face-attribute 'mode-line nil :height (-  (face-attribute 'default :height) 10 ))
-  (set-face-attribute 'mode-line-inactive nil :height (- (face-attribute 'default :height) 10))
+  (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
+  (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
   ;; (set-face-attribute 'mode-line nil :height 0.9)
   ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   )
 
-(defun my/doom-one-theme ()
+(defun my/theme-solarized-dark ()
+  "Solarized."
+  (interactive "*")
+  (load-theme 'doom-solarized-dark)
+  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
+  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
+  (set-face-attribute 'font-lock-constant-face nil :inherit 'normal)
+  (my/modeline-adjust))
+
+(defun my/theme-doom-one-light ()
   "Load my theme."
   (interactive)
   (load-theme 'doom-one-light)
   ;; (load-theme 'doom-solarized-dark)
+  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
   (set-face-attribute 'default nil :background "#f0f0f0")
+  (set-face-attribute 'hl-line nil :background "#CDFDC7" :inherit nil)
+  (set-face-attribute 'show-paren-match nil :background "#F3FF4A")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
@@ -467,20 +498,14 @@
   (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
   (set-face-attribute 'treemacs-root-face nil :inherit 'font-lock-keyword-face)
   (set-face-attribute 'treemacs-root-face nil :height 1.1)
-  )
+  (my/modeline-adjust))
 
 (defun my/set-font ()
-  (interactive) 
+  "Set default font."
+  (interactive)
   (if (eq window-system 'x)
       (set-frame-font "Fira Code Medium-13")
     (set-frame-font "Monaco-15")))
-
-(defun my/solarized-dark ()
-  (interactive "*")
-  (load-theme 'doom-solarized-dark)
-  (my/modeline-adjust 13)
-  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
-  (set-face-attribute 'font-lock-constant-face nil :inherit 'normal))
 
 (defun my/save-buffer ()
   "Indent whole buffer."
@@ -506,6 +531,7 @@
 
 ;; my initialize
 (defun my/initialize ()
+  "Initialize."
   (interactive "*")
   (set-frame-name "Editor")
   (my/doom-one-theme)
