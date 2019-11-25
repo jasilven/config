@@ -442,13 +442,13 @@
       (cider-pop-back)
     (evil-jump-backward)))
 
-(defun my/modeline-adjust (font-size)
+(defun my/modeline-adjust ()
   "Adjust modeline."
   (interactive)
-  (setq doom-modeline-height 12)
+  (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
-  (set-face-attribute 'mode-line nil :height (* 10 (- font-size 1)))
-  (set-face-attribute 'mode-line-inactive nil :height (* 10 (- font-size 1)))
+  (set-face-attribute 'mode-line nil :height (-  (face-attribute 'default :height) 10 ))
+  (set-face-attribute 'mode-line-inactive nil :height (- (face-attribute 'default :height) 10))
   ;; (set-face-attribute 'mode-line nil :height 0.9)
   ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   )
@@ -456,12 +456,9 @@
 (defun my/doom-one-theme ()
   "Load my theme."
   (interactive)
-  (set-frame-name "Editor")
   (load-theme 'doom-one-light)
   ;; (load-theme 'doom-solarized-dark)
   (set-face-attribute 'default nil :background "#f0f0f0")
-  ;; (set-face-attribute 'default nil :background "#faf8f7")
-  ;; (set-face-attribute 'hl-line nil :background "lightgreen")
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
@@ -470,15 +467,13 @@
   (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
   (set-face-attribute 'treemacs-root-face nil :inherit 'font-lock-keyword-face)
   (set-face-attribute 'treemacs-root-face nil :height 1.1)
-  (if (eq window-system 'x)
-    (progn (set-frame-font "Fira Code Medium-13")
-           (my/modeline-adjust 13))
-    (progn (set-frame-font "Monaco-15")
-           (my/modeline-adjust 15))))
+  )
 
-(set-frame-width nil 87)
-(set-frame-height nil 30)
-(my/doom-one-theme)
+(defun my/set-font ()
+  (interactive) 
+  (if (eq window-system 'x)
+      (set-frame-font "Fira Code Medium-13")
+    (set-frame-font "Monaco-15")))
 
 (defun my/solarized-dark ()
   (interactive "*")
@@ -509,7 +504,19 @@
   (interactive)
   (switch-to-buffer nil))
 
-(put 'downcase-region 'disabled nil)
+;; my initialize
+(defun my/initialize ()
+  (interactive "*")
+  (set-frame-name "Editor")
+  (my/doom-one-theme)
+  (set-frame-width nil 87)
+  (set-frame-height nil 30)
+  (my/set-font)
+  (my/modeline-adjust)
+  (put 'downcase-region 'disabled nil))
+
+(my/initialize)
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
