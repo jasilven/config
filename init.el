@@ -11,7 +11,7 @@
 (use-package exec-path-from-shell :ensure t)
 
 ;; editor modes
-(global-so-long-mode) 1
+(global-so-long-mode 1)
 (blink-cursor-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -117,6 +117,8 @@
 (use-package flycheck-posframe :ensure t :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 (use-package avy :ensure t
+  :config
+  (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff")
   :bind
   (("C-." . avy-goto-char)))
 
@@ -204,8 +206,9 @@
   (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
   (define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
   (define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
+  (define-key evil-normal-state-map (kbd "gm") 'evil-jump-item)
   (define-key evil-normal-state-map (kbd "gw") 'ace-window)
-  (define-key evil-normal-state-map (kbd "go") 'other-window)
+  (define-key evil-normal-state-map (kbd "go") 'otherwindow)
   (define-key evil-normal-state-map (kbd "gq") nil)
   (define-key evil-normal-state-map (kbd "gh") 'beginning-of-line)
   (define-key evil-normal-state-map (kbd "ga") 'beginning-of-line)
@@ -221,11 +224,11 @@
   (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
   (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
   (define-key evil-normal-state-map (kbd "<SPC> f") 'ivy-switch-buffer)
+  (define-key evil-normal-state-map (kbd "<SPC> s") 'swiper)
   (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "C-<tab>") 'my/switch-to-last-buffer)
-  (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region)
-  )
+  (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region))
 
 (use-package shell-pop
   :ensure t
@@ -239,8 +242,7 @@
   :config
   (setq highlight-symbol-idle-delay 0.9)
   (add-hook 'emacs-elisp-mode-hook #'highlight-symbol-mode)
-  (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-  )
+  (add-hook 'clojure-mode-hook #'highlight-symbol-mode))
 
 (use-package company
   :ensure t
@@ -262,11 +264,6 @@
   (define-key company-search-map (kbd "C-n") 'company-select-next)
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
-
-;; (use-package clj-refactor :ensure t
-;;   :config
-;;   (setq cljr-warn-on-eval nil)
-;;   :hook cider-mode)
 
 (use-package clojure-mode
   :ensure t
@@ -411,8 +408,6 @@
   (treemacs-mode . (lambda () (text-scale-decrease 1)
                      (setq-local display-line-numbers nil)))
   :config
-  ;; (set-face-attribute 'treemacs-root-face nil :inherit 'font-lock-keyword-face)
-  ;; (set-face-attribute 'treemacs-root-face nil :height 1.1)
   (setq treemacs-show-cursor nil)
   (setq treemacs-project-follow-cleanup 1)
   (treemacs-resize-icons 15)
@@ -424,10 +419,8 @@
 (use-package doom-modeline
   :ensure t
   :config
-  ;; (set-face-attribute 'mode-line nil :height 0.9)
-  ;; (set-face-attribute 'mode-line-inactive nil :height 0.9)
   (setq doom-modeline-major-mode-icon nil)
-  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-major-mode-color-icon nil)
   (setq doom-modeline-buffer-modification-icon -1)
   (setq doom-modeline-modal-icon nil)
   (setq doom-modeline-buffer-state-icon nil)
@@ -441,7 +434,7 @@
   (setq ivy-rich-display-transformers-list
         '(ivy-switch-buffer
           (:columns
-           ((ivy-rich-candidate (:width 30))  ; return the candidate itself
+           ((ivy-rich-candidate (:width 30))
             (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
             (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
             (ivy-rich-switch-buffer-project (:width 15 :face success))
@@ -458,6 +451,11 @@
             (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
   (ivy-rich-mode 1))
 
+
+;; (use-package clj-refactor :ensure t
+;;   :config
+;;   (setq cljr-warn-on-eval nil)
+;;   :hook cider-mode)
 
 ;; (use-package plantuml-mode
 ;;   :ensure t
@@ -495,6 +493,20 @@
 ;;   :config
 ;;   (push 'company-lsp company-backends))
 
+;; (use-package rainbow-delimiters :ensure t
+;;   :config
+;;   (set-face-attribute 'rainbow-delimiters-base-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-1-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-2-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-3-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-4-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-5-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-6-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-7-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-8-face nil :foreground "#859900")
+;;   (set-face-attribute 'rainbow-delimiters-depth-9-face nil :foreground "#859900")
+;;   )
+
 ;; my stuff
 
 (defun my/jump-back ()
@@ -510,8 +522,7 @@
   ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
   (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
-  (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
-  )
+  (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40)))
 
 (defun my/theme-solarized-dark ()
   "My solarized dark."
@@ -604,7 +615,7 @@
   (set-frame-height nil 30)
   (my/set-font)
   (my/modeline-adjust)
-  (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#eff2600" :foreground "#ffffff")
+  ;; (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#eff2600" :foreground "#ffffff")
   (custom-set-faces
    '(aw-leading-char-face
      ((t (:inherit ace-jump-face-foreground :height 3.0)))))
@@ -619,8 +630,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(google-translate-default-source-language "fi" t)
+ '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
