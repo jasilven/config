@@ -1,7 +1,6 @@
 ;;(setq package-enable-at-startup nil)
 
-(setq package-archives '(
-                         ("gnu"          . "http://elpa.gnu.org/packages/")
+(setq package-archives '(("gnu"          . "http://elpa.gnu.org/packages/")
                          ("melpa"        . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("marmalade"    . "http://marmalade-repo.org/packages/")))
@@ -10,10 +9,6 @@
 ;;   (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell :ensure t)
-(when (memq window-system '(mac ns x))
-  (setq mac-option-modifier 'meta)
-  (setq mac-command-modifier 'meta)
-  (exec-path-from-shell-initialize))
 
 ;; editor modes
 (global-so-long-mode) 1
@@ -52,7 +47,6 @@
 (global-set-key (kbd "M-j") 'forward-paragraph)
 (global-set-key (kbd "M-k") 'backward-paragraph)
 (global-set-key (kbd "M-o") (lambda () (end-of-line) (electric-newline-and-maybe-indent)))
-;;(global-set-key (kbd "C-M-q") 'kill-buffer-and-window)
 
 ;; defaults
 (setq-default
@@ -166,12 +160,6 @@
   (set-face-attribute 'internal-border nil :background "#ff79c6")
   (ivy-posframe-mode 1))
 
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;; ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
 (use-package popwin
   :ensure t
   :config
@@ -206,6 +194,7 @@
   (define-key evil-normal-state-map (kbd "C-w C-k") 'ace-delete-window)
   (define-key evil-motion-state-map (kbd "C-o") 'my/jump-back)
   (define-key evil-normal-state-map (kbd "C-f") 'swiper)
+  (define-key evil-normal-state-map (kbd "C-F") 'counsel-projectile-rg)
   (define-key evil-insert-state-map (kbd "M-h") 'paredit-forward-barf-sexp)
   (define-key evil-visual-state-map "gc" 'comment-dwim)
   (define-key evil-normal-state-map "gcc" 'comment-line)
@@ -588,16 +577,34 @@
   (interactive)
   (switch-to-buffer nil))
 
+(defun er-rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
+
 ;; my initialize
 (defun my/initialize ()
   "Initialize."
   (interactive "*")
   (set-frame-name "Editor")
+  (when (memq window-system '(mac ns x))
+    (setq mac-option-modifier 'meta)
+    (setq mac-command-modifier 'meta)
+    (exec-path-from-shell-initialize))
   (my/theme-doom-one-light)
   (set-frame-width nil 87)
   (set-frame-height nil 30)
   (my/set-font)
   (my/modeline-adjust)
+  (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#eff2600" :foreground "#ffffff")
   (custom-set-faces
    '(aw-leading-char-face
      ((t (:inherit ace-jump-face-foreground :height 3.0)))))
@@ -612,8 +619,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(google-translate-default-source-language "fi")
- '(google-translate-default-target-language "en")
  '(package-selected-packages
    '(parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
