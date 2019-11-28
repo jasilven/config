@@ -21,7 +21,7 @@
 (global-hl-line-mode t)
 (size-indication-mode t)
 (global-display-line-numbers-mode -1)
-(global-eldoc-mode -1)
+(global-eldoc-mode t)
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -169,15 +169,16 @@
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
-  (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
+  ;; (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-result*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
-  (push '("*cider-error*" :height 16 :position bottom) popwin:special-display-config)
+  (push '("*cider-error*" :width 0.45 :position right) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Run*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '(cider-docview-mode :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '(cider-repl-mode :height 5 :stick t :noselect t) popwin:special-display-config))
 
 (use-package evil
@@ -188,6 +189,8 @@
   (setq evil-want-keybinding nil)
   :config
   (evil-mode 1)
+  (setq evil-move-beyond-eol t)
+  (setq evil-cross-lines nil)
   (add-hook 'cider--debug-mode-hook
             (lambda () (evil-make-overriding-map cider--debug-mode-map 'normal)
               (evil-normalize-keymaps)))
@@ -302,36 +305,18 @@
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
   (setq nrepl-hide-special-buffers t)
-  (evil-local-set-key 'normal "gd" 'cider-find-var)
+  (evil-define-key 'normal clojure-mode-map "K" 'cider-doc)
+  (evil-define-key 'normal clojure-mode-map "gd" 'cider-find-var)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> ck") 'cider-eval-buffer)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> cp") 'cider-pprint-eval-last-sexp)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h") 'cider-clojuredocs)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e") 'cider-eval-last-sexp)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> x") 'cider-eval-defun-at-point)
+  (evil-define-key 'normal clojure-mode-map (kbd "C-x C-x") 'cider-eval-defun-at-point)
   (add-hook 'cider-repl-mode-hook
             (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
   (add-hook 'cider-popup-buffer-mode-hook
             (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil))))
-
-(use-package cargo
-  :ensure t
-  :hook rust-mode
-  :config (setq compilation-ask-about-save nil))
-
-(use-package flycheck-rust
-  :ensure t
-  :hook (rust-mode . flycheck-rust-setup))
-
-(use-package rust-mode
-  :ensure t
-  :config
-  (set-face-attribute 'rust-string-interpolation-face nil :slant 'normal)
-  (set-face-attribute 'rust-string-interpolation-face nil :weight 'bold)
-  (setq rust-format-on-save t)
-  (evil-local-set-key 'normal "gd" 'lsp-find-definition)
-  (evil-local-set-key 'motion "gd" 'lsp-find-definition)
-  (evil-local-set-key 'normal (kbd "<SPC> r") 'lsp-find-references)
-  :hook (lsp eldoc-mode))
 
 (use-package ivy
   :ensure t
@@ -455,6 +440,25 @@
 ;;   :config
 ;;   (setq cljr-warn-on-eval nil)
 ;;   :hook cider-mode)
+
+;; (use-package cargo
+;;   :ensure t
+;;   :hook rust-mode
+;;   :config (setq compilation-ask-about-save nil))
+
+;; (use-package flycheck-rust
+;;   :ensure t
+;;   :hook (rust-mode . flycheck-rust-setup))
+
+;; (use-package rust-mode
+;;   :ensure t
+;;   :config
+;;   (set-face-attribute 'rust-string-interpolation-face nil :slant 'normal)
+;;   (set-face-attribute 'rust-string-interpolation-face nil :weight 'bold)
+;;   (setq rust-format-on-save t)
+;;   (evil-define-key 'normal rust-mode-map "gd" 'lsp-find-var)
+;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'lsp-find-references)
+;;   :hook (lsp eldoc-mode))
 
 ;; (use-package plantuml-mode
 ;;   :ensure t
