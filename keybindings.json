@@ -9,31 +9,14 @@
         "command": "calva.clearInlineResults",
         "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'"
     },
-    {
-        "key": "ctrl+e",
-        "command": "workbench.action.quickOpen",
-        "when": "!terminalFocus"
-    },
-    {
-        "key": "ctrl+enter",
-        "command": "workbench.action.terminal.focus",
-        "when": "editorTextFocus"
-    },
+    // {
+    //     "key": "ctrl+enter",
+    //     "command": "workbench.action.terminal.focus",
+    //     "when": "editorTextFocus"
+    // },
     {
         "key": "shift+ctrl+f",
         "command": "workbench.action.findInFiles"
-    },
-    {
-        "key": "ctrl+f",
-        "command": "actions.find",
-    },
-    {
-        "key": "ctrl+g",
-        "command": "editor.cancelOperation",
-    },
-    {
-        "key": "ctrl+alt+e",
-        "command": "workbench.action.quickOpen",
     },
     {
         "key": "ctrl+shift+p",
@@ -44,27 +27,8 @@
         "command": "workbench.action.toggleSidebarVisibility",
     },
     {
-        "key": "ctrl+q",
-        "command": "workbench.action.closeActiveEditor",
-    },
-    {
         "key": "ctrl+w",
         "command": "workbench.action.closeActiveEditor",
-    },
-    {
-        "key": "ctrl+x ctrl+e",
-        "command": "calva.evaluateSelection",
-        "when": "calva:activated"
-    },
-    {
-        "key": "ctrl+c ctrl+k",
-        "command": "calva.loadFile",
-        "when": "calva:activated"
-    },
-    {
-        "key": "ctrl+x ctrl+x",
-        "command": "calva.evaluateCurrentTopLevelForm",
-        "when": "calva:activated"
     },
     {
         "key": "alt+l",
@@ -87,47 +51,19 @@
         "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
     },
     {
-        "key": "ctrl+/",
-        "command": "workbench.action.terminal.toggleTerminal"
-    },
-    {
         "key": "ctrl+j",
         "command": "workbench.action.terminal.toggleTerminal"
     },
     {
-        "key": "ctrl+s",
+        "key": "ctrl+x ctrl+s",
         "command": "workbench.action.files.save"
-    },
-    {
-        "key": "ctrl+b",
-        "command": "workbench.action.toggleSidebarVisibility"
-    },
-    {
-        "key": "ctrl+alt+o",
-        "command": "workbench.action.files.openFileFolder"
     },
     {
         "key": "ctrl+o",
         "command": "workbench.action.navigateBack"
     },
     {
-        "key": "ctrl+alt+-",
-        "command": "-workbench.action.navigateBack"
-    },
-    {
         "key": "ctrl+e",
         "command": "-workbench.action.quickOpen"
     },
-    // {
-    //     "key": "ctrl+e",
-    //     "command": "-workbench.action.quickOpen"
-    // },
-    // {
-    //     "key": "ctrl+e",
-    //     "command": "-workbench.action.quickOpen"
-    // },
-    // {
-    //     "key": "ctrl+e",
-    //     "command": "-workbench.action.quickOpen"
-    // },
 ]

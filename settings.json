@@ -8,10 +8,10 @@
       "after": [
         "<leader>",
         "<leader>",
-        "s",
+        "s"
       ],
-      "when": "editorFocus",
-    },
+      "when": "editorFocus"
+    }
   ],
   "vim.insertModeKeyBindingsNonRecursive": [
     {
@@ -27,96 +27,127 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
+        "g",
+        "m"
+      ],
+      "after": [
+        "%"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "k"
+      ],
+      "after": [
+        "{"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "j"
+      ],
+      "after": [
+        "}"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "h"
+      ],
+      "commands": [
+        "cursorHome"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "o"
+      ],
+      "commands": [
+        "workbench.action.focusLastEditorGroup"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "l"
+      ],
+      "commands": [
+        "cursorEnd"
+      ]
+    },
+    {
+      "before": [
         "R"
       ],
       "after": []
     },
     {
-      "before": [
-        "-"
-      ],
-      "commands": [
-        "workbench.action.navigateBack"
-      ]
-    },
-    {
-      "before": [
-        ":",
-      ],
-      "commands": [
-        "workbench.action.showCommands",
-      ]
-    },
-    {
-      "before": [
-        "f1",
-      ],
-      "commands": [
-        "editor.action.showHover",
-      ]
-    },
-    {
-      "before": [
-        "K",
-      ],
-      "commands": [
-        "editor.action.showHover",
-      ]
-    },
-    {
-      "before": [
-        "z",
-        "z"
-      ],
-      "commands": [
-        "editor.foldAll",
-      ]
-    },
-    {
-      "before": [
-        "z",
-        "r"
-      ],
-      "commands": [
-        "editor.unfoldAll",
-      ]
-    },
-    {
-      "before": [
-        "z",
-        "a"
-      ],
-      "commands": [
-        "editor.unfoldRecursively",
-      ]
-    },
-    {
-      "before": [
-        "z",
-        "m"
-      ],
-      "commands": [
-        "editor.unfoldRecursively",
-      ]
-    },
-    {
+      "when": "calva:activated",
       "before": [
         "<leader>",
-        "b"
+        "c",
+        "c"
       ],
       "commands": [
-        "workbench.action.quickOpen",
+        "calva.evaluateCurrentTopLevelForm"
       ]
     },
     {
+      "when": "calva:activated",
+      "before": [
+        "<leader>",
+        "c",
+        "k"
+      ],
+      "commands": [
+        "calva.loadFile"
+      ]
+    },
+    {
+      "when": "calva:activated",
       "before": [
         "<leader>",
         "e"
       ],
       "commands": [
-        {
-          "command": "editor.action.marker.next",
-        }
+        "calva.evaluateSelection"
+      ]
+    },
+    {
+      "before": [
+        ":"
+      ],
+      "commands": [
+        "workbench.action.showCommands"
+      ]
+    },
+    {
+      "before": [
+        "f1"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
+    },
+    {
+      "before": [
+        "K"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
       ]
     },
     {
@@ -125,7 +156,7 @@
         "j"
       ],
       "commands": [
-        "workbench.action.gotoSymbol",
+        "workbench.action.gotoSymbol"
       ]
     },
     {
@@ -134,7 +165,7 @@
         "w"
       ],
       "commands": [
-        "workbench.action.files.save",
+        "workbench.action.files.save"
       ]
     }
   ],
@@ -151,17 +182,16 @@
     "<C-v>": false,
     "<C-f>": false
   },
-  // "vim.easymotionMarkerWidthPerChar": 14,
+  "vim.leader": "<space>",
   "vim.easymotion": true,
   "vim.easymotionKeys": "hklyuopnm,qwertzxcvbasdgjf",
-  // "vim.easymotionKeys": "HKLYUOPNM,QWERTZXCVBASDGJF",
-  "vim.easymotionMarkerFontSize": "15",
+  "vim.easymotionMarkerFontSize": "17",
   "vim.easymotionMarkerFontWeight": "bold",
   "vim.easymotionMarkerFontFamily": "Fira Code",
   "vim.easymotionMarkerHeight": 1,
   "vim.easymotionMarkerYOffset": 13,
-  "vim.easymotionMarkerForegroundColorOneChar": "#FF0000",
-  "vim.easymotionMarkerForegroundColorTwoChar": "#FF0000",
+  "vim.easymotionMarkerForegroundColorOneChar": "#E92323",
+  "vim.easymotionMarkerForegroundColorTwoChar": "#E92323",
   "vim.visualstar": true,
   "vim.sneak": false,
   "vim.incsearch": true,
@@ -170,81 +200,51 @@
   "vim.hlsearch": false,
   "editor.highlightActiveIndentGuide": true,
   "editor.renderIndentGuides": false,
+  "editor.fontSize": 15,
+  "editor.renderControlCharacters": false,
   "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
+  "editor.formatOnSave": true,
+  "editor.autoClosingBrackets": "beforeWhitespace",
   "window.zoomLevel": 0,
   "workbench.startupEditor": "newUntitledFile",
-  "editor.fontSize": 14,
-  "vim.leader": "<space>",
-  "editor.renderControlCharacters": false,
-  "breadcrumbs.enabled": false,
-  "editor.renderWhitespace": "none",
   "workbench.colorCustomizations": {
-    // "statusBar.background": "#6199bf",
-    // "editorLineNumber.foreground": "#CBCBCD",
-    // "list.activeSelectionBackground": "#C9DEEB"
+    "editor.foreground": "#839496",
+    // "editorBracketMatch.background": "#993399",
+    "editor.inactiveSelectionBackground": "#FFFFFF",
   },
   "editor.tokenColorCustomizations": {
-    "comments": "#6A737D",
-    //"functions": "#C586C0",
-    // "keywords": "#569CD6",
-    // "types": "#C586C0",
-    "textMateRules": [
-      {
-        "scope": [
-          "constant.keyword.clojure"
-        ],
-        "settings": {
-          "foreground": "#0366D6"
-        }
-      },
-      // {
-      //   "scope": [
-      //     "punctuation.section.expression.begin.clojure",
-      //     "punctuation.section.expression.end.trailing.clojure"
-      //   ],
-      //   "settings": {
-      //     "foreground": "#999"
-      //   }
-      // }
-    ]
+    "[Solarized Dark]": {
+      "numbers": "#dddddd",
+      "keywords": "#859900",
+      "types": "#839400",
+      "variables": "#839400",
+    },
   },
+  "breadcrumbs.enabled": false,
   "workbench.view.alwaysShowHeaderActions": true,
-  "editor.formatOnSave": true,
   "terminal.integrated.fontSize": 14,
   "[Log]": {
     "editor.fontSize": 14
   },
-  "editor.autoClosingBrackets": "beforeWhitespace",
   "outline.problems.enabled": false,
   "[clojure]": {
     "editor.matchBrackets": true
   },
   "debug.console.fontSize": 14,
+  "calva.highlight.enableBracketColors": false,
   "calva.fmt.removeConsecutiveBlankLines": true,
   "calva.highlight.ignoredFormStyle": {
-    "textDecoration": "none; opacity: 0.6"
+    "textDecoration": "none; opacity: 0.5"
   },
-  "calva.highlight.commentFormStyle": {
-    "textDecoration": "none; opacity: 0.6"
-  },
-  "editor.formatOnPaste": true,
-  "rust-analyzer.enableEnhancedTyping": false,
-  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
   "explorer.confirmDelete": false,
   "workbench.tree.indent": 20,
   "workbench.editor.showTabs": true,
+  "editor.formatOnPaste": true,
   "editor.hover.delay": 400,
   "editor.maxTokenizationLineLength": 130000,
-  "editor.fontFamily": "Monaco, Fira Code, Menlo, 'Courier New', monospace",
-  "calva.highlight.bracketColors": [],
-  "calva.highlight.enableBracketColors": false,
-  "workbench.colorTheme": "Solarized Dark",
+  "editor.fontFamily": "Fira Code Medium, Monaco, Menlo, 'Courier New', monospace",
   "editor.occurrencesHighlight": false,
   "editor.hover.sticky": false,
-  // "clojureWarrior.enableBracketColors": false,
-  // "rest-client.enableTelemetry": false,
-  // "rest-client.timeoutinmilliseconds": 20000,
-  // "rust.build_on_save": true,
-  // "rust.jobs": 4,
-  // "rust.clippy_preference": "on",
+  "workbench.colorTheme": "Solarized Dark"
 }

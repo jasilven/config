@@ -22,6 +22,9 @@
 (size-indication-mode t)
 (global-display-line-numbers-mode -1)
 (global-eldoc-mode t)
+(diminish 'eldoc-mode)
+(diminish 'hs-minor-mode)
+(diminish 'undo-tree-mode)
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -99,9 +102,10 @@
  dired-listing-switches "-aoht")
 
 (use-package restclient :ensure t)
+(use-package diminish :ensure t)
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
-(use-package which-key :ensure t :config (which-key-mode))
+(use-package which-key :ensure t :diminish 'which-key-mode :config (which-key-mode))
 (use-package json-mode :ensure t)
 (use-package expand-region :ensure t)
 (use-package treemacs-projectile :after (treemacs projectile) :ensure t)
@@ -112,7 +116,10 @@
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
-(use-package flycheck :ensure t :init (global-flycheck-mode))
+(use-package flycheck :ensure t
+  :config
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  :init (global-flycheck-mode))
 (use-package flycheck-posframe :ensure t :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 (use-package avy :ensure t
@@ -122,6 +129,7 @@
   (("C-." . avy-goto-char)))
 
 (use-package aggressive-indent :ensure t
+  :diminish 'aggressive-indent-mode
   :config
   (global-aggressive-indent-mode 1)
   (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
@@ -144,6 +152,7 @@
   (google-translate-default-target-language "en"))
 
 (use-package ivy-posframe :ensure t
+  :diminish ivy-posframe-mode
   :config
   (setq ivy-posframe-min-width 80
         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-12" "Monaco-13")
@@ -179,7 +188,7 @@
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-docview-mode :height 15 :stick t :position bottom) popwin:special-display-config)
-  (push '(cider-repl-mode :height 5 :stick t :noselect t) popwin:special-display-config))
+  (push '(cider-repl-mode :height 7 :stick t :noselect t :tail t) popwin:special-display-config))
 
 (use-package evil
   :after key-chord
@@ -252,6 +261,7 @@
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :config
   (add-hook 'emacs-elisp-mode-hook #'company-mode)
@@ -313,10 +323,17 @@
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e") 'cider-eval-last-sexp)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> x") 'cider-eval-defun-at-point)
   (evil-define-key 'normal clojure-mode-map (kbd "C-x C-x") 'cider-eval-defun-at-point)
+  (evil-define-key 'normal clojure-mode-map (kbd "C-c C-z") 'my/switch-to-repl-and-back)
+  (evil-define-key 'normal clojure-mode-map (kbd "C-j") 'my/switch-to-repl-and-back)
   (add-hook 'cider-repl-mode-hook
             (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
   (add-hook 'cider-popup-buffer-mode-hook
             (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil))))
+
+(defun my/switch-to-repl-and-back ()
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (cider-switch-to-last-clojure-buffer))
 
 (use-package ivy
   :ensure t
@@ -351,6 +368,7 @@
 
 (use-package smartparens
   :ensure t
+  :diminish smartparens-mode
   :hook
   ((after-init . smartparens-global-mode)
    (prog-mode . smartparens-mode)
@@ -373,6 +391,7 @@
 
 (use-package evil-smartparens
   :ensure t
+  :diminish 'evil-smartparens-mode
   :after smartparens
   :config
   (evil-smartparens-mode 1)
@@ -408,7 +427,7 @@
   (setq doom-modeline-buffer-modification-icon -1)
   (setq doom-modeline-modal-icon nil)
   (setq doom-modeline-buffer-state-icon nil)
-  :hook (after-init . doom-modeline-mode))
+  :hook (after-init . my/modeline-adjust))
 
 (use-package ivy-rich
   :ensure t
@@ -420,7 +439,6 @@
           (:columns
            ((ivy-rich-candidate (:width 30))
             (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
             (ivy-rich-switch-buffer-project (:width 15 :face success))
             (ivy-rich-switch-buffer-path
              (:width (lambda (x)
@@ -434,7 +452,7 @@
            ((counsel-M-x-transformer (:width 33))
             (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
   (ivy-rich-mode 1))
-
+;; (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
 
 ;; (use-package clj-refactor :ensure t
 ;;   :config
@@ -522,10 +540,15 @@
 (defun my/modeline-adjust ()
   "My adjust modeline."
   (interactive)
+  (doom-modeline-mode)
+  (set-face-attribute 'doom-modeline-buffer-modified nil :inherit 'doom-modeline-battery-warning :weight 'bold)
   ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
-  (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
-  (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40)))
+  ;; (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
+  (set-face-attribute 'mode-line nil :inherit nil :height 0.80 )
+  ;; (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
+  (set-face-attribute 'mode-line-inactive nil :inherit nil :height 0.90)
+  )
 
 (defun my/theme-solarized-dark ()
   "My solarized dark."
@@ -534,6 +557,10 @@
   ;; (set-face-attribute 'internal-border nil :inherit nil :background "#000000" :foreground "#555555")
   ;; (set-face-attribute 'ivy-posframe-border nil :inherit nil :background "#000000" :foreground "#000000")
   ;; (set-face-attribute 'ivy-posframe nil :inherit nil :background "#e9e9fa" :foreground "#000000")
+  (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
+  ;; (set-face-attribute 'tab-line nil :background "#004052" :height 1.1)
+  ;; (set-face-attribute 'tab-line-tab-current nil :inherit 'normal :background "#002B36" :weight 'normal :height 0.9 :foreground "#dddddd" :box '(:line-width 7 :color "#002B36"))
+  ;; (set-face-attribute 'tab-line-tab-inactive  nil :foreground "#839496" :background "#004052" :height 0.9 :box '(:line-width 7 :color "#004052"))
   (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#aaaaaa")
   (set-face-attribute 'hl-line nil :background "#073642" :inherit nil)
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
@@ -565,7 +592,7 @@
   "My default font."
   (interactive)
   (if (eq window-system 'x)
-      (set-frame-font "Fira Code Medium-13")
+      (set-frame-font "Fira Code Medium-12")
     (set-frame-font "Monaco-15")))
 
 ;; (set-frame-font "Fira Code-17")
