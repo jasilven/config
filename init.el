@@ -116,10 +116,14 @@
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
+(use-package ace-window :ensure t
+  :config
+  (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16"))
 (use-package flycheck :ensure t
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   :init (global-flycheck-mode))
+
 (use-package flycheck-posframe :ensure t :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 (use-package avy :ensure t
@@ -127,6 +131,12 @@
   (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff")
   :bind
   (("C-." . avy-goto-char)))
+
+(use-package beacon
+  :ensure t
+  :custom
+  (beacon-color "#f1fa8c")
+  :hook (after-init . beacon-mode))
 
 (use-package aggressive-indent :ensure t
   :diminish 'aggressive-indent-mode
@@ -174,11 +184,12 @@
   :ensure t
   :config
   (popwin-mode 1)
-  (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
+  (push '("*undo-tree*" :width 0.3 :position right) popwin:special-display-config)
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
-  ;; (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
+  (push '("*cider-out*" :height 7 :stick t :noselect t :tail t :position bottom :dedicated t) popwin:special-display-config)
+  (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-result*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :width 0.45 :position right) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
@@ -188,7 +199,8 @@
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-docview-mode :height 15 :stick t :position bottom) popwin:special-display-config)
-  (push '(cider-repl-mode :height 7 :stick t :noselect t :tail t) popwin:special-display-config))
+  (push '(cider-repl-mode :height 7 :stick t :noselect t :tail t :dedicated t) popwin:special-display-config)
+  )
 
 (use-package evil
   :after key-chord
@@ -219,6 +231,7 @@
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-normal-state-map (kbd "q") nil)
   (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+  (define-key evil-visual-state-map (kbd "f") 'avy-goto-char)
   (define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
   (define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
   (define-key evil-normal-state-map (kbd "gm") 'evil-jump-item)
@@ -242,7 +255,9 @@
   (define-key evil-normal-state-map (kbd "<SPC> s") 'swiper)
   (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
+  (define-key evil-normal-state-map (kbd "<SPC> k") 'ace-delete-window)
   (define-key evil-normal-state-map (kbd "C-<tab>") 'my/switch-to-last-buffer)
+  (define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region))
 
 (use-package shell-pop
@@ -295,7 +310,7 @@
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'cider--debug-mode-hook 'evil-normalize-keymaps)
-  (set-face-attribute 'cider-fringe-good-face nil :foreground "#e45649")
+  (set-face-attribute 'cider-fringe-good-face nil :foreground "#2aa198")
   (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
   ;; (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (define-key cider-repl-mode-map (kbd "C-<return>") #'cider-repl-newline-and-indent)
@@ -303,14 +318,14 @@
   (setq cider-save-file-on-load t)
   (setq clojure-toplevel-inside-comment-form t)
   (setq cider-clojure-cli-global-options nil)
-  (setq cider-print-fn (quote pprint))
+  (setq cider-print-fn 'fipp)
   (setq cider-repl-use-pretty-printing t)
   (setq cider-repl-history-recenter nil)
   (setq cider-print-quota 1000000)
   (setq cider-prompt-for-symbol nil)
   (setq nrepl-hide-special-buffers t)
   (setq cider-repl-display-help-banner nil)
-  (setq cider-show-error-buffer t)
+  (setq cider-show-error-buffer nil)
   (setq cider-auto-select-error-buffer nil)
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
@@ -318,6 +333,7 @@
   (evil-define-key 'normal clojure-mode-map "K" 'cider-doc)
   (evil-define-key 'normal clojure-mode-map "gd" 'cider-find-var)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> ck") 'cider-eval-buffer)
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> ci") 'cider-pprint-eval-last-sexp-to-comment)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> cp") 'cider-pprint-eval-last-sexp)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h") 'cider-clojuredocs)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e") 'cider-eval-last-sexp)
@@ -558,6 +574,10 @@
   ;; (set-face-attribute 'ivy-posframe-border nil :inherit nil :background "#000000" :foreground "#000000")
   ;; (set-face-attribute 'ivy-posframe nil :inherit nil :background "#e9e9fa" :foreground "#000000")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
+  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+
+  ;; (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16")
+
   ;; (set-face-attribute 'tab-line nil :background "#004052" :height 1.1)
   ;; (set-face-attribute 'tab-line-tab-current nil :inherit 'normal :background "#002B36" :weight 'normal :height 0.9 :foreground "#dddddd" :box '(:line-width 7 :color "#002B36"))
   ;; (set-face-attribute 'tab-line-tab-inactive  nil :foreground "#839496" :background "#004052" :height 0.9 :box '(:line-width 7 :color "#004052"))
@@ -566,6 +586,7 @@
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
   (set-face-attribute 'font-lock-constant-face nil :foreground nil)
   (set-face-attribute 'font-lock-constant-face nil :inherit 'normal)
+  (setq beacon-color "#f1fa8c")
   (my/modeline-adjust))
 
 (defun my/theme-doom-one-light ()
@@ -574,6 +595,7 @@
   (load-theme 'doom-one-light)
   ;; (set-face-attribute 'internal-border nil :inherit nil :background "#000000" :foreground "#555555")
   ;; (set-face-attribute 'ivy-posframe-border nil :inherit nil :background "#000000" :foreground "#000000")
+  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'ivy-posframe nil :background "#e9e9fa" :foreground "#000000")
   (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
@@ -586,13 +608,17 @@
   (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
+
+  ;; (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16")
+
+  (setq beacon-color "#268bd2")
   (my/modeline-adjust))
 
 (defun my/set-font ()
   "My default font."
   (interactive)
   (if (eq window-system 'x)
-      (set-frame-font "Fira Code Medium-12")
+      (set-frame-font "Fira Code Medium-13")
     (set-frame-font "Monaco-15")))
 
 ;; (set-frame-font "Fira Code-17")
@@ -645,10 +671,6 @@
   (set-frame-height nil 30)
   (my/set-font)
   (my/modeline-adjust)
-  ;; (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#eff2600" :foreground "#ffffff")
-  (custom-set-faces
-   '(aw-leading-char-face
-     ((t (:inherit ace-jump-face-foreground :height 3.0)))))
   (put 'downcase-region 'disabled nil))
 
 (my/initialize)
@@ -660,14 +682,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(google-translate-default-source-language "fi" t)
- '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(golden-ratio beacon rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+ '())
