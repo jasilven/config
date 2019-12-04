@@ -22,9 +22,6 @@
 (size-indication-mode t)
 (global-display-line-numbers-mode -1)
 (global-eldoc-mode t)
-(diminish 'eldoc-mode)
-(diminish 'hs-minor-mode)
-(diminish 'undo-tree-mode)
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -58,8 +55,8 @@
  display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
- ;; gc-cons-upper-limit 536870912
- ;; gc-cons-threshold 16777216
+ gc-cons-upper-limit 536870912
+ gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
  clean-buffer-list-delay-general 1
@@ -81,7 +78,7 @@
  midnight-period 7200
  mouse-wheel-progressive-speed nil
  ;; mouse-wheel-scroll-amount '(3)
- mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))
+ mouse-wheel-scroll-amount '(3 ((shift) . 2) ((control) . nil))
  ring-bell-function #'ignore
  scalable-fonts-allowed t
  scroll-conservatively 10000
@@ -102,10 +99,9 @@
  dired-listing-switches "-aoht")
 
 (use-package restclient :ensure t)
-(use-package diminish :ensure t)
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
-(use-package which-key :ensure t :diminish 'which-key-mode :config (which-key-mode))
+(use-package which-key :ensure t :config (which-key-mode))
 (use-package json-mode :ensure t)
 (use-package expand-region :ensure t)
 (use-package treemacs-projectile :after (treemacs projectile) :ensure t)
@@ -119,6 +115,7 @@
 (use-package ace-window :ensure t
   :config
   (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16"))
+
 (use-package flycheck :ensure t
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
@@ -126,6 +123,7 @@
 
 (use-package flycheck-posframe :ensure t :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+
 (use-package avy :ensure t
   :config
   (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff")
@@ -139,7 +137,6 @@
   :hook (after-init . beacon-mode))
 
 (use-package aggressive-indent :ensure t
-  :diminish 'aggressive-indent-mode
   :config
   (global-aggressive-indent-mode 1)
   (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
@@ -162,7 +159,6 @@
   (google-translate-default-target-language "en"))
 
 (use-package ivy-posframe :ensure t
-  :diminish ivy-posframe-mode
   :config
   (setq ivy-posframe-min-width 80
         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-12" "Monaco-13")
@@ -276,7 +272,6 @@
 
 (use-package company
   :ensure t
-  :diminish company-mode
   :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
   :config
   (add-hook 'emacs-elisp-mode-hook #'company-mode)
@@ -384,7 +379,6 @@
 
 (use-package smartparens
   :ensure t
-  :diminish smartparens-mode
   :hook
   ((after-init . smartparens-global-mode)
    (prog-mode . smartparens-mode)
@@ -407,7 +401,6 @@
 
 (use-package evil-smartparens
   :ensure t
-  :diminish 'evil-smartparens-mode
   :after smartparens
   :config
   (evil-smartparens-mode 1)
@@ -682,12 +675,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(google-translate-default-source-language "fi" t)
+ '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(golden-ratio beacon rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '())
+ '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0)))))
