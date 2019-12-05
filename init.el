@@ -98,6 +98,7 @@
  kill-buffer-query-functions nil
  dired-listing-switches "-aoht")
 
+(use-package move-text :ensure t :config (move-text-default-bindings))
 (use-package restclient :ensure t)
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
@@ -422,7 +423,7 @@
   :config
   (setq treemacs-show-cursor nil)
   (setq treemacs-project-follow-cleanup 1)
-  (treemacs-resize-icons 15)
+  (treemacs-resize-icons 11)
   (setq treemacs-eldoc-display t)
   (treemacs-follow-mode t)
   (setq treemacs-width 22)
@@ -675,11 +676,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(column-number-mode t)
  '(google-translate-default-source-language "fi" t)
  '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

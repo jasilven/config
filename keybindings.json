@@ -9,11 +9,6 @@
         "command": "calva.clearInlineResults",
         "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'"
     },
-    // {
-    //     "key": "ctrl+enter",
-    //     "command": "workbench.action.terminal.focus",
-    //     "when": "editorTextFocus"
-    // },
     {
         "key": "shift+ctrl+f",
         "command": "workbench.action.findInFiles"

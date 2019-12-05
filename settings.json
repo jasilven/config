@@ -3,6 +3,16 @@
   "vim.normalModeKeyBindings": [
     {
       "before": [
+        "<alt>",
+        "j"
+      ],
+      "after": [
+        "}",
+      ],
+      "when": "editorFocus"
+    },
+    {
+      "before": [
         "f"
       ],
       "after": [
@@ -25,6 +35,15 @@
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<Alt>",
+        "j"
+      ],
+      "after": [
+        "}",
+      ]
+    },
     {
       "before": [
         "g",
@@ -170,6 +189,7 @@
     }
   ],
   "vim.handleKeys": {
+    "<M-j>": true,
     "<C-r>": true,
     "<C-c>": false,
     "<C-k>": false,
@@ -200,7 +220,7 @@
   "vim.hlsearch": false,
   "editor.highlightActiveIndentGuide": true,
   "editor.renderIndentGuides": false,
-  "editor.fontSize": 15,
+  "editor.fontSize": 14,
   "editor.renderControlCharacters": false,
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
@@ -221,11 +241,10 @@
       "variables": "#839400",
     },
   },
-  "breadcrumbs.enabled": false,
   "workbench.view.alwaysShowHeaderActions": true,
   "terminal.integrated.fontSize": 14,
   "[Log]": {
-    "editor.fontSize": 14
+    "editor.fontSize": 12
   },
   "outline.problems.enabled": false,
   "[clojure]": {
@@ -243,7 +262,7 @@
   "editor.formatOnPaste": true,
   "editor.hover.delay": 400,
   "editor.maxTokenizationLineLength": 130000,
-  "editor.fontFamily": "Fira Code Medium, Monaco, Menlo, 'Courier New', monospace",
+  "editor.fontFamily": "Monaco, Fira Code Medium, Menlo, 'Courier New', monospace",
   "editor.occurrencesHighlight": false,
   "editor.hover.sticky": false,
   "workbench.colorTheme": "Solarized Dark"
