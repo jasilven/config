@@ -303,6 +303,7 @@
   :init
   (use-package flycheck-joker :ensure t)
   :config
+  (add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 0)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'cider--debug-mode-hook 'evil-normalize-keymaps)
@@ -325,7 +326,6 @@
   (setq cider-auto-select-error-buffer nil)
   (setq cider-stacktrace-default-filters '(tooling dup java REPL))
   (setq cider-save-file-on-load t)
-  (setq nrepl-hide-special-buffers t)
   (evil-define-key 'normal clojure-mode-map "K" 'cider-doc)
   (evil-define-key 'normal clojure-mode-map "gd" 'cider-find-var)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> ck") 'cider-eval-buffer)
