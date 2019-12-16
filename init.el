@@ -89,14 +89,13 @@
  shell-file-name "zsh"
  show-paren-style 'parentheses
  tab-width 4
- truncate-lines t
+ truncate-lines nil
  vc-follow-symlinks t
  vc-make-backup-files -1
  version-control t
  indicate-empty-lines t
  x-select-enable-clipboard t
- kill-buffer-query-functions nil
- dired-listing-switches "-aoht")
+ kill-buffer-query-functions nil)
 
 (use-package move-text :ensure t :config (move-text-default-bindings))
 (use-package restclient :ensure t)
@@ -117,13 +116,54 @@
   :config
   (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16"))
 
+(use-package dired
+  :ensure nil
+  :config
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired t
+          insert-directory-program "/usr/local/bin/gls"))
+  (setq dired-auto-revert-buffer t)
+  (setq dired-recursive-copies t)
+  (setq dired-recursive-deletes t)
+  :custom
+  (dired-listing-switches "-aBhl --group-directories-first"))
+
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands lsp
+;;   :config
+;;   (dolist (m '(clojure-mode
+;;                clojurec-mode
+;;                clojurescript-mode
+;;                clojurex-mode))
+;;     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+;;   :init
+;;   (setq lsp-enable-indentation nil)
+;;   (add-hook 'clojure-mode-hook #'lsp)
+;;   (add-hook 'clojurec-mode-hook #'lsp)
+;;   (add-hook 'clojurescript-mode-hook #'lsp))
+
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :commands lsp-ui-mode)
+
+;; (use-package company-lsp
+;;   :ensure t
+;;   :commands company-lsp)
+
 (use-package flycheck :ensure t
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   :init (global-flycheck-mode))
 
+(use-package flycheck-pos-tip :ensure t :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
+
 (use-package flycheck-posframe :ensure t :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+
+(use-package flycheck-inline :ensure t :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 
 (use-package avy :ensure t
   :config
@@ -181,24 +221,29 @@
   :ensure t
   :config
   (popwin-mode 1)
+  (push '("*cider-clojuredocs*" :width 0.40 :position bottom :dedicated t) popwin:special-display-config)
+  (push '("*cider-scratch*" :width 0.30 :position right) popwin:special-display-config)
   (push '("*undo-tree*" :width 0.3 :position right) popwin:special-display-config)
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*xref*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*shell*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-out*" :height 7 :stick t :noselect t :tail t :position bottom :dedicated t) popwin:special-display-config)
-  (push '("*cider-doc*" :height 15 :stick t :position bottom) popwin:special-display-config)
   (push '("*cider-result*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
-  (push '("*cider-error*" :width 0.45 :position right) popwin:special-display-config)
+  (push '("*cider-test-report*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
+  (push '("*cider-inspect*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
+  (push '("*cider-error*" :width 0.40 :position right) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Run*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
   (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '(cider-docview-mode :height 15 :stick t :position bottom) popwin:special-display-config)
+  (push '(cider-docview-mode :width 0.40 :stick t :position bottom) popwin:special-display-config)
+  (push '(cider-popup-buffer-mode :width 0.30 :stick t :position right) popwin:special-display-config)
   (push '(cider-repl-mode :height 7 :stick t :noselect t :tail t :dedicated t) popwin:special-display-config)
   )
 
+;; (push '("*cider-doc*" :width 0.30 :stick t :position right) popwin:special-display-config)
 (use-package evil
   :after key-chord
   :ensure t
@@ -303,7 +348,7 @@
   :init
   (use-package flycheck-joker :ensure t)
   :config
-  (add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 0)))
+  (add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 1)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'cider--debug-mode-hook 'evil-normalize-keymaps)
@@ -311,6 +356,7 @@
   (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
   ;; (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (define-key cider-repl-mode-map (kbd "C-<return>") #'cider-repl-newline-and-indent)
+  (setq cljr-warn-on-eval nil)
   (setq cider-repl-pop-to-buffer-on-connect 'display-only)
   (setq cider-save-file-on-load t)
   (setq clojure-toplevel-inside-comment-form t)
@@ -334,9 +380,13 @@
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> h") 'cider-clojuredocs)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> e") 'cider-eval-last-sexp)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> x") 'cider-eval-defun-at-point)
+  (evil-define-key 'normal clojure-mode-map (kbd "<SPC> r") 'cider-jump-to-compilation-error)
   (evil-define-key 'normal clojure-mode-map (kbd "C-x C-x") 'cider-eval-defun-at-point)
   (evil-define-key 'normal clojure-mode-map (kbd "C-c C-z") 'my/switch-to-repl-and-back)
   (evil-define-key 'normal clojure-mode-map (kbd "C-j") 'my/switch-to-repl-and-back)
+  (add-hook 'cider-docview-mode-hook
+            (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)
+              (visual-line-mode t)))
   (add-hook 'cider-repl-mode-hook
             (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
   (add-hook 'cider-popup-buffer-mode-hook
@@ -564,17 +614,9 @@
   "My solarized dark."
   (interactive "*")
   (load-theme 'doom-solarized-dark)
-  ;; (set-face-attribute 'internal-border nil :inherit nil :background "#000000" :foreground "#555555")
-  ;; (set-face-attribute 'ivy-posframe-border nil :inherit nil :background "#000000" :foreground "#000000")
-  ;; (set-face-attribute 'ivy-posframe nil :inherit nil :background "#e9e9fa" :foreground "#000000")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-
-  ;; (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16")
-
-  ;; (set-face-attribute 'tab-line nil :background "#004052" :height 1.1)
-  ;; (set-face-attribute 'tab-line-tab-current nil :inherit 'normal :background "#002B36" :weight 'normal :height 0.9 :foreground "#dddddd" :box '(:line-width 7 :color "#002B36"))
-  ;; (set-face-attribute 'tab-line-tab-inactive  nil :foreground "#839496" :background "#004052" :height 0.9 :box '(:line-width 7 :color "#004052"))
+  (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A" :slant 'italic)
   (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#aaaaaa")
   (set-face-attribute 'hl-line nil :background "#073642" :inherit nil)
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
@@ -587,9 +629,8 @@
   "My one light."
   (interactive)
   (load-theme 'doom-one-light)
-  ;; (set-face-attribute 'internal-border nil :inherit nil :background "#000000" :foreground "#555555")
-  ;; (set-face-attribute 'ivy-posframe-border nil :inherit nil :background "#000000" :foreground "#000000")
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+  (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A")
   (set-face-attribute 'ivy-posframe nil :background "#e9e9fa" :foreground "#000000")
   (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
@@ -676,10 +717,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(beacon-color "#f1fa8c")
  '(google-translate-default-source-language "fi" t)
  '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
