@@ -1,9 +1,12 @@
 ;;(setq package-enable-at-startup nil)
 
-(setq package-archives '(("gnu"          . "http://elpa.gnu.org/packages/")
-                         ("melpa"        . "https://melpa.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("marmalade"    . "http://marmalade-repo.org/packages/")))
+(setq package-archives '(("gnu"            . "http://elpa.gnu.org/packages/")
+                         ("melpa"          . "https://melpa.org/packages/")
+                         ("melpa-stable"   . "https://stable.melpa.org/packages/")
+                         ("milkbox"        . "http://melpa.milkbox.net/packages/")
+                         ("milkbox-stable" . "http://melpa-stable.milkbox.net/packages/")
+                         ))
+;;("marmalade"    . "http://marmalade-repo.org/packages/")
 ;; (unless (package-installed-p 'use-package)
 ;;   (package-refresh-contents)
 ;;   (package-install 'use-package))
@@ -24,6 +27,8 @@
 (global-eldoc-mode t)
 (global-auto-revert-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'clojure-mode-hook #'display-line-numbers-mode)
+(add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
@@ -33,6 +38,7 @@
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'flycheck-error-list-mode-hook (lambda () (text-scale-decrease 1)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; global keys
@@ -46,9 +52,14 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-j") 'forward-paragraph)
 (global-set-key (kbd "M-k") 'backward-paragraph)
+(global-set-key (kbd "C-'") 'next-error)
+(global-set-key (kbd "C-c y") 'company-yasnippet)
+(global-set-key (kbd "C-c C-y") 'company-yasnippet)
 (global-set-key (kbd "M-o") (lambda () (end-of-line) (electric-newline-and-maybe-indent)))
+
 ;; defaults
 (setq-default
+ compilation-ask-about-save nil
  hl-line-sticky-flag nil
  global-hl-line-sticky-flag nil
  undo-tree-auto-save-history t
@@ -77,7 +88,6 @@
  make-backup-files nil
  midnight-period 7200
  mouse-wheel-progressive-speed nil
- ;; mouse-wheel-scroll-amount '(3)
  mouse-wheel-scroll-amount '(3 ((shift) . 2) ((control) . nil))
  ring-bell-function #'ignore
  scalable-fonts-allowed t
@@ -89,7 +99,7 @@
  shell-file-name "zsh"
  show-paren-style 'parentheses
  tab-width 4
- truncate-lines nil
+ truncate-lines t
  vc-follow-symlinks t
  vc-make-backup-files -1
  version-control t
@@ -102,7 +112,6 @@
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
 (use-package which-key :ensure t :config (which-key-mode))
-(use-package json-mode :ensure t)
 (use-package expand-region :ensure t)
 (use-package treemacs-projectile :after (treemacs projectile) :ensure t)
 (use-package treemacs-evil :after (treemacs evil) :ensure t)
@@ -112,64 +121,48 @@
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
+(use-package yasnippet :ensure t
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
+
+(use-package yasnippet-snippets :ensure t :after yasnippet)
+
 (use-package ace-window :ensure t
   :config
-  (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16"))
+  (ace-window-display-mode 1)
+  (set-face-attribute 'aw-leading-char-face nil :inherit nil :height 2.0 :foreground "#cb4b16")
+  )
 
 (use-package dired
   :ensure nil
   :config
   (when (string= system-type "darwin")
-    (setq dired-use-ls-dired t
-          insert-directory-program "/usr/local/bin/gls"))
+    (setq dired-use-ls-dired t insert-directory-program "/usr/local/bin/gls"))
   (setq dired-auto-revert-buffer t)
   (setq dired-recursive-copies t)
   (setq dired-recursive-deletes t)
   :custom
   (dired-listing-switches "-aBhl --group-directories-first"))
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :commands lsp
-;;   :config
-;;   (dolist (m '(clojure-mode
-;;                clojurec-mode
-;;                clojurescript-mode
-;;                clojurex-mode))
-;;     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
-;;   :init
-;;   (setq lsp-enable-indentation nil)
-;;   (add-hook 'clojure-mode-hook #'lsp)
-;;   (add-hook 'clojurec-mode-hook #'lsp)
-;;   (add-hook 'clojurescript-mode-hook #'lsp))
-
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :commands lsp-ui-mode)
-
-;; (use-package company-lsp
-;;   :ensure t
-;;   :commands company-lsp)
-
 (use-package flycheck :ensure t
   :config
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (global-set-key (kbd "C-x '") 'flycheck-list-errors)
   :init (global-flycheck-mode))
 
-(use-package flycheck-pos-tip :ensure t :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
+;; (use-package flycheck-pos-tip :ensure t :after flycheck
+;;   :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
 
-(use-package flycheck-posframe :ensure t :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+;; (use-package flycheck-posframe :ensure t :after flycheck
+;;   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
 
-(use-package flycheck-inline :ensure t :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+;; (use-package flycheck-inline :ensure t :after flycheck
+;;   :config (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 
 (use-package avy :ensure t
   :config
-  (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff")
-  :bind
-  (("C-." . avy-goto-char)))
+  (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff"))
 
 (use-package beacon
   :ensure t
@@ -180,7 +173,8 @@
 (use-package aggressive-indent :ensure t
   :config
   (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'rust-mode))
 
 (use-package magit
   :ensure t
@@ -190,14 +184,6 @@
 (use-package hide-mode-line :ensure t
   :hook
   ((cider-repl-mode imenu-list-minor-mode treemacs-mode) . hide-mode-line-mode))
-
-(use-package google-translate :ensure t
-  :bind
-  ("M-g t" . google-translate-at-point)
-  ("M-g T" . google-translate-at-point-reverse)
-  :custom
-  (google-translate-default-source-language "fi")
-  (google-translate-default-target-language "en"))
 
 (use-package ivy-posframe :ensure t
   :config
@@ -222,6 +208,7 @@
   :config
   (popwin-mode 1)
   (push '("*cider-clojuredocs*" :width 0.40 :position bottom :dedicated t) popwin:special-display-config)
+  (push '("*cider-xref*" :width 0.40 :position bottom :dedicated t) popwin:special-display-config)
   (push '("*cider-scratch*" :width 0.30 :position right) popwin:special-display-config)
   (push '("*undo-tree*" :width 0.3 :position right) popwin:special-display-config)
   (push '("*eshell*" :height 15 :stick t :position bottom) popwin:special-display-config)
@@ -233,17 +220,14 @@
   (push '("*cider-inspect*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :width 0.40 :position right) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
-  (push '("*Cargo Run*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '("*Cargo Test*" :height 12 :stick t :position bottom) popwin:special-display-config)
-  (push '("*Cargo Check*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
-  (push '("*Racer Help*" :height 12 :stick t :position bottom :noselect t) popwin:special-display-config)
+  (push '("^*Cargo" :regexp t :width 40 :position right :dedicated f :stick t) popwin:special-display-config)
+  ;; (push '("^*Cargo Run" :regexp t :height 14 :position bottom :tail t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-docview-mode :width 0.40 :stick t :position bottom) popwin:special-display-config)
   (push '(cider-popup-buffer-mode :width 0.30 :stick t :position right) popwin:special-display-config)
   (push '(cider-repl-mode :height 7 :stick t :noselect t :tail t :dedicated t) popwin:special-display-config)
   )
 
-;; (push '("*cider-doc*" :width 0.30 :stick t :position right) popwin:special-display-config)
 (use-package evil
   :after key-chord
   :ensure t
@@ -258,6 +242,7 @@
             (lambda () (evil-make-overriding-map cider--debug-mode-map 'normal)
               (evil-normalize-keymaps)))
   (add-to-list 'evil-emacs-state-modes 'cider-inspector-mode)
+  (add-to-list 'evil-emacs-state-modes 'flycheck-list-errors-mode)
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
   (define-key evil-emacs-state-map (kbd "<escape>") 'keyboard-escape-quit)
   (define-key evil-normal-state-map (kbd "<escape>") 'keyboard-quit)
@@ -276,24 +261,24 @@
   (define-key evil-visual-state-map (kbd "f") 'avy-goto-char)
   (define-key evil-normal-state-map (kbd "m") 'sp-down-sexp)
   (define-key evil-normal-state-map (kbd "M") 'sp-backward-sexp)
+  (define-key evil-normal-state-map (kbd "zA") 'hs-hide-all)
   (define-key evil-normal-state-map (kbd "gm") 'evil-jump-item)
   (define-key evil-normal-state-map (kbd "gw") 'ace-window)
   (define-key evil-normal-state-map (kbd "go") 'other-window)
   (define-key evil-normal-state-map (kbd "gq") nil)
   (define-key evil-normal-state-map (kbd "gh") 'beginning-of-line)
   (define-key evil-normal-state-map (kbd "ga") 'beginning-of-line)
-  (define-key evil-normal-state-map (kbd "gj") 'forward-paragraph)
-  (define-key evil-normal-state-map (kbd "gk") 'backward-paragraph)
   (define-key evil-normal-state-map (kbd "gl") 'end-of-line)
   (define-key evil-normal-state-map (kbd "ge") 'end-of-line)
   (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
   (define-key evil-insert-state-map (kbd "C-p") 'projectile-find-file)
   (define-key evil-normal-state-map (kbd "C-n") 'evil-buffer-new)
   (define-key evil-insert-state-map (kbd "C-n") 'evil-buffer-new)
-  (define-key evil-normal-state-map (kbd "<SPC> e") 'eval-last-sexp)
+  (define-key evil-insert-state-map (kbd "M-y") 'company-yasnippet)
   (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
   (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
-  (define-key evil-normal-state-map (kbd "<SPC> f") 'ivy-switch-buffer)
+  (define-key evil-normal-state-map (kbd "<SPC> f") 'counsel-projectile-find-file)
+  (define-key evil-normal-state-map (kbd "<SPC> b") 'ivy-switch-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> s") 'swiper)
   (define-key evil-normal-state-map (kbd "<SPC> w") 'save-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> o") 'delete-other-windows)
@@ -302,9 +287,11 @@
   (define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region))
 
+
 (use-package shell-pop
   :ensure t
   :config
+  (evil-set-initial-state 'term-mode 'emacs)
   (setq shell-pop-term-shell "/bin/zsh")
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
@@ -322,17 +309,20 @@
   :config
   (add-hook 'emacs-elisp-mode-hook #'company-mode)
   (add-hook 'prog-mode-hook #'company-mode)
+  (setq company-tooltip-timer 1)
+  (setq company-selection-wrap-around t)
   (setq company-tooltip-align-annotations t)
-  (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0)
-  (setq company-echo-delay 0)
-  (setq company-minimum-prefix-length 1)
+  (setq company-minimum-prefix-length 2)
+  ;; (setq company-idle-delay 0.5)
+  ;; (setq company-echo-delay 0.5)
+  (define-key company-active-map (kbd "C-j") 'newline-and-indent)
+  (define-key company-active-map (kbd "<tab>") 'company-select-next)
+  (define-key company-active-map (kbd "RET") 'company-complete-selection)
   (define-key company-active-map (kbd "<return>") 'company-complete-selection)
+  (define-key company-search-map (kbd "TAB") 'company-select-next)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-active-map (kbd "<tab>") 'company-select-next)
   (define-key company-active-map (kbd "<escape>") 'keyboard-escape-quit)
-  (define-key company-search-map (kbd "<tab>") 'company-select-next)
   (define-key company-search-map (kbd "C-n") 'company-select-next)
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
@@ -391,11 +381,6 @@
             (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
   (add-hook 'cider-popup-buffer-mode-hook
             (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil))))
-
-(defun my/switch-to-repl-and-back ()
-  (interactive)
-  (cider-switch-to-repl-buffer)
-  (cider-switch-to-last-clojure-buffer))
 
 (use-package ivy
   :ensure t
@@ -459,25 +444,53 @@
 
 (use-package diff-hl
   :ensure t
+  :config
+  (global-diff-hl-mode 1)
   :hook ((prog-mode . diff-hl-margin-mode)
          (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
 
-(use-package treemacs
+(use-package neotree
   :ensure t
-  :bind
-  (( "C-\\" . treemacs)
-   ( "C-<return>" . treemacs))
   :hook
-  (treemacs-mode . (lambda () (text-scale-decrease 1)
-                     (setq-local display-line-numbers nil)))
+  (neotree-mode . (lambda () (text-scale-decrease 1)
+                    (setq-local display-line-numbers nil)))
+  :bind
+  (( "C-\\" . neotree-find)
+   ( "C-<return>" . neotree-toggle))
   :config
-  (setq treemacs-show-cursor nil)
-  (setq treemacs-project-follow-cleanup 1)
-  (treemacs-resize-icons 11)
-  (setq treemacs-eldoc-display t)
-  (treemacs-follow-mode t)
-  (setq treemacs-width 22)
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+  (setq neo-window-width 35)
+  (setq projectile-switch-project-action 'neotree-projectile-action)
+  (add-hook 'neotree-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
+              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+              (define-key evil-normal-state-local-map (kbd "I") 'neotree-hidden-file-toggle)
+              (define-key evil-normal-state-local-map (kbd "z") 'neotree-stretch-toggle)
+              (define-key evil-normal-state-local-map (kbd "R") 'neotree-refresh)
+              (define-key evil-normal-state-local-map (kbd "m") 'neotree-rename-node)
+              (define-key evil-normal-state-local-map (kbd "c") 'neotree-create-node)
+              (define-key evil-normal-state-local-map (kbd "d") 'neotree-delete-node)
+              (define-key evil-normal-state-local-map (kbd "s") 'neotree-enter-vertical-split)
+              (define-key evil-normal-state-local-map (kbd "S") 'neotree-enter-horizontal-split)
+              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter))))
+
+
+;; (use-package treemacs
+;;   :ensure t
+;;   :bind
+;;   (( "C-\\" . treemacs)
+;;    ( "C-<return>" . treemacs))
+;;   :hook
+;;   (treemacs-mode . (lambda () (text-scale-decrease 1)
+;;                      (setq-local display-line-numbers nil)))
+;;   :config
+;;   (setq treemacs-show-cursor nil)
+;;   (setq treemacs-project-follow-cleanup 1)
+;;   (treemacs-resize-icons 11)
+;;   (setq treemacs-eldoc-display t)
+;;   (treemacs-follow-mode t)
+;;   (setq treemacs-width 22)
+;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package doom-modeline
   :ensure t
@@ -512,83 +525,102 @@
            ((counsel-M-x-transformer (:width 33))
             (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
   (ivy-rich-mode 1))
-;; (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
 
-;; (use-package clj-refactor :ensure t
-;;   :config
-;;   (setq cljr-warn-on-eval nil)
-;;   :hook cider-mode)
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config
+  (require 'lsp-clients)
+  (setq lsp-auto-guess-root t
+	    lsp-prefer-flymake nil
+	    lsp-enable-indentation nil
+	    lsp-enable-on-type-formatting nil)
+  (add-to-list 'lsp-file-watch-ignored "\\.vscode$"))
 
-;; (use-package cargo
-;;   :ensure t
-;;   :hook rust-mode
-;;   :config (setq compilation-ask-about-save nil))
+(use-package lsp-ui
+  :ensure t
+  :hook ((lsp-mode . lsp-ui-mode)
+	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
+                             (lsp-ui-doc-mode -1))))
+  :config
+  (lsp-ui-doc-mode -1)
+  (require 'lsp-ui-flycheck)
+  (setq lsp-ui-doc-enable nil)
+  ;; (setq lsp-ui-doc-use-webkit t)
+  ;; (setq lsp-ui-sideline-show-hover nil)
+  ;; :bind (:map lsp-ui-mode-map
+  ;;             ("C-c r ." . lsp-ui-peek-find-definitions)
+  ;;             ("C-c r ?" . lsp-ui-peek-find-references)
+  ;;             ("C-c r d" . lsp-ui-peek-find-definitions)
+  ;;             ("C-c r r" . lsp-ui-peek-find-references)
+  ;;             ("C-c r i" . lsp-ui-imenu)
+  ;;             ("C-c r F" . lsp-ui-sideline-apply-code-actions)
+  ;;             ("C-c r R" . lsp-rename))
 
-;; (use-package flycheck-rust
-;;   :ensure t
-;;   :hook (rust-mode . flycheck-rust-setup))
+  )
 
-;; (use-package rust-mode
-;;   :ensure t
-;;   :config
-;;   (set-face-attribute 'rust-string-interpolation-face nil :slant 'normal)
-;;   (set-face-attribute 'rust-string-interpolation-face nil :weight 'bold)
-;;   (setq rust-format-on-save t)
-;;   (evil-define-key 'normal rust-mode-map "gd" 'lsp-find-var)
-;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'lsp-find-references)
-;;   :hook (lsp eldoc-mode))
+(defun my/cargo-run-bin ()
+  (interactive)
+  (let ((bin-name (file-name-sans-extension (buffer-name))))
+    (message "MOI")
+    (message bin-name)
+    (if (string= "main" bin-name)
+        (cargo-process-run)
+      (cargo-process-run-bin bin-name))))
 
-;; (use-package plantuml-mode
-;;   :ensure t
-;;   :init
-;;   (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
-;;   (setq plantuml-default-exec-mode 'jar))
+(use-package rust-mode
+  :ensure t
+  :mode "\\.rs\\'"
+  :hook (rust-mode . lsp)
+  :config
+  (flycheck-inline-mode -1)
+  (electric-pair-local-mode t)
+  (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
+  (define-key rust-mode-map (kbd "C-c C-t") 'cargo-process-test)
+  (define-key rust-mode-map (kbd "C-c C-k") 'cargo-process-check)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'cargo-process-test)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'cargo-process-check)
+  (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
+  (require 'lsp-clients)
+  (setq rust-format-on-save t))
 
-;; (use-package flycheck-plantuml
-;;   :after (flycheck plantuml)
-;;   :ensure t
-;;   :config
-;;   (flycheck-plantuml-setup))
+(use-package flycheck-rust
+  :ensure t
+  :after flycheck
+  :commands flycheck-rust-setup
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :commands lsp
-;;   :hook (rust-mode . lsp)
-;;   :config
-;;   (setq lsp-enable-snippet nil)
-;;   (set-face-attribute 'lsp-lens-face nil :height 0.9))
+(use-package cargo
+  :ensure t
+  :commands cargo-minor-mode
+  :config
+  (define-key cargo-process-mode-map (kbd "go") 'other-window)
+  (add-hook 'cargo-process-mode-hook
+            (lambda ()
+              (text-scale-decrease 1.1)
+              (visual-line-mode 1)
+              (setq-local global-hl-line-mode nil)))
+  :hook (rust-mode . cargo-minor-mode))
 
-;; (use-package lsp-ui
-;;   :after lsp
-;;   :ensure t
-;;   :hook (rust-mode . lsp-ui-mode)
-;;   :config
-;;   (evil-local-set-key 'normal "K" 'lsp-ui-doc-show)
-;;   (evil-local-set-key 'normal (kbd "<SPC> k") 'lsp-ui-doc-hide)
-;;   (setq lsp-ui-sideline-enable nil)
-;;   (setq lsp-ui-doc-enable nil))
+(use-package toml-mode
+  :ensure t
+  :mode (("\\.toml\\'" . toml-mode)
+	     ("/Pipfile\\'" . toml-mode)))
 
-;; (use-package company-lsp
-;;   :after company
-;;   :ensure t
-;;   :config
-;;   (push 'company-lsp company-backends))
-
-;; (use-package rainbow-delimiters :ensure t
-;;   :config
-;;   (set-face-attribute 'rainbow-delimiters-base-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-1-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-2-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-3-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-4-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-5-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-6-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-7-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-8-face nil :foreground "#859900")
-;;   (set-face-attribute 'rainbow-delimiters-depth-9-face nil :foreground "#859900")
-;;   )
+(use-package json-mode
+  :ensure t
+  :mode (("\\.json\\'" . json-mode)
+	     ("/Pipfile.lock\\'" . json-mode)))
 
 ;; my stuff
+
+
+(defun my/switch-to-repl-and-back ()
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (cider-switch-to-last-clojure-buffer))
 
 (defun my/jump-back ()
   "My jump back based on mode."
@@ -605,58 +637,61 @@
   ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
   (setq doom-modeline-bar-width 3)
   ;; (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
-  (set-face-attribute 'mode-line nil :inherit nil :height 0.80 )
+  (set-face-attribute 'mode-line nil :inherit nil :height 0.90)
   ;; (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
   (set-face-attribute 'mode-line-inactive nil :inherit nil :height 0.90)
   )
+
+(defun my/common-faces ()
+  (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
+  (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
+  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+  (set-face-attribute 'warning nil :height 0.90)
+  (set-face-attribute 'error nil :height 0.90)
+  (set-face-attribute 'success nil :height 0.90)
+  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+  (set-face-attribute 'font-lock-preprocessor-face nil :foreground nil :inherit 'default :weight 'bold)
+  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
+  (set-face-attribute 'font-lock-constant-face nil :foreground nil :inherit 'normal))
 
 (defun my/theme-solarized-dark ()
   "My solarized dark."
   (interactive "*")
   (load-theme 'doom-solarized-dark)
   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
+  (set-face-attribute 'region nil :background "#055633")
+  (set-face-attribute 'hl-line nil :background "#083a4a")
+  (set-face-attribute 'line-number-current-line nil :background "#083a4a" :foreground "#cccccc")
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A" :slant 'italic)
   (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#aaaaaa")
-  (set-face-attribute 'hl-line nil :background "#073642" :inherit nil)
-  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
-  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
-  (set-face-attribute 'font-lock-constant-face nil :inherit 'normal)
   (setq beacon-color "#f1fa8c")
+  (my/common-faces)
   (my/modeline-adjust))
 
 (defun my/theme-doom-one-light ()
   "My one light."
   (interactive)
   (load-theme 'doom-one-light)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A")
   (set-face-attribute 'ivy-posframe nil :background "#e9e9fa" :foreground "#000000")
   (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
-  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
   (set-face-attribute 'default nil :background "#f2f2f2")
   (set-face-attribute 'hl-line nil :background "#CDFDC7" :inherit nil)
+  (set-face-attribute 'line-number-current-line nil :background "#CDFDC7" :foreground "#333333")
   (set-face-attribute 'show-paren-match nil :background "#F3FF4A")
-  (set-face-attribute 'font-lock-constant-face nil :foreground nil)
-  (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
-  (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
-  (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (set-face-attribute 'font-lock-preprocessor-face nil :weight 'normal)
-
-  ;; (set-face-attribute 'aw-leading-char-face nil :height 3.0 :foreground "#cb4b16")
-
   (setq beacon-color "#268bd2")
+  (my/common-faces)
   (my/modeline-adjust))
 
 (defun my/set-font ()
   "My default font."
   (interactive)
   (if (eq window-system 'x)
-      (set-frame-font "Fira Code Medium-13")
+      (set-frame-font "Fira Code Medium-12")
     (set-frame-font "Monaco-15")))
 
-;; (set-frame-font "Fira Code-17")
 (defun my/save-buffer ()
   "Indent whole buffer."
   (interactive "*")
@@ -701,7 +736,7 @@
     (setq mac-option-modifier 'meta)
     (setq mac-command-modifier 'meta)
     (exec-path-from-shell-initialize))
-  (my/theme-doom-one-light)
+  (my/theme-solarized-dark)
   (set-frame-width nil 87)
   (set-frame-height nil 30)
   (my/set-font)
@@ -711,21 +746,22 @@
 (my/initialize)
 
 (provide 'init)
-;;; init.el ends here
+    ;;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon-color "#f1fa8c")
+ '(dired-listing-switches "-aBhl --group-directories-first")
  '(google-translate-default-source-language "fi" t)
  '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+ )
