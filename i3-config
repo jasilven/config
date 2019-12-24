@@ -5,7 +5,7 @@ workspace_layout tabbed
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+Return exec alacritty
-bindsym $mod+shift+q kill
+bindsym $mod+shift+Delete kill
 bindsym $mod+d exec "rofi -combi-modi window,drun -theme solarized -font 'hack 12' -show combi"
 bindsym $mod+a layout tabbed
 bindsym $mod+s layout toggle split
@@ -15,7 +15,7 @@ bindsym $mod+v split v
 bindsym $mod+space floating toggle
 bindsym $mod+PageUp floating toggle
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+Delete exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
