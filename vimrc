@@ -21,6 +21,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-fireplace'
 call plug#end()
 
 "" settings
@@ -107,21 +108,17 @@ hi link rustenumvariant default
 hi link cocerrorsign warningmsg
 hi link cochighlighttext search 
 hi link NERDTreeFile default 
-" hi link LspHintText nontext 
-" hi link LspHintHighlight spellbad 
-" hi link LspInformationText warningmsg 
-" hi link LspInformationHighlight spellbad 
-" hi link LspWarningText comment 
-" hi link LspWarningHighlight spellbad
-" hi link LspErrorText warningmsg 
-" hi link LspErrorHighlight spellbad 
-" hi link lspReference visual 
+hi link GitGutterChangeLine DiffText
+hi link clojuremacro keyword
+hi link clojuredefine keyword
 
 "" gitgutter
 let g:gitgutter_sign_modified = '|'
 let g:gitgutter_sign_added= '|'
 let g:gitgutter_sign_removed= '|'
+let g:gitgutter_sign_modified_removed = '|'
 let g:gitgutter_override_sign_column_highlight = 0
+
 "" vim-sexp
 nmap <M-l> <Plug>(sexp_capture_next_element)
 nmap <M-h> <Plug>(sexp_emit_tail_element) 
@@ -129,10 +126,6 @@ nmap <M-h> <Plug>(sexp_emit_tail_element)
 "" neomake
 " call neomake#configure#automake({'TextChanged': {},'InsertLeave': {},'BufWritePost': {'delay': 0},'BufWinEnter': {},}, 500)
 " let g:neomake_warning_sign = { 'text': '✖' ,'texthl': 'NeomakeWarningSign', }
-
-"" asyncomplete
-" autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#racer#get_source_options())
-" autocmd User lsp_setup call lsp#register_server({ 'name': 'rls', 'cmd': { server_info->['rls']}, 'whitelist': ['rust'], })
 
 "" vimrooter
 let g:rooter_silent_chdir = 1
@@ -198,5 +191,3 @@ if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
 endif
-
-

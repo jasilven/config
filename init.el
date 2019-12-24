@@ -282,8 +282,8 @@
   (define-key evil-normal-state-map (kbd "ge") 'end-of-line)
   (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
   (define-key evil-insert-state-map (kbd "C-p") 'projectile-find-file)
-  (define-key evil-normal-state-map (kbd "C-n") 'evil-buffer-new)
-  (define-key evil-insert-state-map (kbd "C-n") 'evil-buffer-new)
+  (define-key evil-normal-state-map (kbd "C-n") 'neotree-toggle)
+  (define-key evil-insert-state-map (kbd "C-n") 'neotree-toggle)
   (define-key evil-insert-state-map (kbd "M-y") 'company-yasnippet)
   (define-key evil-normal-state-map (kbd "<SPC> i") 'counsel-imenu)
   (define-key evil-normal-state-map (kbd "<SPC> j") 'counsel-imenu)
@@ -468,6 +468,7 @@
   (( "C-\\" . neotree-toggle)
    ( "C-<return>" . neotree-toggle))
   :config
+  (setq neo-window-fixed-size nil)
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq-local tab-width 0)
   (setq neo-smart-open nil)
