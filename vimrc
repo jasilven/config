@@ -34,7 +34,7 @@ set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch
 set wildmode=list:longest,full 
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
 set updatetime=500
-set sessionoptions=blank,curdir,folds,help,tabpages,winsize
+set sessionoptions=blank,curdir,help,tabpages,winsize
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*/.git/*
 set background=dark
 syntax enable
@@ -178,15 +178,16 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nnoremap FileType rust <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd FileType rust nnoremap <silent> K :call CocAction('doHover')<cr>
+" nnoremap FileType rust <silent> K :call <SID>show_documentation()<CR>
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   else
+"     call CocAction('doHover')
+"   endif
+" endfunction
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 "" Remember cursor position
 augroup vimrc-remember-cursor-position
