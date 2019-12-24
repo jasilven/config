@@ -1,9 +1,13 @@
 {
-	"diagnostic.infoSign": "➡",
+	"coc.preferences.formatOnSaveFiletypes": ["rust", "clojure"],
+	"diagnostic.infoSign": "❗",
 	"diagnostic.errorSign": "✗",
-	"diagnostic.warningSign": "⚠",
-	"diagnostic.hintSign": "⭐",
+	"diagnostic.warningSign": "⚡",
+	"diagnostic.hintSign": "🗨",
 	"suggest.autoTrigger": "always",
 	"suggest.snippetIndicator": "►",
-	"diagnostic.virtualText": true
+	"diagnostic.virtualText": true,
+	"rust-analyzer.enableCargoWatchOnStartup":"enabled", 
+	"rust.clippy_preference":"on",
+	"rust.jobs": 4
 }
