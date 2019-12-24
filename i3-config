@@ -1,6 +1,7 @@
 set $mod Mod4
 font pango:Menlo 12
 floating_modifier $mod
+workspace_layout tabbed
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+Return exec alacritty
