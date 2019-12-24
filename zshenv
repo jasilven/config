@@ -1,1 +1,1 @@
-export PATH=".:/home/jari/bin:$PATH"
+export PATH=".:/home/jari/bin:/home/jari/.cargo/bin:/home/jari/go/bin:$PATH"

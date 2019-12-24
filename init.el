@@ -31,14 +31,15 @@
 (add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'eshell-mode-hook (lambda () (hl-line-mode -1)))
+(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)
+                              (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
-(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'term-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)
+                            (text-scale-decrease 1)))
 (add-hook 'flycheck-error-list-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'cargo-process-mode-hook (lambda () (end-of-buffer)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; global keys
@@ -52,7 +53,10 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-j") 'forward-paragraph)
 (global-set-key (kbd "M-k") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'next-error)
+(global-set-key (kbd "M-m") 'previous-error)
 (global-set-key (kbd "C-'") 'next-error)
+(global-set-key (kbd "C-\"") 'previous-error)
 (global-set-key (kbd "C-c y") 'company-yasnippet)
 (global-set-key (kbd "C-c C-y") 'company-yasnippet)
 (global-set-key (kbd "M-o") (lambda () (end-of-line) (electric-newline-and-maybe-indent)))
@@ -124,7 +128,12 @@
 (use-package yasnippet :ensure t
   :config
   (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode))
+  (add-hook 'prog-mode-hook (lambda () (yas-minor-mode-on))))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
 
 (use-package yasnippet-snippets :ensure t :after yasnippet)
 
@@ -220,7 +229,8 @@
   (push '("*cider-inspect*" :width 0.30 :stick t :position right :noselect t) popwin:special-display-config)
   (push '("*cider-error*" :width 0.40 :position right) popwin:special-display-config)
   (push '("*Flycheck errors*" :height 12 :stick t :position bottom) popwin:special-display-config)
-  (push '("^*Cargo" :regexp t :width 40 :position right :dedicated f :stick t) popwin:special-display-config)
+  (push '("^*Cargo" :regexp t :width 40 :position right :dedicated f :stick t :noselect t) popwin:special-display-config)
+  (push '(compilation-mode :width 40 :position right :dedicated f :stick t :noselect t) popwin:special-display-config)
   ;; (push '("^*Cargo Run" :regexp t :height 14 :position bottom :tail t) popwin:special-display-config)
   (push '("*Warnings*" :height 7 :stick t :position bottom :noselect t) popwin:special-display-config)
   (push '(cider-docview-mode :width 0.40 :stick t :position bottom) popwin:special-display-config)
@@ -313,7 +323,7 @@
   (setq company-selection-wrap-around t)
   (setq company-tooltip-align-annotations t)
   (setq company-minimum-prefix-length 2)
-  ;; (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0)
   ;; (setq company-echo-delay 0.5)
   (define-key company-active-map (kbd "C-j") 'newline-and-indent)
   (define-key company-active-map (kbd "<tab>") 'company-select-next)
@@ -455,24 +465,30 @@
   (neotree-mode . (lambda () (text-scale-decrease 1)
                     (setq-local display-line-numbers nil)))
   :bind
-  (( "C-\\" . neotree-find)
+  (( "C-\\" . neotree-toggle)
    ( "C-<return>" . neotree-toggle))
   :config
-  (setq neo-window-width 35)
   (setq projectile-switch-project-action 'neotree-projectile-action)
+  (setq-local tab-width 0)
+  (setq neo-smart-open nil)
+  (setq neo-autorefresh nil)
+  (setq neo-window-width 30)
+  (setq neo-click-changes-root nil)
+  (setq projectile-switch-project-action 'neotree-projectile-action)
+  (setq all-the-icons-color-icons nil)
+  (setq neo-theme (if (display-graphic-p) 'arrow 'arrow))
   (add-hook 'neotree-mode-hook
             (lambda ()
-              (define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
+              (define-key evil-normal-state-local-map (kbd "go") 'other-window)
+              (define-key evil-normal-state-local-map (kbd "\t") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
               (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
-              (define-key evil-normal-state-local-map (kbd "I") 'neotree-hidden-file-toggle)
-              (define-key evil-normal-state-local-map (kbd "z") 'neotree-stretch-toggle)
-              (define-key evil-normal-state-local-map (kbd "R") 'neotree-refresh)
-              (define-key evil-normal-state-local-map (kbd "m") 'neotree-rename-node)
-              (define-key evil-normal-state-local-map (kbd "c") 'neotree-create-node)
-              (define-key evil-normal-state-local-map (kbd "d") 'neotree-delete-node)
-              (define-key evil-normal-state-local-map (kbd "s") 'neotree-enter-vertical-split)
-              (define-key evil-normal-state-local-map (kbd "S") 'neotree-enter-horizontal-split)
-              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter))))
+              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "v") 'neotree-quick-look)
+              (define-key evil-normal-state-local-map (kbd "n") 'neotree-next-line)
+              (define-key evil-normal-state-local-map (kbd "p") 'neotree-previous-line)
+              (define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
+              (define-key evil-normal-state-local-map (kbd "H") 'neotree-hidden-file-toggle))))
 
 
 ;; (use-package treemacs
@@ -541,11 +557,18 @@
   :ensure t
   :hook ((lsp-mode . lsp-ui-mode)
 	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
+                             (set-face-attribute 'lsp-ui-sideline-global nil :height 0.8 :background "#00242e")
                              (lsp-ui-doc-mode -1))))
   :config
-  (lsp-ui-doc-mode -1)
-  (require 'lsp-ui-flycheck)
+  (setq lsp-ui-sideline-show-symbol t)
+  (setq lsp-ui-sideline-ignore-duplicate t)
+  (setq lsp-ui-doc-use-webkit nil)
+  (setq lsp-ui-flycheck-enable t)
+  (setq lsp-ui-doc-include-signature t)
   (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-mode -1)
+  ;; (require 'lsp-ui-flycheck)
   ;; (setq lsp-ui-doc-use-webkit t)
   ;; (setq lsp-ui-sideline-show-hover nil)
   ;; :bind (:map lsp-ui-mode-map
@@ -562,11 +585,20 @@
 (defun my/cargo-run-bin ()
   (interactive)
   (let ((bin-name (file-name-sans-extension (buffer-name))))
-    (message "MOI")
-    (message bin-name)
+    (delete-other-windows)
     (if (string= "main" bin-name)
         (cargo-process-run)
       (cargo-process-run-bin bin-name))))
+
+(defun my/cargo-process-test()
+  (interactive)
+  (delete-other-windows)
+  (cargo-process-test))
+
+(defun my/cargo-process-check()
+  (interactive)
+  (delete-other-windows)
+  (cargo-process-check))
 
 (use-package rust-mode
   :ensure t
@@ -576,11 +608,11 @@
   (flycheck-inline-mode -1)
   (electric-pair-local-mode t)
   (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
-  (define-key rust-mode-map (kbd "C-c C-t") 'cargo-process-test)
-  (define-key rust-mode-map (kbd "C-c C-k") 'cargo-process-check)
+  (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
+  (define-key rust-mode-map (kbd "C-c C-k") 'my/cargo-process-check)
   (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
-  (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'cargo-process-test)
-  (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'cargo-process-check)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'my/cargo-process-test)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'my/cargo-process-check)
   (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
   (require 'lsp-clients)
   (setq rust-format-on-save t))
@@ -651,7 +683,7 @@
   (set-face-attribute 'error nil :height 0.90)
   (set-face-attribute 'success nil :height 0.90)
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (set-face-attribute 'font-lock-preprocessor-face nil :foreground nil :inherit 'default :weight 'bold)
+  (set-face-attribute 'font-lock-preprocessor-face nil :foreground nil :inherit 'default :weight 'normal)
   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
   (set-face-attribute 'font-lock-constant-face nil :foreground nil :inherit 'normal))
 
@@ -659,13 +691,14 @@
   "My solarized dark."
   (interactive "*")
   (load-theme 'doom-solarized-dark)
+  (set-face-attribute 'error nil :foreground "#e66f6d" :weight 'bold)
   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
   (set-face-attribute 'region nil :background "#055633")
   (set-face-attribute 'hl-line nil :background "#083a4a")
   (set-face-attribute 'line-number-current-line nil :background "#083a4a" :foreground "#cccccc")
   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
   (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A" :slant 'italic)
-  (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#aaaaaa")
+  (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#bbaaaa")
   (setq beacon-color "#f1fa8c")
   (my/common-faces)
   (my/modeline-adjust))
@@ -757,7 +790,7 @@
  '(google-translate-default-source-language "fi" t)
  '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   '(evil-surround yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

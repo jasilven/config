@@ -37,7 +37,7 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
-        "<Alt>",
+        "<alt>",
         "j"
       ],
       "after": [
@@ -130,6 +130,26 @@
       "when": "calva:activated",
       "before": [
         "<leader>",
+        "c",
+        "i"
+      ],
+      "commands": [
+        "calva.evaluateSelectionAsComment"
+      ]
+    },
+    {
+      "when": "editorTextFocus && !editorHasMultipleSelections && !editorReadOnly && !hasOtherSuggestions && !suggestWidgetVisible && editorLangId == 'clojure'",
+      "before": [
+        "`"
+      ],
+      "commands": [
+        "calva.clearInlineResults"
+      ]
+    },
+    {
+      "when": "calva:activated",
+      "before": [
+        "<leader>",
         "e"
       ],
       "commands": [
@@ -189,7 +209,6 @@
     }
   ],
   "vim.handleKeys": {
-    "<M-j>": true,
     "<C-r>": true,
     "<C-c>": false,
     "<C-k>": false,
@@ -202,6 +221,8 @@
     "<C-v>": false,
     "<C-f>": false
   },
+  "explorer.confirmDelete": false,
+  "debug.console.fontSize": 14,
   "vim.leader": "<space>",
   "vim.easymotion": true,
   "vim.easymotionKeys": "hklyuopnm,qwertzxcvbasdgjf",
@@ -220,28 +241,52 @@
   "vim.hlsearch": false,
   "editor.highlightActiveIndentGuide": true,
   "editor.renderIndentGuides": false,
-  "editor.fontSize": 14,
+  "editor.fontSize": 16,
   "editor.renderControlCharacters": false,
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
   "editor.formatOnSave": true,
   "editor.autoClosingBrackets": "beforeWhitespace",
+  "editor.formatOnPaste": true,
+  "editor.hover.delay": 400,
+  "editor.maxTokenizationLineLength": 130000,
+  "editor.fontFamily": "Fira Code Medium, Menlo, 'Courier New', monospace",
+  "editor.occurrencesHighlight": false,
+  "editor.hover.sticky": false,
+  "editor.tokenColorCustomizations": {
+    "[Solarized Dark]": {
+      "numbers": "#dbdbdb",
+      "keywords": "#859900",
+      "types": "#839400",
+      "variables": "#839400",
+      "textMateRules": [
+        {
+          "scope": "string.regexp.clojure",
+          "settings": {
+            "foreground": "#aabb0f"
+          }
+        }
+      ]
+    },
+  },
+  "calva.highlight.enableBracketColors": false,
+  "calva.fmt.removeConsecutiveBlankLines": true,
+  "calva.highlight.ignoredFormStyle": {
+    "textDecoration": "none; opacity: 0.5"
+  },
   "window.zoomLevel": 0,
+  "workbench.view.alwaysShowHeaderActions": true,
+  "workbench.tree.indent": 20,
+  "workbench.editor.showTabs": true,
   "workbench.startupEditor": "newUntitledFile",
   "workbench.colorCustomizations": {
     "editor.foreground": "#839496",
     // "editorBracketMatch.background": "#993399",
     "editor.inactiveSelectionBackground": "#FFFFFF",
   },
-  "editor.tokenColorCustomizations": {
-    "[Solarized Dark]": {
-      "numbers": "#dddddd",
-      "keywords": "#859900",
-      "types": "#839400",
-      "variables": "#839400",
-    },
-  },
-  "workbench.view.alwaysShowHeaderActions": true,
+  "workbench.colorTheme": "Solarized Dark",
+  "workbench.enableExperiments": false,
+  "workbench.settings.enableNaturalLanguageSearch": false,
   "terminal.integrated.fontSize": 14,
   "[Log]": {
     "editor.fontSize": 12
@@ -250,20 +295,7 @@
   "[clojure]": {
     "editor.matchBrackets": true
   },
-  "debug.console.fontSize": 14,
-  "calva.highlight.enableBracketColors": false,
-  "calva.fmt.removeConsecutiveBlankLines": true,
-  "calva.highlight.ignoredFormStyle": {
-    "textDecoration": "none; opacity: 0.5"
-  },
-  "explorer.confirmDelete": false,
-  "workbench.tree.indent": 20,
-  "workbench.editor.showTabs": true,
-  "editor.formatOnPaste": true,
-  "editor.hover.delay": 400,
-  "editor.maxTokenizationLineLength": 130000,
-  "editor.fontFamily": "Monaco, Fira Code Medium, Menlo, 'Courier New', monospace",
-  "editor.occurrencesHighlight": false,
-  "editor.hover.sticky": false,
-  "workbench.colorTheme": "Solarized Dark"
+  "extensions.showRecommendationsOnlyOnDemand": true,
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
 }
