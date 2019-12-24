@@ -2,7 +2,7 @@
 call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'liuchengxu/vista.vim'
-Plug 'guns/vim-sexp'
+Plug 'kovisoft/paredit'
 Plug 'benmills/vimux'
 " Plug 'neomake/neomake'
 Plug 'ludovicchabant/vim-gutentags'
@@ -22,6 +22,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fireplace'
+Plug 'venantius/vim-cljfmt'
 call plug#end()
 
 "" settings
@@ -108,7 +109,6 @@ hi link rustenumvariant default
 hi link cocerrorsign warningmsg
 hi link cochighlighttext search 
 hi link NERDTreeFile default 
-hi link GitGutterChangeLine DiffText
 hi link clojuremacro keyword
 hi link clojuredefine keyword
 
@@ -119,9 +119,16 @@ let g:gitgutter_sign_removed= '|'
 let g:gitgutter_sign_modified_removed = '|'
 let g:gitgutter_override_sign_column_highlight = 0
 
-"" vim-sexp
-nmap <M-l> <Plug>(sexp_capture_next_element)
-nmap <M-h> <Plug>(sexp_emit_tail_element) 
+"" clojure paredit.vim 
+nnoremap <M-h> :call PareditMoveLeft()<cr>
+nnoremap <M-l> :call PareditMoveRight()<cr>
+autocmd FileType clojure nmap <buffer> <space>e cpp
+autocmd FileType clojure nmap <buffer> <space>r cpp
+autocmd FileType clojure nmap <buffer> gd [<C-D> 
+autocmd FileType clojure nnoremap <buffer> <C-c><C-k> :%Eval<cr>
+autocmd FileType clojure nnoremap <buffer> <C-c>k :%Eval<cr>
+autocmd FileType clojure nnoremap <buffer> <C-c>p :%Eval<cr><cr>:Last<cr>
+autocmd FileType clojure nnoremap <buffer> <C-c><C-p> :%Eval<cr><cr>:Last<cr>
 
 "" neomake
 " call neomake#configure#automake({'TextChanged': {},'InsertLeave': {},'BufWritePost': {'delay': 0},'BufWinEnter': {},}, 500)
@@ -171,7 +178,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap FileType rust <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
