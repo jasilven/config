@@ -67,6 +67,7 @@ nnoremap gm %
 nnoremap <C-x><C-s> :write<cr>
 nnoremap <C-x><C-k> :hide<cr>
 nnoremap <C-x>k :bd<cr>
+nnoremap <C-x>g :Gstatus<cr>
 nnoremap <C-g> <Esc>
 inoremap <C-g> <Esc>
 vnoremap <C-g> <Esc>
@@ -103,21 +104,24 @@ hi link rustmacrovariable default
 hi link rustattribute nontext
 hi link rustassert default
 hi link rustenumvariant default
-hi link LspHintText nontext 
-hi link LspHintHighlight spellbad 
-hi link LspInformationText warningmsg 
-hi link LspInformationHighlight spellbad 
-hi link LspWarningText comment 
-hi link LspWarningHighlight spellbad
-hi link LspErrorText warningmsg 
-hi link LspErrorHighlight spellbad 
-hi link lspReference visual 
+hi link cocerrorsign warningmsg
+hi link cochighlighttext search 
 hi link NERDTreeFile default 
+" hi link LspHintText nontext 
+" hi link LspHintHighlight spellbad 
+" hi link LspInformationText warningmsg 
+" hi link LspInformationHighlight spellbad 
+" hi link LspWarningText comment 
+" hi link LspWarningHighlight spellbad
+" hi link LspErrorText warningmsg 
+" hi link LspErrorHighlight spellbad 
+" hi link lspReference visual 
 
 "" gitgutter
 let g:gitgutter_sign_modified = '|'
+let g:gitgutter_sign_added= '|'
+let g:gitgutter_sign_removed= '|'
 let g:gitgutter_override_sign_column_highlight = 0
-
 "" vim-sexp
 nmap <M-l> <Plug>(sexp_capture_next_element)
 nmap <M-h> <Plug>(sexp_emit_tail_element) 
@@ -194,4 +198,5 @@ if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
 endif
+
 

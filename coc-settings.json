@@ -1,13 +1,43 @@
 {
-	"coc.preferences.formatOnSaveFiletypes": ["rust", "clojure"],
-	"diagnostic.infoSign": "❗",
-	"diagnostic.errorSign": "✗",
-	"diagnostic.warningSign": "⚡",
-	"diagnostic.hintSign": "🗨",
-	"suggest.autoTrigger": "always",
-	"suggest.snippetIndicator": "►",
+  "coc.preferences.formatOnType": true,
+  "coc.source.buffer.ignoreGitignore": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "rust",
+    "clojure",
+    "json"
+  ],
+  "coc.preferences.snippets.enable": true,
+  "diagnostic.infoSign": "i",
+  "diagnostic.errorSign": "✖",
+  "diagnostic.warningSign": "❓",
+  "diagnostic.hintSign": "➡",
+  "suggest.autoTrigger": "always",
+  "suggest.snippetIndicator": "🏁",
 	"diagnostic.virtualText": true,
-	"rust-analyzer.enableCargoWatchOnStartup":"enabled", 
-	"rust.clippy_preference":"on",
-	"rust.jobs": 4
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+  "rust.clippy_preference": "on",
+  "rust.jobs": 4,
+  "languageserver": {
+    "clojure-lsp": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "cd ~/bin/clojure-lsp && lein run"
+      ],
+      "filetypes": [
+        "clojure"
+      ],
+      "rootPatterns": [
+        "project.clj"
+      ],
+      "additionalSchemes": [
+        "jar",
+        "zipfile"
+      ],
+      "trace.server": "verbose",
+      "InitializationOptions": {
+        "ignore-classpath_dictories": true
+      }
+    }
+  }
 }
