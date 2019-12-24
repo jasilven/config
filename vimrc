@@ -4,7 +4,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'liuchengxu/vista.vim'
 Plug 'guns/vim-sexp'
 Plug 'benmills/vimux'
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
@@ -15,15 +15,6 @@ Plug 'jiangmiao/auto-pairs', { 'tag': 'v2.0.0' }
 Plug 'joshdick/onedark.vim'
 Plug 'lifepillar/vim-solarized8'
 Plug 'liuchengxu/vim-clap', { 'do': function('clap#helper#build_all') }
-Plug 'prabirshrestha/async.vim'
-Plug 'keremc/asyncomplete-racer.vim', { 'for': 'rust' }
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-file.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-tags.vim'
-Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/vim-lsp'
 Plug 'rust-lang/rust.vim', {'for': 'rust'}
 Plug 'scrooloose/nerdtree'
 Plug 'sheerun/vim-polyglot'
@@ -34,7 +25,8 @@ call plug#end()
 
 "" settings
 set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8 spelllang=en_us
-set completeopt-=preview scrolloff=2 tabstop=2 shiftwidth=2 " set t_Co=256
+set scrolloff=2 tabstop=2 shiftwidth=2 " set t_Co=256
+" set completeopt-=preview 
 set nolist norelativenumber nospell noswapfile nobackup noshowmode nowrap noshowcmd nospell 
 set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch 
 set wildmode=list:longest,full 
@@ -87,6 +79,9 @@ tnoremap <C-g> <Esc>
 nnoremap <M-j> }
 nnoremap <M-k> {
 nnoremap <C-k> d$
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 "" colors
 hi signcolumn guibg=#002b36
@@ -128,15 +123,12 @@ nmap <M-l> <Plug>(sexp_capture_next_element)
 nmap <M-h> <Plug>(sexp_emit_tail_element) 
 
 "" neomake
-call neomake#configure#automake({'TextChanged': {},'InsertLeave': {},'BufWritePost': {'delay': 0},'BufWinEnter': {},}, 500)
-let g:neomake_warning_sign = { 'text': '✖' ,'texthl': 'NeomakeWarningSign', }
+" call neomake#configure#automake({'TextChanged': {},'InsertLeave': {},'BufWritePost': {'delay': 0},'BufWinEnter': {},}, 500)
+" let g:neomake_warning_sign = { 'text': '✖' ,'texthl': 'NeomakeWarningSign', }
 
 "" asyncomplete
 " autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#racer#get_source_options())
 " autocmd User lsp_setup call lsp#register_server({ 'name': 'rls', 'cmd': { server_info->['rls']}, 'whitelist': ['rust'], })
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 "" vimrooter
 let g:rooter_silent_chdir = 1
@@ -175,8 +167,9 @@ autocmd FileType rust set foldmethod=manual
 autocmd FileType rust nnoremap za zfa} 
 
 "" coc
-nmap <silent><M-n> <Plug>(coc-diagnostic-prev)
-nmap <silent><M-m> <Plug>(coc-diagnostic-next)
+nmap <f2> <Plug>(coc-rename)
+nmap <silent> <M-.> <Plug>(coc-diagnostic-next)
+nmap <silent> <M-,> <Plug>(coc-diagnostic-prev)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -190,28 +183,6 @@ function! s:show_documentation()
   endif
 endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
-nmap <f2> <Plug>(coc-rename)
-
-
-"" vim-lsp
-let g:lsp_diagnostics_enabled = 0
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '✗'}
-let g:lsp_signs_hint = {'text': '⭐'}
-let g:lsp_signs_information = {'text': '➡'}
-let g:lsp_signs_enabled = 1
-let g:lsp_highlights_enabled = 1
-let g:lsp_textprop_enabled = 1
-let g:lsp_diagnostics_echo_cursor = 1
-let g:lsp_virtual_text_enabled = 1
-let g:lsp_highlight_references_enabled = 1
-nmap gd :LspDefinition<cr>
-nmap K :LspHover<cr>
-if executable('rls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'rls', 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'workspace_config': {'rust': {'clippy_preference': 'off'}}, 'whitelist': ['rust'],})
-endif
 
 "" Remember cursor position
 augroup vimrc-remember-cursor-position

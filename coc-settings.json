@@ -1,9 +1,9 @@
 {
-  "languageserver": {
-    "rust": {
-      "command": "ra_lsp_server",
-      "filetypes": ["rust"],
-      "rootPatterns": ["Cargo.toml"]
-    }
- } 
+	"diagnostic.infoSign": "➡",
+	"diagnostic.errorSign": "✗",
+	"diagnostic.warningSign": "⚠",
+	"diagnostic.hintSign": "⭐",
+	"suggest.autoTrigger": "always",
+	"suggest.snippetIndicator": "►",
+	"diagnostic.virtualText": true
 }
