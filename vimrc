@@ -4,7 +4,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'liuchengxu/vista.vim'
 Plug 'kovisoft/paredit'
 Plug 'benmills/vimux'
-" Plug 'neomake/neomake'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
@@ -68,17 +67,19 @@ nnoremap gh 0
 nnoremap gm %
 nnoremap <C-x><C-s> :write<cr>
 nnoremap <C-x><C-k> :hide<cr>
+nnoremap <C-S-f> :Clap grep<cr><space><bs>
 nnoremap <C-x>k :bd<cr>
 nnoremap <C-x>g :Gstatus<cr>
-nnoremap <C-g> <Esc>
-inoremap <C-g> <Esc>
-vnoremap <C-g> <Esc>
-snoremap <C-g> <Esc>
-xnoremap <C-g> <Esc>
-cnoremap <C-g> <Esc>
-onoremap <C-g> <Esc>
-lnoremap <C-g> <Esc>
-tnoremap <C-g> <Esc>
+nmap <C-g> <Esc>
+imap <C-g> <Esc>
+vmap <C-g> <Esc>
+smap <C-g> <Esc>
+xmap <C-g> <Esc>
+cmap <C-g> <Esc>
+omap <C-g> <Esc>
+lmap <C-g> <Esc>
+tmap <C-g> <Esc>
+map <C-g> <Esc>
 nnoremap <M-j> }
 nnoremap <M-k> {
 nnoremap <C-k> d$
@@ -130,10 +131,6 @@ autocmd FileType clojure nnoremap <buffer> <C-c>k :%Eval<cr>
 autocmd FileType clojure nnoremap <buffer> <C-c>p :%Eval<cr><cr>:Last<cr>
 autocmd FileType clojure nnoremap <buffer> <C-c><C-p> :%Eval<cr><cr>:Last<cr>
 
-"" neomake
-" call neomake#configure#automake({'TextChanged': {},'InsertLeave': {},'BufWritePost': {'delay': 0},'BufWinEnter': {},}, 500)
-" let g:neomake_warning_sign = { 'text': '✖' ,'texthl': 'NeomakeWarningSign', }
-
 "" vimrooter
 let g:rooter_silent_chdir = 1
 
@@ -160,7 +157,7 @@ autocmd BufRead,BufNewFile * setlocal signcolumn=yes
 autocmd FileType fugitive nnoremap <silent> <C-n> :NERDTreeToggle<cr>
 
 " rust.vim
-let g:rustfmt_autosave = 1
+let g:rustfmt_autosave = 0 " coc autosaves
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 autocmd BufReadPost *.rs setlocal filetype=rust
@@ -179,15 +176,8 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 autocmd FileType rust nnoremap <silent> K :call CocAction('doHover')<cr>
-" nnoremap FileType rust <silent> K :call <SID>show_documentation()<CR>
-" function! s:show_documentation()
-"   if (index(['vim','help'], &filetype) >= 0)
-"     execute 'h '.expand('<cword>')
-"   else
-"     call CocAction('doHover')
-"   endif
-" endfunction
-" autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd CursorHold * silent call CocActionAsync('highlight')
+nnoremap <silent> <space>q :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 
 "" Remember cursor position
 augroup vimrc-remember-cursor-position
