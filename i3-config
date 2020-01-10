@@ -100,6 +100,7 @@ bindsym $mod+Pause exec --no-startup-id "pactl set-sink-mute $sink toggle"
 bindsym Print exec --no-startup-id "xfce4-screenshooter"
 bindsym $mod+Print exec --no-startup-id "xfce4-screenshooter"
 
+exec --no-startup-id xrandr --output eDP1 --mode 1600x900
 exec --no-startup-id "setxkbmap -layout us -variant altgr-intl -option 'ctrl:nocaps'"
 exec --no-startup-id "xmodmap ~/config/Xmodmap"
 exec nm-applet

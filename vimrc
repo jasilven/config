@@ -1,5 +1,6 @@
 "" plugins
 call plug#begin('~/.config/nvim/plugged')
+Plug 'cormacrelf/vim-colors-github'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'liuchengxu/vista.vim'
 Plug 'kovisoft/paredit'
@@ -27,6 +28,8 @@ call plug#end()
 "" settings
 set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8 spelllang=en_us
 set scrolloff=2 tabstop=2 shiftwidth=2 " set t_Co=256
+set undodir "~/.vimundo"
+set undofile
 " set completeopt-=preview 
 set nolist norelativenumber nospell noswapfile nobackup noshowmode nowrap noshowcmd nospell 
 set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch 
@@ -35,9 +38,7 @@ set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
 set updatetime=500
 set sessionoptions=blank,curdir,help,tabpages,winsize
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*/.git/*
-set background=dark
 syntax enable
-colorscheme solarized8
 
 "" key mappings
 let maplocalleader = ","
@@ -88,11 +89,11 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 "" colors
-hi signcolumn guibg=#002b36
-hi linenr guibg=#002b36
-hi vertsplit guibg=#002b36 guifg=#586E75
-hi special ctermfg=13 guifg=#2aa198
-hi NeomakeWarningSign guifg=#e5d11c 
+set background=light
+colorscheme solarized8
+" hi link signcolumn difftext 
+" 
+hi link vertsplit normal 
 hi link vimoption default
 hi link delimiter default
 hi link rustpreproc default
@@ -112,13 +113,27 @@ hi link cochighlighttext search
 hi link NERDTreeFile default 
 hi link clojuremacro keyword
 hi link clojuredefine keyword
+hi link clapcurrentselection spellbad 
+hi link clapdefaultpreview default
+hi link clapfuzzymatches1 clapmatches1
+hi link clapfuzzymatches2 clapmatches1
+hi link clapfuzzymatches3 clapmatches1
+hi link clapfuzzymatches4 clapmatches1
+hi link clapfuzzymatches5 clapmatches1
+" hi NeomakeWarningSign guifg=#e5d11c 
+" hi signcolumn guibg=#fafbfc
+" hi signcolumn guibg=#002b36
+" hi link signcolumn default 
+" hi linenr guibg=#002b36
+" hi special ctermfg=13 guifg=#2aa198
+" hi vertsplit guibg=#002b36 guifg=#586E75
 
-"" gitgutter
+" gitgutter
 let g:gitgutter_sign_modified = '|'
 let g:gitgutter_sign_added= '|'
 let g:gitgutter_sign_removed= '|'
 let g:gitgutter_sign_modified_removed = '|'
-let g:gitgutter_override_sign_column_highlight = 0
+let g:gitgutter_override_sign_column_highlight = 1
 
 "" clojure paredit.vim 
 nnoremap <M-h> :call PareditMoveLeft()<cr>
