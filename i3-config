@@ -4,8 +4,10 @@ floating_modifier $mod
 workspace_layout tabbed
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-bindsym $mod+Return exec alacritty
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+shift+Delete kill
+bindsym $mod+Delete kill
 bindsym $mod+d exec "rofi -combi-modi window,drun -theme solarized -font 'hack 12' -show combi"
 bindsym $mod+a layout tabbed
 bindsym $mod+s layout toggle split
@@ -13,9 +15,6 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+h split h
 bindsym $mod+v split v
 bindsym $mod+space floating toggle
-bindsym $mod+PageUp floating toggle
-bindsym $mod+Shift+r restart
-bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
@@ -28,6 +27,8 @@ bindsym $mod+Shift+Right move right
 bindsym Mod1+Tab focus right
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
+bindsym $mod+t exec thunar 
+bindsym $mod+Return exec alacritty
 
 for_window [class="Thunar"] floating enable
 
@@ -103,6 +104,7 @@ bindsym $mod+Print exec --no-startup-id "xfce4-screenshooter"
 exec --no-startup-id xrandr --output eDP1 --mode 1600x900
 exec --no-startup-id "setxkbmap -layout us -variant altgr-intl -option 'ctrl:nocaps'"
 exec --no-startup-id "xmodmap ~/config/Xmodmap"
+exec blueman-applet
 exec nm-applet
 exec pasystray
 exec xfce4-power-manager

@@ -20,6 +20,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
@@ -31,7 +32,7 @@ set scrolloff=2 tabstop=2 shiftwidth=2 " set t_Co=256
 set undodir "~/.vimundo"
 set undofile
 " set completeopt-=preview 
-set nolist norelativenumber nospell noswapfile nobackup noshowmode nowrap noshowcmd nospell 
+set nolist norelativenumber noswapfile nobackup noshowmode nowrap noshowcmd nospell 
 set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch 
 set wildmode=list:longest,full 
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
@@ -89,10 +90,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 "" colors
-set background=light
-colorscheme solarized8
-" hi link signcolumn difftext 
-" 
+set background=dark
+colorscheme solarized8 
 hi link vertsplit normal 
 hi link vimoption default
 hi link delimiter default
@@ -108,8 +107,10 @@ hi link rustmacrovariable default
 hi link rustattribute nontext
 hi link rustassert default
 hi link rustenumvariant default
-hi link cocerrorsign warningmsg
+hi link cocerrorsign diffdelete 
+hi link cocwarningsign diffchange 
 hi link cochighlighttext search 
+hi link cocunderline spellbad
 hi link NERDTreeFile default 
 hi link clojuremacro keyword
 hi link clojuredefine keyword
@@ -120,13 +121,6 @@ hi link clapfuzzymatches2 clapmatches1
 hi link clapfuzzymatches3 clapmatches1
 hi link clapfuzzymatches4 clapmatches1
 hi link clapfuzzymatches5 clapmatches1
-" hi NeomakeWarningSign guifg=#e5d11c 
-" hi signcolumn guibg=#fafbfc
-" hi signcolumn guibg=#002b36
-" hi link signcolumn default 
-" hi linenr guibg=#002b36
-" hi special ctermfg=13 guifg=#2aa198
-" hi vertsplit guibg=#002b36 guifg=#586E75
 
 " gitgutter
 let g:gitgutter_sign_modified = '|'
