@@ -33,7 +33,7 @@ set undodir "~/.vimundo"
 set undofile
 " set completeopt-=preview 
 set nolist norelativenumber noswapfile nobackup noshowmode nowrap noshowcmd nospell 
-set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch 
+set termguicolors number cursorline hidden ttyfast ruler ignorecase hlsearch autoread 
 set wildmode=list:longest,full 
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
 set updatetime=500
