@@ -4,7 +4,8 @@ SAVEHIST=1000
 setopt appendhistory autocd extendedglob notify prompt_subst
 unsetopt prompt_cr prompt_sp
 bindkey -e
-
+# set tilde to work
+set -o magicequalsubst
 autoload -Uz compinit
 compinit
 

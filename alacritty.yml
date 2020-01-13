@@ -64,7 +64,6 @@ colors:
     magenta: '0xd33682' # magenta
     cyan:    '0x2aa198' # cyan
     white:   '0xeee8d5' # base2
-
   # Bright colors
   bright:
     black:   '0x002b36' # base03
@@ -127,6 +126,8 @@ key_bindings:
   #- { key: Minus,    mods: Control,       action: DecreaseFontSize }
 
   # (macOS only)
+  - { key: J,        mods: Alt,     chars: "\x1bj"                       }
+  - { key: K,        mods: Alt,     chars: "\x1bk"                       }
   #- { key: Key0,   mods: Command, action: ResetFontSize    }
   #- { key: Equals, mods: Command, action: IncreaseFontSize }
   #- { key: Add,    mods: Command, action: IncreaseFontSize }
