@@ -208,7 +208,7 @@ augroup vimrc-remember-cursor-position
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 
-"" rg/grep
+"" rg/grep - usage: :Grep <search> <file> 
 if executable('rg')
  set grepprg=rg\ --no-heading\ --vimgrep
  set grepformat=%f:%l:%c:%m
@@ -227,13 +227,13 @@ command! -nargs=+ -complete=file_in_path -bar Grep  cgetexpr Grep(<q-args>)
 "" statusline
 set statusline=
 set statusline+=%#StatusLine#
-set statusline+=\ \ %f
+set statusline+=\ %f
 set statusline+=\ \ 
-set statusline+=[%{getcwd()}]\ 
+set statusline+=🗁\ %{getcwd()}\ 
 set statusline+=%m
 set statusline+=%=
 set statusline+=%l,%.4c
-set statusline+=\ %y\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\ %y\ %{&fileencoding?&fileencoding:&encoding}\ 
 
 "" neoterm
 let g:neoterm_size=12

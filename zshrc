@@ -22,16 +22,16 @@ git_branch() {
       branch=${match[1]}
       branch_cut=${branch:0:35}
       if (( ${#branch} > ${#branch_cut} )); then
-          echo "[${branch_cut}…${state}]"
+          echo "${branch_cut}…${state}"
       else
-          echo "[${branch}${state}]"
+          echo "${branch}${state}"
       fi
     fi
 }
 
 PROMPT='
-%F{blue}%d%f%F{yellow} $(git_branch)
-%F{none}%B $%b '
+%F{blue}%d%f%F{yellow}  $(git_branch)  %F{cyan}%(1j.(jobs!).)
+%F{green%}%B $ %F{none}%b'
 
 alias vim="nvim"
 alias ls="ls -Cp"
