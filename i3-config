@@ -5,10 +5,11 @@ workspace_layout tabbed
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+#bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+q exec i3-msg exit 
 bindsym $mod+shift+Delete kill
 bindsym $mod+Delete kill
-bindsym $mod+d exec "rofi -combi-modi window,drun -theme solarized -font 'hack 12' -show combi"
+bindsym $mod+d exec "rofi -combi-modi window,drun -theme solarized -font 'menlo 12' -show combi"
 bindsym $mod+a layout tabbed
 bindsym $mod+s layout toggle split
 bindsym $mod+f fullscreen toggle
@@ -101,7 +102,8 @@ bindsym $mod+Pause exec --no-startup-id "pactl set-sink-mute $sink toggle"
 bindsym Print exec --no-startup-id "xfce4-screenshooter"
 bindsym $mod+Print exec --no-startup-id "xfce4-screenshooter"
 
-exec --no-startup-id xrandr --output eDP1 --mode 1600x900
+# exec --no-startup-id xrandr --output eDP1 --mode 1600x900
+exec --no-startup-id xrandr --output eDP1 --auto 
 exec --no-startup-id "setxkbmap -layout us -variant altgr-intl -option 'ctrl:nocaps'"
 exec --no-startup-id "xmodmap ~/config/Xmodmap"
 exec blueman-applet

@@ -1,4 +1,6 @@
 {
+	"json.enable": true,
+	"json.format.enable": true,
   "coc.preferences.formatOnType": true,
   "coc.source.buffer.ignoreGitignore": true,
   "coc.preferences.formatOnSaveFiletypes": [
