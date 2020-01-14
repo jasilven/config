@@ -202,7 +202,7 @@ nnoremap <silent> <space>q :exe 'CocList -I --input='.expand('<cword>').' grep'<
 autocmd FileType json set foldmethod=manual
 autocmd FileType json nnoremap za zfa}
 
-"" Remember cursor position
+"" remember cursor position
 augroup vimrc-remember-cursor-position
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
