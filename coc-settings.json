@@ -1,5 +1,6 @@
 {
 	"json.enable": true,
+	"codeLens.enable":true,
 	"json.format.enable": true,
   "coc.preferences.formatOnType": true,
   "coc.source.buffer.ignoreGitignore": true,
@@ -15,30 +16,18 @@
   "diagnostic.hintSign": "➡",
   "suggest.autoTrigger": "always",
   "suggest.snippetIndicator": "🏁",
-	"diagnostic.virtualText": true,
-  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+	"diagnostic.virtualText": false,
   "rust.clippy_preference": "on",
   "rust.jobs": 4,
   "languageserver": {
     "clojure-lsp": {
       "command": "bash",
-      "args": [
-        "-c",
-        "cd ~/bin/clojure-lsp && lein run"
-      ],
-      "filetypes": [
-        "clojure"
-      ],
-      "rootPatterns": [
-        "project.clj"
-      ],
-      "additionalSchemes": [
-        "jar",
-        "zipfile"
-      ],
+      "args": ["-c", "clojure-lsp"],
+      "filetypes": ["clojure"],
+      "rootPatterns": ["project.clj"],
+      "additionalSchemes": ["jar", "zipfile"],
       "trace.server": "verbose",
-      "InitializationOptions": {
-        "ignore-classpath_dictories": true
+      "initializationOptions": {
       }
     }
   }
