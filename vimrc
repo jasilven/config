@@ -2,6 +2,7 @@
 call plug#begin('~/.config/nvim/plugged')
 Plug 'cormacrelf/vim-colors-github'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'ludovicchabant/vim-gutentags'
 Plug 'kassio/neoterm'
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
@@ -28,7 +29,8 @@ set scrolloff=2 tabstop=2 shiftwidth=2 " set t_Co=256 completeopt-=preview
 set noswapfile nobackup noshowmode nowrap noshowcmd nospell nofoldenable
 set termguicolors number cursorline hidden ttyfast ignorecase hlsearch autoread
 set wildmode=list:longest,full splitright
-set fillchars=fold:\  listchars=tab:→\ ,trail:· nolist
+set fillchars=fold:\  nolist 
+set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:$,precedes:«,extends:»
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
 set updatetime=500 undofile inccommand=nosplit
 set sessionoptions=blank,curdir,help,tabpages,winsize
@@ -80,6 +82,10 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 tnoremap <C-w><C-w> <C-\><C-N><C-w>w
 tnoremap <C-w>w <C-\><C-N><C-w>w
+tnoremap <C-w>k <C-\><C-N><C-w>k
+tnoremap <C-w>j <C-\><C-N><C-w>j
+tnoremap <C-w>h <C-\><C-N><C-w>h
+tnoremap <C-w>l <C-\><C-N><C-w>l
 tnoremap jk <c-\><c-n>
 
 "" colors
@@ -120,7 +126,7 @@ hi easymotiontargetdefault gui=bold guifg=#EF2733
 
 "" fzf/skim
 autocmd FileType fzg tnoremap <C-e> <Esc>
-let g:fzf_tags_command = 'ctags --languages=Rust,Go,Clojure,Java,JavaScript -R'
+" let g:fzf_tags_command = 'ctags --languages=Rust,Go,Clojure,Java,JavaScript -R' " gutengags generates
 let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'down': '~26%' }
 let g:fzf_colors = {
@@ -219,14 +225,11 @@ autocmd FileType json nnoremap za zfa}
 
 "" sexp 
 let g:sexp_mappings = { 
-  \ 'sexp_capture_next_element': '<M-l>', 
-  \ 'sexp_emit_tail_element': '<M-h>',
-  \ 'sexp_swap_list_backward': '',
-  \ 'sexp_swap_list_forward': '', }
+  \ 'sexp_capture_next_element': '<M-l>',  'sexp_emit_tail_element': '<M-h>',
+  \ 'sexp_swap_list_backward': '',  'sexp_swap_list_forward': '', }
 
 "" clojure
 autocmd FileType clojure nmap <space>e cpp
-autocmd FileType clojure nmap <space>r cpp
 autocmd FileType clojure nmap gd [<C-D>
 autocmd FileType clojure nnoremap <C-c><C-k> :%Eval<cr>
 autocmd FileType clojure nnoremap <C-c>k :%Eval<cr>
