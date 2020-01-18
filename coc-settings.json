@@ -10,9 +10,9 @@
     "json"
   ],
   "coc.preferences.snippets.enable": true,
-  "diagnostic.infoSign": "i",
+  "diagnostic.infoSign": "🗈",
   "diagnostic.errorSign": "✖",
-  "diagnostic.warningSign": "❓",
+  "diagnostic.warningSign": "❗",
   "diagnostic.hintSign": "➡",
   "suggest.autoTrigger": "always",
   "suggest.snippetIndicator": "🏁",
