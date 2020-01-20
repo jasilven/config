@@ -1,0 +1,13 @@
+{:conns
+ {:jvm {:port 5555
+        :hooks {:connect! (fn [conn] (println "Connected to JVM prepl!"))
+                :refresh (fn [opts]
+                           (#(prn %) "Refreshing!")
+                           opts)}}}
+
+ :hooks
+ {:connect! (fn [conn]
+              (println "Connected to a"
+                       #?(:clj "Clojure"
+                          :cljs "ClojureScript")
+                       "prepl!"))}}

@@ -38,13 +38,13 @@
 (add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)
                             (text-scale-decrease 1)))
 (add-hook 'flycheck-error-list-mode-hook (lambda () (text-scale-decrease 1)))
-(add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
-(add-hook 'cargo-process-mode-hook (lambda () (end-of-buffer)))
+;; (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
+(add-hook 'cargo-process-mode-hook (lambda () (goto-char (point-max))))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; global keys
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "<f8>") 'shell-pop)
+(global-set-key (kbd "C-j") 'shell-pop)
 (global-set-key (kbd "C-<tab>") 'my/switch-to-last-buffer)
 (global-set-key (kbd "C-M-=") 'my/indent-buffer)
 (global-set-key (kbd "C-M-w") 'ace-delete-window)
@@ -197,19 +197,19 @@
 (use-package ivy-posframe :ensure t
   :config
   (setq ivy-posframe-min-width 80
-        ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-12" "Monaco-13")
+        ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
         ivy-posframe-border-width 2
-        ivy-posframe-width 80
+        ivy-posframe-width 90
         ivy-posframe-min-height 10
         ivy-posframe-height 10
-        ivy-posframe-parameters '((left-fringe . 8) (right-fringe . 8))
+        ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
         ivy-posframe-display-functions-alist
         '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
           (counsel-company . ivy-posframe-display-at-point)
           (complete-symbol . ivy-posframe-display-at-point)
           (counsel-M-x     . ivy-posframe-display-at-window-center)
           (t               . ivy-posframe-display-at-window-center)))
-  (set-face-attribute 'internal-border nil :background "#ff79c6")
+  (set-face-attribute 'internal-border nil :background "#2AA18E")
   (ivy-posframe-mode 1))
 
 (use-package popwin
@@ -301,6 +301,7 @@
 (use-package shell-pop
   :ensure t
   :config
+  (define-key term-raw-map (kbd "C-j") 'shell-pop)
   (evil-set-initial-state 'term-mode 'emacs)
   (setq shell-pop-term-shell "/bin/zsh")
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
@@ -558,12 +559,12 @@
   :ensure t
   :hook ((lsp-mode . lsp-ui-mode)
 	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
-                             (set-face-attribute 'lsp-ui-sideline-global nil :height 0.8 :background "#00242e")
+                             (set-face-attribute 'lsp-ui-sideline-global nil :height 0.9 :background "#00242e")
                              (lsp-ui-doc-mode -1))))
   :config
   (setq lsp-ui-sideline-show-symbol t)
   (setq lsp-ui-sideline-ignore-duplicate t)
-  (setq lsp-ui-doc-use-webkit nil)
+  (setq lsp-ui-doc-use-webkit -1)
   (setq lsp-ui-flycheck-enable t)
   (setq lsp-ui-doc-include-signature t)
   (setq lsp-ui-doc-enable nil)
@@ -580,10 +581,10 @@
   ;;             ("C-c r i" . lsp-ui-imenu)
   ;;             ("C-c r F" . lsp-ui-sideline-apply-code-actions)
   ;;             ("C-c r R" . lsp-rename))
-
   )
 
 (defun my/cargo-run-bin ()
+  "Run cargo run."    
   (interactive)
   (let ((bin-name (file-name-sans-extension (buffer-name))))
     (delete-other-windows)
@@ -592,11 +593,13 @@
       (cargo-process-run-bin bin-name))))
 
 (defun my/cargo-process-test()
+  "Run cargo test."
   (interactive)
   (delete-other-windows)
   (cargo-process-test))
 
 (defun my/cargo-process-check()
+  "Run cargo check."
   (interactive)
   (delete-other-windows)
   (cargo-process-check))
@@ -606,7 +609,7 @@
   :mode "\\.rs\\'"
   :hook (rust-mode . lsp)
   :config
-  (flycheck-inline-mode -1)
+  ;; (flycheck-inline-mode -1)
   (electric-pair-local-mode t)
   (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
   (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
@@ -632,7 +635,7 @@
   (define-key cargo-process-mode-map (kbd "go") 'other-window)
   (add-hook 'cargo-process-mode-hook
             (lambda ()
-              (text-scale-decrease 1.1)
+              (text-scale-decrease 1)
               (visual-line-mode 1)
               (setq-local global-hl-line-mode nil)))
   :hook (rust-mode . cargo-minor-mode))
@@ -651,6 +654,7 @@
 
 
 (defun my/switch-to-repl-and-back ()
+  "Switch to repl and back."
   (interactive)
   (cider-switch-to-repl-buffer)
   (cider-switch-to-last-clojure-buffer))
@@ -693,6 +697,8 @@
   (interactive "*")
   (load-theme 'doom-solarized-dark)
   (set-face-attribute 'error nil :foreground "#e66f6d" :weight 'bold)
+  (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
+  (set-face-attribute 'markdown-code-face nil :background "#002B36")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
   (set-face-attribute 'region nil :background "#055633")
   (set-face-attribute 'hl-line nil :background "#083a4a")

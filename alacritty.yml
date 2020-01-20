@@ -23,17 +23,27 @@ tabspaces: 4
 # Font configuration (changes require restart)
 font:
   size: 11
+
   normal:
-    # family: Dejavu Sans mono
-    # family: Menlo
-    family: Fira Code Medium 
+    family: Fira Code Medium
     style: Regular
   bold:
     family: Fira Code Medium
-    style: Bold
+    style: Regular
   italic:
-    family: Fira Code Medium 
+    family: Fira Code 
     style: Italic
+
+  # normal:
+  #   family: Fira Mono
+  #   style: Regular
+  # bold:
+  #   family: Fira Mono
+  #   style: Regular 
+  # italic:
+  #   family: Fira Mono 
+  #   style: Italic
+
   offset:
     x: 0
     y: 0
@@ -44,47 +54,62 @@ font:
 
 draw_bold_text_with_bright_colors: false
 
+
 # Colors (Solarized Dark)
 colors:
   primary:
-    # background: '0x002b36' # base03
-    # foreground: '0x839496' # base0
-    foreground: '0xa3a3a3'
-    # background: '0x171717'
-    background: '0x1a1a1a'
+    background: '0x002b36' # base03
+    foreground: '0x839496' # base0
   cursor:
     text:   '0x002b36' # base03
-    # cursor: '0x839496' # base0
-    cursor: '0xdddddd'
+    cursor: '0x839496' # base0
   normal:
     black:   '0x073642' # base02
-    red:     '0xcb4b16' # orange
+    red:     '0xdc322f' # red
     green:   '0x859900' # green
     yellow:  '0xb58900' # yellow
     blue:    '0x268bd2' # blue
     magenta: '0xd33682' # magenta
     cyan:    '0x2aa198' # cyan
     white:   '0xeee8d5' # base2
-  # Bright colors
   bright:
-    black:   '0x073642' # base02
+    black:   '0x002b36' # base03
     red:     '0xcb4b16' # orange
-    green:   '0x859900' # green
-    yellow:  '0xb58900' # yellow
-    blue:    '0x268bd2' # blue
-    magenta: '0xd33682' # magenta
-    cyan:    '0x2aa198' # cyan
-    white:   '0xeee8d5' # base2
-    # black:   '0x002b36' # base03
-    # red:     '0xcb4b16' # orange
-    # green:   '0x586e75' # base01
-    # yellow:  '0x657b83' # base00
-    # blue:    '0x839496' # base0
-    # magenta: '0x6c71c4' # violet
-    # cyan:    '0x93a1a1' # base1
-    # white:   '0xfdf6e3' # base3
+    green:   '0x586e75' # base01
+    yellow:  '0x657b83' # base00
+    blue:    '0x839496' # base0
+    magenta: '0x6c71c4' # violet
+    cyan:    '0x93a1a1' # base1
+    white:   '0xfdf6e3' # base3
 
-    # red:     '0xdc322f' # red
+
+# # Colors (Dark)
+# colors:
+#   primary:
+#     foreground: '0xa3a3a3'
+#     background: '0x1a1a1a'
+#   cursor:
+#     text:   '0xffffff' # base03
+#     cursor: '0xdddddd'
+#     cursor: '0x4F52E6'
+#   normal:
+#     black:   '0x073642' # base02
+#     red:     '0xcb4b16' # orange
+#     green:   '0x859900' # green
+#     yellow:  '0xb58900' # yellow
+#     blue:    '0x268bd2' # blue
+#     magenta: '0xd33682' # magenta
+#     cyan:    '0x2aa198' # cyan
+#     white:   '0xeee8d5' # base2
+#   bright:
+#     black:   '0x073642' # base02
+#     red:     '0xcb4b16' # orange
+#     green:   '0x859900' # green
+#     yellow:  '0xb58900' # yellow
+#     blue:    '0x268bd2' # blue
+#     magenta: '0xd33682' # magenta
+#     cyan:    '0x2aa198' # cyan
+#     white:   '0xeee8d5' # base2
 
 visual_bell:
   animation: EaseOutExpo
@@ -113,13 +138,13 @@ selection:
 dynamic_title: true
 
 cursor:
-  style: Block
+  style: Beam
   unfocused_hollow: false
 
 live_config_reload: true
 
 shell:
-  program: /usr/bin/fish
+  program: /bin/zsh
 enable_experimental_conpty_backend: false
 
 # Send ESC (\x1b) before characters when alt is pressed.

@@ -284,7 +284,7 @@
     // "editorBracketMatch.background": "#993399",
     "editor.inactiveSelectionBackground": "#FFFFFF",
   },
-  "workbench.colorTheme": "Solarized Dark",
+  "workbench.colorTheme": "Default Light+",
   "workbench.enableExperiments": false,
   "workbench.settings.enableNaturalLanguageSearch": false,
   "terminal.integrated.fontSize": 14,

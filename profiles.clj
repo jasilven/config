@@ -1,6 +1,2 @@
-{:user {:plugins [[cider/cider-nrepl "0.22.0"] 
-                  [lein-cljfmt "0.6.6"]
-                  ]
-        :dependencies [[cljfmt "0.6.4"]]
-        }
- }
+{:user {:jvm-opts ["-Dclojure.server.repl={:port,5555,:accept,clojure.core.server/io-prepl}"]}
+ :cider {:plugins [[cider/cider-nrepl "0.22.0"]]}}
