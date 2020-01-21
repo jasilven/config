@@ -330,21 +330,21 @@ au BufRead,BufNewFile * setlocal signcolumn=yes
 
 "" tmux_navigator
 let g:tmux_navigator_no_mappings = 1
-nnoremap <silent> <M-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <M-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <M-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <M-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <M-p> :TmuxNavigatePrevious<cr>
-tmap <silent> <M-h> jk:TmuxNavigateLeft<cr>
-tmap <silent> <M-j> jk:TmuxNavigateDown<cr>
-tmap <silent> <M-k> jk:TmuxNavigateUp<cr>
-tmap <silent> <M-l> jk:TmuxNavigateRight<cr>
-tmap <silent> <M-p> jk:TmuxNavigatePrevious<cr>
-inoremap <silent> <M-h> <esc>:TmuxNavigateLeft<cr>
-inoremap <silent> <M-j> <esc>:TmuxNavigateDown<cr>
-inoremap <silent> <M-k> <esc>:TmuxNavigateUp<cr>
-inoremap <silent> <M-l> <esc>:TmuxNavigateRight<cr>
-inoremap <silent> <M-p> <esc>:TmuxNavigatePrevious<cr>
+nnoremap <silent> <C-w>h :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-w>j :TmuxNavigateDown<cr>
+nnoremap <silent> <C-w>k :TmuxNavigateUp<cr>
+nnoremap <silent> <C-w>l :TmuxNavigateRight<cr>
+nnoremap <silent> <C-w>p :TmuxNavigatePrevious<cr>
+tmap <silent> <C-w>h jk:TmuxNavigateLeft<cr>
+tmap <silent> <C-w>j jk:TmuxNavigateDown<cr>
+tmap <silent> <C-w>k jk:TmuxNavigateUp<cr>
+tmap <silent> <C-w>l jk:TmuxNavigateRight<cr>
+tmap <silent> <C-w>p jk:TmuxNavigatePrevious<cr>
+inoremap <silent> <C-w>h <esc>:TmuxNavigateLeft<cr>
+inoremap <silent> <C-w>j <esc>:TmuxNavigateDown<cr>
+inoremap <silent> <C-w>k <esc>:TmuxNavigateUp<cr>
+inoremap <silent> <C-w>l <esc>:TmuxNavigateRight<cr>
+inoremap <silent> <C-w>p <esc>:TmuxNavigatePrevious<cr>
 
 "" fugitive
 au FileType fugitive nnoremap <silent> <C-n> :NERDTreeToggle<cr>

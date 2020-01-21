@@ -1,6 +1,6 @@
 .cpcache/*
 tags
-target/*
+target
 classes/*
 checkouts/*
 pom.xml
