@@ -70,8 +70,8 @@ nnoremap <space>h :History<cr>
 nnoremap <C-s> :BLines<cr>
 nnoremap <C-p> :GFiles<cr>
 nnoremap go <C-w>w
-nnoremap gj } 
-nnoremap gk {
+nnoremap <M-j> } 
+nnoremap <M-k> {
 nnoremap dh d0
 nnoremap dl d$
 nnoremap yl y$
@@ -80,9 +80,11 @@ nnoremap gl $
 nnoremap gh 0
 nnoremap gm %
 nnoremap <C-x><C-s> :write<cr>
-nnoremap <C-x><C-k> :hide<cr>
 nnoremap <C-S-F> :Rg<cr>
-nnoremap <C-x>k :close<cr>
+nnoremap <C-x><C-k> :bd!<cr>
+nnoremap <C-x>k :bd!<cr>
+tnoremap <C-x><C-k> <C-\><C-N>:bd!<cr>
+tnoremap <C-x>k <C-\><C-N>:bd!<cr>
 nnoremap <C-q> :cq<cr>
 inoremap <C-q> <esc>:cq<cr>
 tnoremap <C-q> <C-\><C-N>:cq<cr>
@@ -256,7 +258,8 @@ command! MyDark call Dark()
 call Solarized()
 
 "" conjure
-autocmd BufEnter /tmp/conjure.cljc nnoremap <buffer> q :ConjureCloseLog<CR>
+au BufEnter */conjure.cljc nnoremap <buffer> q :ConjureCloseLog<CR>
+au BufEnter */conjure.cljc setlocal nonumber 
 let g:conjure_log_blacklist = ["up", "ret", "load-file", "eval"]
 let g:conjure_default_mappings = v:false
 let g:conjure_log_direction = "vertical"
@@ -409,7 +412,7 @@ augroup END
 "" clojure
 au FileType clojure nnoremap <buffer> <C-c><C-k> :ConjureEvalBuffer<cr>
 au FileType clojure nnoremap <buffer> <C-c>k :ConjureEvalBuffer<cr>
-au FileType clojure nnoremap <buffer> <C-c><C-p> :ConjureToggleLog<cr>
+au FileType clojure nnoremap <buffer> <C-c><C-p> :ConjureToggleLog<cr><C-w><C-w>
 au FileType clojure nnoremap <buffer> <C-c>p :ConjureToggleLog<cr>
 au FileType clojure nnoremap <buffer> <space>e :ConjureEvalCurrentForm<cr>
 au FileType clojure nnoremap <buffer> <space>r :ConjureEvalCurrentForm<cr>
