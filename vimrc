@@ -80,7 +80,7 @@ nnoremap gh 0
 nnoremap gm %
 nnoremap <C-x><C-s> :write<cr>
 nnoremap <C-x><C-k> :hide<cr>
-nnoremap <C-S-f> :Rg<cr>
+nnoremap <C-S-F> :Rg<cr>
 nnoremap <C-x>k :close<cr>
 nnoremap <C-q> :cq<cr>
 inoremap <C-q> <esc>:cq<cr>
@@ -180,6 +180,7 @@ function! Solarized()
 	hi! link fzf1 comment
 	hi! link fzf2 comment
 	hi! link fzf3 comment
+  hi! matchparen guifg=#dc322f
 endfunction
 command! MySolarized call Solarized()
 
@@ -275,9 +276,9 @@ let g:fzf_layout = { 'down': '~18%' }
 let g:fzf_colors = {
   \ 'fg':      ['fg', 'Normal'], 
 	\ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'directory'], 
-	\ 'hl+':     ['fg', 'directory'],
-	\ 'fg+':     ['fg', 'directory', 'normal', 'normal'],
+  \ 'hl':      ['fg', 'keyword'], 
+	\ 'hl+':     ['fg', 'keyword'],
+	\ 'fg+':     ['fg', 'keyword', 'normal', 'normal'],
   \ 'bg+':     ['bg', 'normal', 'normal' ],
   \ 'info':    ['fg', 'Comment'], 'border':  ['fg', 'Comment'],
   \ 'prompt':  ['fg', 'Directory'], 'pointer': ['fg', 'Keyword'],
@@ -397,13 +398,6 @@ function! s:vim_sexp_mappings()
 	nmap <silent><buffer> <M-S-l>  <Plug>(sexp_capture_next_element)
 	imap <silent><buffer> <M-S-l>  <esc><Plug>(sexp_capture_next_element)i
 	imap <silent><buffer> <BS>     <Plug>(sexp_insert_backspace)
-	imap <silent><buffer> "        <Plug>(sexp_insert_double_quote)
-	imap <silent><buffer> (        <Plug>(sexp_insert_opening_round)
-	imap <silent><buffer> )        <Plug>(sexp_insert_closing_round)
-	imap <silent><buffer> [        <Plug>(sexp_insert_opening_square)
-	imap <silent><buffer> ]        <Plug>(sexp_insert_closing_square)
-	imap <silent><buffer> {        <Plug>(sexp_insert_opening_curly)
-	imap <silent><buffer> }        <Plug>(sexp_insert_closing_curly)
 endfunction
 augroup VIM_SEXP_MAPPING
 	autocmd!
@@ -415,11 +409,9 @@ au FileType clojure nnoremap <buffer> <C-c><C-k> :ConjureEvalBuffer<cr>
 au FileType clojure nnoremap <buffer> <C-c>k :ConjureEvalBuffer<cr>
 au FileType clojure nnoremap <buffer> <C-c><C-p> :ConjureToggleLog<cr>
 au FileType clojure nnoremap <buffer> <C-c>p :ConjureToggleLog<cr>
-au FileType clojure nnoremap <buffer> <space>e "cya):ConjureEvalCurrentForm<cr>
-au FileType clojure nnoremap <buffer> <space>r "cya):ConjureEvalCurrentForm<cr>
+au FileType clojure nnoremap <buffer> <space>e :ConjureEvalCurrentForm<cr>
+au FileType clojure nnoremap <buffer> <space>r :ConjureEvalCurrentForm<cr>
 au FileType clojure nnoremap <buffer> <space>t :ConjureRunTests<cr>
-" au FileType clojure nnoremap <C-c>p :execute "normal! cpp\<cr>:Last\<cr>"
-" au FileType clojure nnoremap <C-c><C-p> :execute "normal! cpp\<cr>:Last\<cr>"
 au FileType clojure nnoremap <buffer> <silent> K :call CocAction('doHover')<cr>
 au FileType clojure nnoremap <buffer> <silent> <f1> :call CocAction('doHover')<cr>
 au FileType clojure nnoremap <M-z> :!zeal 'clojure:'<cword> &<cr><cr>
