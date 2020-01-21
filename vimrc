@@ -25,6 +25,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-salve'
 Plug 'guns/vim-sexp', {'for': 'clojure'}
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
 Plug 'machakann/vim-highlightedyank'
 Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
@@ -301,6 +302,7 @@ let g:gitgutter_sign_allow_clobber=1
 
 "" vimrooter
 let g:rooter_silent_chdir = 1
+let g:rooter_patterns = ['project.clj','deps.edn', '.git/', 'Cargo.toml']
 
 "" statusline
 set statusline=%*
@@ -393,10 +395,10 @@ au FileType json nnoremap za zfa}
 "" sexp 
 let g:sexp_filetypes = ''
 function! s:vim_sexp_mappings()
-	nmap <silent><buffer> <M-S-h>  <Plug>(sexp_emit_tail_element)
-	imap <silent><buffer> <M-S-h>  <esc><Plug>(sexp_emit_tail_element)i
-	nmap <silent><buffer> <M-S-l>  <Plug>(sexp_capture_next_element)
-	imap <silent><buffer> <M-S-l>  <esc><Plug>(sexp_capture_next_element)i
+	nmap <silent><buffer> <M-h>  <Plug>(sexp_emit_tail_element)
+	imap <silent><buffer> <M-h>  <esc><Plug>(sexp_emit_tail_element)i
+	nmap <silent><buffer> <M-l>  <Plug>(sexp_capture_next_element)
+	imap <silent><buffer> <M-l>  <esc><Plug>(sexp_capture_next_element)i
 	imap <silent><buffer> <BS>     <Plug>(sexp_insert_backspace)
 endfunction
 augroup VIM_SEXP_MAPPING
