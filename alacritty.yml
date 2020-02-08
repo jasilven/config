@@ -62,10 +62,10 @@ colors:
     foreground: '0x839496' # base0
   cursor:
     text:   '0x002b36' # base03
-    cursor: '0x839496' # base0
+    cursor: '0xdddddd' # 839496 # base0
   normal:
     black:   '0x073642' # base02
-    red:     '0xdc322f' # red
+    red:     '0xC25956' # red
     green:   '0x859900' # green
     yellow:  '0xb58900' # yellow
     blue:    '0x268bd2' # blue
@@ -74,7 +74,7 @@ colors:
     white:   '0xeee8d5' # base2
   bright:
     black:   '0x002b36' # base03
-    red:     '0xcb4b16' # orange
+    red:     '0xC25956' # orange
     green:   '0x586e75' # base01
     yellow:  '0x657b83' # base00
     blue:    '0x839496' # base0
@@ -138,7 +138,7 @@ selection:
 dynamic_title: true
 
 cursor:
-  style: Beam
+  style: Block 
   unfocused_hollow: false
 
 live_config_reload: true
@@ -152,8 +152,8 @@ alt_send_esc: false
 
 key_bindings:
   # (Windows/Linux only)
-  #- { key: V,        mods: Control|Shift, action: Paste            }
-  #- { key: C,        mods: Control|Shift, action: Copy             }
+  - { key: V,        mods: Control|Shift, action: Paste            }
+  - { key: C,        mods: Control|Shift, action: Copy             }
   #- { key: Insert,   mods: Shift,         action: PasteSelection   }
   #- { key: Equals,   mods: Control,       action: IncreaseFontSize }
   #- { key: Add,      mods: Control,       action: IncreaseFontSize }
@@ -166,6 +166,8 @@ key_bindings:
   - { key: K,        mods: Alt,     chars: "\x1bk"                       }
   - { key: H,        mods: Alt,     chars: "\x1bh"                       }
   - { key: L,        mods: Alt,     chars: "\x1bl"                       }
+  - { key: N,        mods: Alt,     chars: "\x1bn"                       }
+  - { key: P,        mods: Alt,     chars: "\x1bp"                       }
   #- { key: K,      mods: Command, action: ClearHistory     }
   #- { key: K,      mods: Command, chars: "\x0c"            }
   #- { key: V,      mods: Command, action: Paste            }

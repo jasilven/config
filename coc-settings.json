@@ -10,13 +10,16 @@
     "json"
   ],
   "coc.preferences.snippets.enable": true,
+  "diagnostic.enableSign": true,
+  "diagnostic.joinMessageLines": true,
   "diagnostic.infoSign": "🗈",
   "diagnostic.errorSign": "✖",
   "diagnostic.warningSign": "❗",
+  "diagnostic.highlightOffset": 1000,
   "diagnostic.hintSign": "➡",
   "suggest.autoTrigger": "always",
   "suggest.snippetIndicator": "🏁",
-	"diagnostic.virtualText": false,
+  "diagnostic.virtualText": false,
   "rust.clippy_preference": "on",
   "rust.jobs": 4,
   "languageserver": {
@@ -24,7 +27,7 @@
       "command": "bash",
       "args": ["-c", "clojure-lsp"],
       "filetypes": ["clojure"],
-      "rootPatterns": ["project.clj"],
+      "rootPatterns": ["project.clj", "deps.edn"],
       "additionalSchemes": ["jar", "zipfile"],
       "trace.server": "verbose",
       "initializationOptions": {

@@ -5,3 +5,11 @@
 	default = matching
 [core]
 	excludesfile = ~/.gitignore_global
+
+[color "status"]
+  added = green
+  changed = yellow 
+  untracked = magenta bold
+
+[color "branch"]
+  remote = yellow

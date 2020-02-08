@@ -34,11 +34,12 @@ PROMPT='
 %F{green%}%B $ %F{none}%b'
 
 alias vim="nvim"
-alias ls="ls -Cp"
 alias nrepl="clj -R:nrepl -m nrepl.cmdline"
 alias cider="clj -A:cider"
 alias lrun="LEIN_FAST_TRAMPOLINE=y lein trampoline run -m"
 alias leinrun="LEIN_FAST_TRAMPOLINE=y lein trampoline run -m"
 alias ls="exa"
-alias clj="clj -J-Dclojure.server.jvm=\"{:port 5555 :accept clojure.core.server/io-prepl}\""
+alias ll="exa -l"
+# alias clj="clj -J-Dclojure.server.jvm=\"{:port 5555 :accept clojure.core.server/io-prepl}\""
 alias find="fd"
+alias tm="tmux attach || tmux new"

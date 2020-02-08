@@ -1,4 +1,5 @@
 .cpcache/*
+.lsp
 tags
 target
 classes/*
@@ -9,6 +10,8 @@ pom.xml.asc
 *.class
 .lein-*
 .nrepl-port
+.prepl-port
+Cargo.lock
 .hgignore
 .hg/
 **/*~
