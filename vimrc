@@ -34,8 +34,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'pseewald/vim-anyfold' 
 Plug 'majutsushi/tagbar'
 Plug 'farmergreg/vim-lastplace'
-" Plug 'jasilven/redbush', { 'do': 'cargo install --path .' }
-Plug '/home/jari/dev/rust/redbush/plugin'
+Plug 'jasilven/redbush', { 'do': 'cargo install --path .' }
+" Plug '/home/jari/dev/rust/redbush/plugin'
 call plug#end()
 
 "" settings
@@ -188,7 +188,7 @@ function! Solarized()
     hi! link preproc default
     hi! link type default
     hi! link cocerrorsign warningmsg 
-    hi! link cocwarningsign conceal 
+    hi! link cocwarningsign special
     hi! link cochighlighttext visual 
     hi! link cocunderline highlight 
     hi! link cocerrorfloat diffdelete 
@@ -342,26 +342,9 @@ if has('nvim')
         call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
         autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
     endfunction
-    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.3, "Comment")' }
+    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.2, "Comment")' }
 endif
 command! -bang -nargs=* Rg call fzf#vim#grep('rg --column --line-number --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
-
-
-" if has('nvim')
-"    let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
-"    function! FloatingFZF()
-"        let width = float2nr(&columns * 0.6)
-"        let height = float2nr(&lines * 0.2)
-"        let opts = { 'relative': 'editor',
-"                   \ 'row': (&lines - height) / 2,
-"                   \ 'col': (&columns - width) / 2,
-"                   \ 'width': width,
-"                   \ 'height': height }
-"        let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-"        call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
-"    endfunction
-"    let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-" endif
 
 "" autopairs
 let g:AutoPairsShortcutToggle = ''
@@ -437,7 +420,7 @@ let g:rustfmt_emit_files = 0
 let g:rustfmt_fail_silently = 0
 au BufReadPost *.rs setlocal filetype=rust
 au FileType rust nnoremap <silent> <buffer> <space>r :w<cr>:call CargoCmd("cargo run", expand('%:t:r')) <cr>
-au FileType rust nnoremap <silent> <buffer> <space>t :w<cr>:call CargoCmd("RUST_BACKTRACE=1 cargo test -- --nocapture", expand('%:t:r')) <cr>
+au FileType rust nnoremap <silent> <buffer> <space>t :w<cr>:call CargoCmd("RUST_BACKTRACE=1 cargo test", expand('%:t:r')) <cr>
 au FileType rust nnoremap <silent> <buffer> <space>c :w<cr>:call CargoCmd("cargo check", expand('%:t:r')) <cr>
 " au FileType rust setlocal foldmethod=manual
 " au FileType rust nnoremap za zfa}
@@ -525,7 +508,7 @@ au BufReadPre,BufRead,BufWinEnter,BufNewFile,BufEnter conjure.cljc setlocal fold
 
 "" rg/grep - usage: :Grep <search> <file> 
 if executable('rg')
-    set grepprg=rg\ --no-heading\ --vimgrep\ --ignore-case
+    set grepprg=rg\ --no-heading\ --vimgrep
     set grepformat=%f:%l:%c:%m
 endif
 augroup quickfix
@@ -552,9 +535,9 @@ inoremap <silent> <C-j> :botright Ttoggle<cr><cr>
 tnoremap <silent> <C-j> <C-\><C-N><C-w><C-p>:Ttoggle<cr>
 
 "" redbush
-let g:redbush_bin = '/home/jari/dev/rust/redbush/target/debug/redbush'
-" let g:redbush_bin = 'redbush'
-" let g:redbush_filepath = '/tmp/redbush-log.clj'
+" let g:redbush_bin = '/home/jari/dev/rust/redbush/target/debug/redbush'
+let g:redbush_bin = 'redbush'
+let g:redbush_filepath = '/tmp/redbush-eval.clj'
 let g:redbush_filesize = 1000 
-" let g:redbush_is_vertical = 1
-" let g:redbush_winsize = 40
+let g:redbush_is_vertical = v:true
+let g:redbush_winsize = 40

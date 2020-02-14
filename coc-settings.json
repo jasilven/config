@@ -14,7 +14,7 @@
   "diagnostic.joinMessageLines": true,
   "diagnostic.infoSign": "🗈",
   "diagnostic.errorSign": "✖",
-  "diagnostic.warningSign": "❗",
+  "diagnostic.warningSign": "?",
   "diagnostic.highlightOffset": 1000,
   "diagnostic.hintSign": "➡",
   "suggest.autoTrigger": "always",
