@@ -342,8 +342,11 @@ if has('nvim')
         call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
         autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
     endfunction
-    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.2, "Comment")' }
+    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.3, "Comment")' }
 endif
+command! -bang -nargs=* Rg call fzf#vim#grep('rg --column --line-number --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+
 " if has('nvim')
 "    let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
 "    function! FloatingFZF()
@@ -522,7 +525,7 @@ au BufReadPre,BufRead,BufWinEnter,BufNewFile,BufEnter conjure.cljc setlocal fold
 
 "" rg/grep - usage: :Grep <search> <file> 
 if executable('rg')
-    set grepprg=rg\ --no-heading\ --vimgrep
+    set grepprg=rg\ --no-heading\ --vimgrep\ --ignore-case
     set grepformat=%f:%l:%c:%m
 endif
 augroup quickfix
