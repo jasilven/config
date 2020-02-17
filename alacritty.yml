@@ -25,10 +25,10 @@ font:
   size: 11
 
   normal:
-    family: Fira Code Medium
+    family: Fira Code 
     style: Regular
   bold:
-    family: Fira Code Medium
+    family: Fira Code
     style: Regular
   italic:
     family: Fira Code 
@@ -175,7 +175,6 @@ key_bindings:
   #- { key: H,      mods: Command, action: Hide             }
   #- { key: Q,      mods: Command, action: Quit             }
   #- { key: W,      mods: Command, action: Quit             }
-
 #   - { key: Paste,                   action: Paste                            }
 #   - { key: Copy,                    action: Copy                             }
 #   - { key: L,        mods: Control, action: ClearLogNotice                   }

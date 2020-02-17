@@ -1,7 +1,6 @@
 " plugins
 call plug#begin('~/.config/nvim/plugged')
-Plug 'flazz/vim-colorschemes'
-Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
 Plug 'mbbill/undotree'
 Plug 'lifepillar/vim-solarized8'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -14,8 +13,6 @@ Plug 'easymotion/vim-easymotion'
 Plug 'jiangmiao/auto-pairs', { 'tag': 'v2.0.0' }
 Plug 'rust-lang/rust.vim', {'for': 'rust'}
 Plug 'scrooloose/nerdtree'
-" Plug 'sheerun/vim-polyglot'
-" Plug 'guns/vim-clojure-static'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -24,8 +21,6 @@ Plug '~/dev/clojure/conjure'
 " Plug 'Olical/conjure', { 'do': 'bin/compile', 'for': 'clojure', 'on': 'ConjureUp' }
 " Plug 'Olical/conjure', { 'do': 'bin/compile', 'for': 'clojure' }
 " Plug 'Olical/conjure', { 'tag': 'v2.1.2', 'do': 'bin/compile' }
-" Plug 'tpope/vim-vinegar'
-" Plug 'tpope/vim-salve'
 Plug 'guns/vim-sexp', {'for': 'clojure'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf'
@@ -47,12 +42,12 @@ set termguicolors number cursorline hidden ttyfast ignorecase hlsearch autoread
 set wildmode=list:longest,full 
 set splitright splitbelow
 " set fillchars=fold:\ ,stlnc:\ ,vert:│  nolist
-set scrolloff=2
-set fillchars=fold:\ ,vert:│  nolist
+set scrolloff=2 nolist
+set fillchars=fold:\ ,vert:\| 
 set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:$,precedes:«,extends:»
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
 set undodir=~/.undodir undofile
-set updatetime=100 inccommand=nosplit
+set updatetime=100 inccommand=nosplit shortmess=I 
 set sessionoptions=blank,curdir,help,tabpages,winsize
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*/.git/*,*/target/*,*~
 au BufWinEnter,WinEnter * set cursorline 
@@ -183,6 +178,7 @@ function! Solarized()
     hi! highlight guibg=#0A4757
     hi! diffdelete guifg=#9B5B59
     hi! warningmsg guifg=#CC5E5B
+    hi! cocerrorvirtualtext guifg=#CC5E5B gui=italic
     hi! link title warningmsg
     hi! link delimiter default
     hi! link preproc default
@@ -208,6 +204,7 @@ function! Solarized()
     hi! link rustderivetrait comment 
     hi! link tagbarsignature comment 
     hi! link rustenumvariant default 
+    hi! link gospaceerror default
     hi! matchparen guifg=orange guibg=#002B36
     hi! easymotiontarget guifg=orange
     hi! link NERDTreeFile default
@@ -342,7 +339,7 @@ if has('nvim')
         call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
         autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
     endfunction
-    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.2, "Comment")' }
+    let g:fzf_layout = { 'window': 'call FloatingFZF(0.6, 0.4, "Comment")' }
 endif
 command! -bang -nargs=* Rg call fzf#vim#grep('rg --column --line-number --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
@@ -353,16 +350,16 @@ let g:AutoPairsShortcutBackInsert = ''
 let g:AutoPairsShortcutFastWrap = ''
 
 "" gitgutter
-let g:gitgutter_sign_modified ='·'
-let g:gitgutter_sign_added='﹢'
-let g:gitgutter_sign_removed='·'
-let g:gitgutter_sign_modified_removed='·'
+let g:gitgutter_sign_modified ='.'
+let g:gitgutter_sign_added='.'
+let g:gitgutter_sign_removed='|'
+let g:gitgutter_sign_modified_removed='.'
 let g:gitgutter_override_sign_column_highlight=0
 " let g:gitgutter_sign_allow_clobber=0
 
 "" vimrooter
 let g:rooter_silent_chdir = 1
-let g:rooter_patterns = ['project.clj','deps.edn', '.git/', 'Cargo.toml']
+let g:rooter_patterns = ['project.clj','deps.edn', '.git/', 'Cargo.toml', 'go.mod']
 
 "" statusline
 set statusline=%*
@@ -384,7 +381,8 @@ let NERDTreeMapPreview="<tab>"
 let NERDTreeMapChangeRoot="R"
 let NERDTreeMapRefreshRoot="C"
 let NERDTreeWinSize=25
-let NERDTreeDirArrowExpandable = ''
+let NERDTreeDirArrowExpandable = '+'
+let NERDTreeDirArrowCollapsible = ' '
 let NERDTreeShowHidden=1
 au FileType nerdtree nnoremap go <C-w>p
 
@@ -449,6 +447,7 @@ nmap <silent> gr <Plug>(coc-references)
 nmap <silent> ga <Plug>(coc-codelens-action)
 nnoremap <silent> <space>q :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 nnoremap <silent> <C-h> :call CocActionAsync('highlight')<cr>
+au FileType rust,go,clojure nnoremap <silent> K :call CocAction('doHover')<cr>
 au User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 "" json
@@ -507,20 +506,20 @@ au BufReadPre,BufRead,BufWinEnter,BufNewFile,BufEnter conjure.cljc setlocal fold
 " augroup END
 
 "" rg/grep - usage: :Grep <search> <file> 
-if executable('rg')
-    set grepprg=rg\ --no-heading\ --vimgrep
-    set grepformat=%f:%l:%c:%m
-endif
-augroup quickfix
-    autocmd!
-    au QuickFixCmdPost cgetexpr cwindow
-    au QuickFixCmdPost lgetexpr lwindow
-augroup END
-function! Grep(args)
-    let args = split(a:args, ' ')
-    return system(join([&grepprg, shellescape(args[0]), len(args) > 1 ? join(args[1:-1], ' ') : ''], ' '))
-endfunction
-command! -nargs=+ -complete=file_in_path -bar Grep cgetexpr Grep(<q-args>)
+" if executable('rg')
+"     set grepprg=rg\ --no-heading\ --vimgrep
+"     set grepformat=%f:%l:%c:%m
+" endif
+" augroup quickfix
+"     autocmd!
+"     au QuickFixCmdPost cgetexpr cwindow
+"     au QuickFixCmdPost lgetexpr lwindow
+" augroup END
+" function! Grep(args)
+"     let args = split(a:args, ' ')
+"     return system(join([&grepprg, shellescape(args[0]), len(args) > 1 ? join(args[1:-1], ' ') : ''], ' '))
+" endfunction
+" command! -nargs=+ -complete=file_in_path -bar Grep cgetexpr Grep(<q-args>)
 
 "" neoterm
 let g:neoterm_size=15
@@ -537,7 +536,14 @@ tnoremap <silent> <C-j> <C-\><C-N><C-w><C-p>:Ttoggle<cr>
 "" redbush
 " let g:redbush_bin = '/home/jari/dev/rust/redbush/target/debug/redbush'
 let g:redbush_bin = 'redbush'
-let g:redbush_filepath = '/tmp/redbush-eval.clj'
+let g:redbush_filepath = './redbush-eval.clj'
 let g:redbush_filesize = 1000 
 let g:redbush_is_vertical = v:true
 let g:redbush_winsize = 40
+
+"" gruvbox
+let g:gruvbox_contrast_dark = 'Medium'
+hi cursorline gui=underline guibg=default
+
+"" go
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
