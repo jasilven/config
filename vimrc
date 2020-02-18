@@ -1,6 +1,10 @@
 " plugins
 call plug#begin('~/.config/nvim/plugged')
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'ayu-theme/ayu-vim'
+Plug 'rakr/vim-one'
 Plug 'morhetz/gruvbox'
+Plug 'chriskempson/base16-vim'
 Plug 'mbbill/undotree'
 Plug 'lifepillar/vim-solarized8'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -34,7 +38,7 @@ Plug 'jasilven/redbush', { 'do': 'cargo install --path .' }
 call plug#end()
 
 "" settings
-set signcolumn=auto:2
+set signcolumn=yes:1
 set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8 spelllang=en_us
 set smarttab tabstop=4 shiftwidth=4 expandtab " set t_Co=256 completeopt-=preview 
 set noswapfile nobackup noshowmode nowrap noshowcmd nospell nofoldenable
@@ -69,8 +73,8 @@ nnoremap <silent> <C-t> :TagbarToggle<cr>
 nnoremap <space>o :only<cr><space><bs>
 nnoremap <space>w :w<cr><space><bs>
 nnoremap <space><Tab> :b#<cr><space><bs>
-nnoremap <space>i :Tags<cr>
-nnoremap <space>j :Tags<cr>
+nnoremap <space>i :BTags<cr>
+nnoremap <space>j :BTags<cr>
 nnoremap <space>g :Rg<cr>
 nnoremap <space>b :Buffers<cr>
 nnoremap <space>f :Files<cr>
@@ -124,162 +128,6 @@ nmap <RightMouse> <LeftMouse>gdzz
 nmap <RightMouse> <LeftMouse>gdzz
 nmap <MiddleMouse> <C-o>
 nmap <C-RightMouse> <C-o>
-
-function! Github()
-    syntax reset
-    set background=light
-    hi! cursor ctermbg=blue guibg=blue
-    colorscheme github
-    hi! incsearch guifg=#cb4b16 gui=standout
-    hi! normal guifg=#24292E guibg=#F5F5F5
-    hi! pmenu guibg=#EFEFF5 guifg=#24292E
-    hi! GitGutterAdd guibg=#F5F5F5 guifg=green
-    hi! GitGutterDelete guibg=#F5F5F5 guifg=red
-    hi! GitGutterChange guibg=#F5F5F5 guifg=yellow
-    hi! VertSplit guibg=NONE
-    hi! cursorLineNr guifg=black
-    hi! cursorline guibg=#EAEAF0
-    hi! linenr guibg=NONE guifg=#BEC0C1
-    hi! statement guifg=#D73A49
-    hi! function guifg=#6C40BD ""5C37A1 6F42C1
-    hi! underlined guifg=#6c71c4 gui=underline
-    hi! string guifg=green
-    hi! signcolumn guibg=NONE
-    hi! link delimiter default
-    hi! link preproc default
-    hi! link type default
-    hi! link operator default 
-    hi! link matchparen incsearch
-    hi! link special statement
-    hi! link cocwarningsign directory 
-    hi! link identifier directory
-    hi! link endofbuffer nontext
-    hi! link cocerrorsign warningmsg 
-    hi! link cocwarningsign warningmsg 
-    hi! cocerrorfloat guibg=NONE guifg=#B82E1D
-    hi! cocwarningfloat guibg=NONE guifg=#94682B
-    hi! link cochighlighttext visual 
-    hi! link cocunderline spellbad
-    hi! statuslinenc guifg=#BDBDBD guibg=#EDEDED gui=NONE
-    hi! statusline guibg=#CFCFCF
-    " unlet g:loaded_fzf
-    " call plug#load('fzf', 'fzf.vim')
-endfunction
-command! MyGithub call Github()
-
-function! Solarized()
-    syntax reset
-    set background=dark
-    colorscheme solarized8 
-    hi! special guifg=#b58900
-    hi! VertSplit guibg=NONE guifg=#004252
-    hi! cursorLineNr guifg=white
-    hi! linenr guibg=NONE guifg=#004252
-    hi! highlight guibg=#0A4757
-    hi! diffdelete guifg=#9B5B59
-    hi! warningmsg guifg=#CC5E5B
-    hi! cocerrorvirtualtext guifg=#CC5E5B gui=italic
-    hi! link title warningmsg
-    hi! link delimiter default
-    hi! link preproc default
-    hi! link type default
-    hi! link cocerrorsign warningmsg 
-    hi! link cocwarningsign special
-    hi! link cochighlighttext visual 
-    hi! link cocunderline highlight 
-    hi! link cocerrorfloat diffdelete 
-    hi! link cocwarningfloat diffchange 
-    hi! link clojuremacro keyword
-    hi! link clojuredefine keyword
-    hi! link clojurekeyword identifier 
-    hi! link clojurespecial keyword
-    hi! link tabline pmenu
-    hi! link tablinefill pmenu
-    hi! link tablinesel normal
-    hi! link fzf1 comment
-    hi! link fzf2 domment
-    hi! link fzf3 comment
-    hi! link rustattribute comment 
-    hi! link rustderive comment 
-    hi! link rustderivetrait comment 
-    hi! link tagbarsignature comment 
-    hi! link rustenumvariant default 
-    hi! link gospaceerror default
-    hi! matchparen guifg=orange guibg=#002B36
-    hi! easymotiontarget guifg=orange
-    hi! link NERDTreeFile default
-endfunction
-command! MySolarized call Solarized()
-
-function! Dark()
-    syntax reset
-    set background=dark
-    colorscheme solarized8 
-    " hi! normal guifg=#a3a3a3 guibg=#1A1A1A
-    hi! normal guifg=#9E9E9E guibg=#1A1A1A
-    hi! statement guifg=#946F00
-    hi! constant guifg=#258C85
-    hi! statusline guifg=#7A7A7A guibg=#1A1A1A 
-    hi! function guifg=#217AB8
-    hi! vertsplit guibg=NONE gui=NONE guifg=#363636
-    hi! signcolumn guibg=NONE
-    hi! special guifg=#839496
-    hi! special guifg=#b58900
-    hi! VertSplit guibg=NONE
-    hi! cursorline guibg=#212121 gui=NONE
-    hi! cursorLineNr guifg=#BDBD00 guibg=NONE
-    hi! linenr guifg=#303030 guibg=NONE
-    hi! underlined guifg=#6c71c4 gui=underline
-    hi! pmenu guibg=#242424
-    hi! visual guibg=#9E9E9E guifg=default
-    hi! error guibg=NONE guifg=#B82E1D
-    hi! warning guibg=NONE guifg=#bfbf12
-    hi! diffadd guibg=NONE guibg=#3D4700
-    hi! diffdelete guifg=NONE guibg=#610E17 
-    hi! diffchange guibg=NONE guibg=#BFBF12
-    hi! GitGutterAdd guibg=NONE guifg=green
-    hi! GitGutterDelete guibg=NONE guifg=darkred
-    hi! GitGutterChange guibg=NONE guifg=orange
-    hi! comment gui=italic guifg=#4a4a4a 
-    hi! statuslinenc guifg=#575757 guibg=#212121 gui=NONE
-    hi! link endofbuffer linenr
-    hi! link termcursornc normal
-    hi! link tabline statuslinenc
-    hi! link tablinefill pmenu
-    hi! link tablinesel normal
-    hi! link specialkey special
-    hi! link folded pmenu
-    hi! link foldcolumn signcolumn 
-    hi! link cursorcolumn signcolumn 
-    hi! link colorcolumn signcolumn 
-    hi! link keyword statement 
-    hi! link delimiter default
-    hi! link preproc default
-    hi! link type default
-    hi! cocerrorfloat guibg=NONE guifg=#cb4b16
-    hi! cocwarningfloat guibg=NONE guifg=#bfbf12
-    hi! link cocerrorsign cocerrorfloat
-    hi! link cocwarningsign cocwarningfloat 
-    hi! link cochighlighttext visual 
-    hi! link cocunderline spellbad
-    hi! link clojuremacro keyword
-    hi! link clojuredefine keyword
-    hi! link clojurekeyword identifier 
-    hi! link clojurespecial keyword
-    hi! link specialcomment comment
-    hi! link special constant 
-    hi! link operator default 
-    hi! link foldcolumn signcolumn 
-    hi! link fzf1 comment
-    hi! link fzf2 comment
-    hi! link fzf3 comment
-    hi! link coccodelens linenr
-    hi! link matchparen title
-endfunction
-command! MyDark call Dark()
-
-"" default theme 
-call Solarized()
 
 "" easymotion
 let g:EasyMotion_keys = 'abcdefghijklmnopqrstuvwxy'
@@ -381,8 +229,8 @@ let NERDTreeMapPreview="<tab>"
 let NERDTreeMapChangeRoot="R"
 let NERDTreeMapRefreshRoot="C"
 let NERDTreeWinSize=25
-let NERDTreeDirArrowExpandable = '+'
-let NERDTreeDirArrowCollapsible = ' '
+" let NERDTreeDirArrowExpandable = '+'
+" let NERDTreeDirArrowCollapsible = ' '
 let NERDTreeShowHidden=1
 au FileType nerdtree nnoremap go <C-w>p
 
@@ -423,8 +271,6 @@ au FileType rust nnoremap <silent> <buffer> <space>c :w<cr>:call CargoCmd("cargo
 " au FileType rust setlocal foldmethod=manual
 " au FileType rust nnoremap za zfa}
 au FileType rust nnoremap <M-z> :!zeal 'rust:'<cword> &<cr><cr>
-au FileType rust nnoremap <silent> K :call CocAction('doHover')<cr>
-au FileType rust nnoremap <silent> <f1> :call CocAction('doHover')<cr>
 function! CargoCmd(cmd,bin)
     let dir = getcwd() 
     botright Topen
@@ -444,7 +290,8 @@ nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> ga <Plug>(coc-codelens-action)
+nmap <silent> gA <Plug>(coc-codelens-action)
+nmap <silent> ga :CocCommand actions.open<cr>
 nnoremap <silent> <space>q :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 nnoremap <silent> <C-h> :call CocActionAsync('highlight')<cr>
 au FileType rust,go,clojure nnoremap <silent> K :call CocAction('doHover')<cr>
@@ -476,8 +323,6 @@ au FileType clojure nnoremap <buffer> <space>e :ConjureEvalCurrentForm<cr>
 au FileType clojure nnoremap <buffer> <space>x :ConjureEvalRootForm<cr>
 au FileType clojure nnoremap <buffer> <space>r :ConjureEvalCurrentForm<cr>
 au FileType clojure nnoremap <buffer> <space>t :ConjureRunTests<cr>
-au FileType clojure nnoremap <buffer> <silent> K :call CocAction('doHover')<cr>
-au FileType clojure nnoremap <buffer> <silent> <f1> :call CocAction('doHover')<cr>
 au FileType clojure nnoremap <M-z> :!zeal 'clojure:'<cword> &<cr><cr>
 
 "" conjure
@@ -505,22 +350,6 @@ au BufReadPre,BufRead,BufWinEnter,BufNewFile,BufEnter conjure.cljc setlocal fold
 "   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 " augroup END
 
-"" rg/grep - usage: :Grep <search> <file> 
-" if executable('rg')
-"     set grepprg=rg\ --no-heading\ --vimgrep
-"     set grepformat=%f:%l:%c:%m
-" endif
-" augroup quickfix
-"     autocmd!
-"     au QuickFixCmdPost cgetexpr cwindow
-"     au QuickFixCmdPost lgetexpr lwindow
-" augroup END
-" function! Grep(args)
-"     let args = split(a:args, ' ')
-"     return system(join([&grepprg, shellescape(args[0]), len(args) > 1 ? join(args[1:-1], ' ') : ''], ' '))
-" endfunction
-" command! -nargs=+ -complete=file_in_path -bar Grep cgetexpr Grep(<q-args>)
-
 "" neoterm
 let g:neoterm_size=15
 let g:neoterm_autoinsert=1
@@ -542,8 +371,158 @@ let g:redbush_is_vertical = v:true
 let g:redbush_winsize = 40
 
 "" gruvbox
-let g:gruvbox_contrast_dark = 'Medium'
-hi cursorline gui=underline guibg=default
+function! MyGruvbox()
+    syntax reset
+    set background=dark
+    colorscheme gruvbox 
+    let g:gruvbox_contrast_dark = 'medium'
+    let g:gruvbox_sign_column = 'bg0'
+    hi cursorline gui=underline guibg=default
+endfun
+command! MyGruvbox call MyGruvbox()
 
 "" go
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+
+"" ayu 
+function! MyAyu()
+    syntax reset
+    let g:ayucolor="mirage"
+    colorscheme ayu
+    hi! signcolumn guibg=default
+    hi! function guifg=#61afef
+    hi! type guifg=default
+    hi! rustmodpath guifg=default
+    hi! specialchar guifg=default
+    hi! rustmodpathsep guifg=default
+    hi! vertsplit guibg=NONE gui=NONE guifg=#272D38
+    hi! matchparen gui=none guifg=#ff3333 guibg=default
+    hi! easymotiontarget guifg=orange
+    hi! warningmsg guifg=#f77178
+    hi! search guibg=#f05b16 
+    hi! cursorline guibg=#2C3545
+    hi! link NERDTreeFile default
+    hi! link NERDTreedir function 
+    hi! link constant string
+    hi! link number identifier 
+    hi! link title warningmsg
+    hi! link delimiter default
+    hi! link preproc default
+    hi! link type default
+    hi! link cocerrorvirtualtext warningmsg
+    hi! link cocerrorsign warningmsg 
+    hi! link cocwarningsign special
+    hi! link cochighlighttext visual 
+    hi! link cocunderline visual
+    hi! link cocerrorfloat cocerrorsign 
+    hi! link cocwarningfloat cocwarningsign 
+    hi! link clojuremacro keyword
+    hi! link clojuredefine keyword
+    hi! link clojurekeyword identifier 
+    hi! link clojurespecial keyword
+    hi! link tabline pmenu
+    hi! link tablinefill pmenu
+    hi! link tablinesel normal
+    hi! link fzf1 comment
+    hi! link fzf2 domment
+    hi! link fzf3 comment
+    hi! link rustmacro function 
+    hi! link rustassert function 
+    hi! link rustattribute comment 
+    hi! link rustderive comment 
+    hi! link rustderivetrait comment 
+    hi! link tagbarsignature comment 
+    hi! link rustenumvariant default 
+    hi! link gospaceerror default
+endfun
+command! MyAyu call MyAyu()
+
+function! Github()
+    syntax reset
+    set background=light
+    hi! cursor ctermbg=blue guibg=blue
+    colorscheme github
+    hi! incsearch guifg=#cb4b16 gui=standout
+    hi! normal guifg=#24292E guibg=#F5F5F5
+    hi! pmenu guibg=#EFEFF5 guifg=#24292E
+    hi! GitGutterAdd guibg=#F5F5F5 guifg=green
+    hi! GitGutterDelete guibg=#F5F5F5 guifg=red
+    hi! GitGutterChange guibg=#F5F5F5 guifg=yellow
+    hi! VertSplit guibg=NONE
+    hi! cursorLineNr guifg=black
+    hi! cursorline guibg=#EAEAF0
+    hi! linenr guibg=NONE guifg=#BEC0C1
+    hi! statement guifg=#D73A49
+    hi! function guifg=#6C40BD ""5C37A1 6F42C1
+    hi! underlined guifg=#6c71c4 gui=underline
+    hi! string guifg=green
+    hi! signcolumn guibg=NONE
+    hi! link delimiter default
+    hi! link preproc default
+    hi! link type default
+    hi! link operator default 
+    hi! link matchparen incsearch
+    hi! link special statement
+    hi! link cocwarningsign directory 
+    hi! link identifier directory
+    hi! link endofbuffer nontext
+    hi! link cocerrorsign warningmsg 
+    hi! link cocwarningsign warningmsg 
+    hi! cocerrorfloat guibg=NONE guifg=#B82E1D
+    hi! cocwarningfloat guibg=NONE guifg=#94682B
+    hi! link cochighlighttext visual 
+    hi! link cocunderline spellbad
+    hi! statuslinenc guifg=#BDBDBD guibg=#EDEDED gui=NONE
+    hi! statusline guibg=#CFCFCF
+    " unlet g:loaded_fzf
+    " call plug#load('fzf', 'fzf.vim')
+endfunction
+command! MyGithub call Github()
+
+function! Solarized()
+    syntax reset
+    set background=dark
+    colorscheme solarized8 
+    hi! special guifg=#b58900
+    hi! VertSplit guibg=NONE guifg=#004252
+    hi! cursorLineNr guifg=white
+    hi! linenr guibg=NONE guifg=#004252
+    hi! highlight guibg=#0A4757
+    hi! diffdelete guifg=#9B5B59
+    hi! warningmsg guifg=#CC5E5B
+    hi! cocerrorvirtualtext guifg=#CC5E5B gui=italic
+    hi! link title warningmsg
+    hi! link delimiter default
+    hi! link preproc default
+    hi! link type default
+    hi! link cocerrorsign warningmsg 
+    hi! link cocwarningsign special
+    hi! link cochighlighttext visual 
+    hi! link cocunderline highlight 
+    hi! link cocerrorfloat diffdelete 
+    hi! link cocwarningfloat diffchange 
+    hi! link clojuremacro keyword
+    hi! link clojuredefine keyword
+    hi! link clojurekeyword identifier 
+    hi! link clojurespecial keyword
+    hi! link tabline pmenu
+    hi! link tablinefill pmenu
+    hi! link tablinesel normal
+    hi! link fzf1 comment
+    hi! link fzf2 domment
+    hi! link fzf3 comment
+    hi! link rustattribute comment 
+    hi! link rustderive comment 
+    hi! link rustderivetrait comment 
+    hi! link tagbarsignature comment 
+    hi! link rustenumvariant default 
+    hi! link gospaceerror default
+    hi! matchparen guifg=orange guibg=#002B36
+    hi! easymotiontarget guifg=orange
+    hi! link NERDTreeFile default
+endfunction
+command! MySolarized call Solarized()
+
+"" default theme 
+call MyAyu()
+
