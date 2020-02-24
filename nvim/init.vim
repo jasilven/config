@@ -1,6 +1,7 @@
 " plugins
 call plug#begin('~/.config/nvim/plugged')
 Plug 'drewtempelmeyer/palenight.vim'
+Plug 'dracula/vim', { 'name': 'dracula' }
 Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
 Plug 'morhetz/gruvbox'

@@ -1,10 +1,10 @@
-text/*;                           LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
-application/*;                    LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
-image/*;                          LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
-audio/*;                          LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
+# text/*;                           LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
+# application/*;                    LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
+# image/*;                          LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
+# audio/*;                          LESSQUIET=1 lesspipe.sh '%s'; copiousoutput
 
-# image/*; ristretto %s ; copiousoutput
-# application/msword; libreoffice %s ; copiousoutput
-# application/pdf; evince %s ; copiousoutput
-# application/postscript ; evince %s ; copiousoutput
-# text/html; w3m -s -I %{charset} -T text/html ; copiousoutput; nametemplate=%s.html
+image/*; ristretto %s ; copiousoutput
+application/msword; libreoffice %s ; copiousoutput
+application/pdf; evince %s ; copiousoutput
+application/postscript ; evince %s ; copiousoutput
+text/html; w3m -s -I %{charset} -T text/html ; copiousoutput; nametemplate=%s.html
