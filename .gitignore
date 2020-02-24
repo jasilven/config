@@ -4,4 +4,8 @@ secret
 authinfo
 authinfo.*
 .directory
-
+nvim/plugged
+tags
+zsh/.zcompdump
+coc
+ristretto

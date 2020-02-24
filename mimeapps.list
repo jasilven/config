@@ -1,0 +1,19 @@
+[Added Associations]
+#application/pdf=org.gnome.Evince.desktop;
+x-scheme-handler/http=firefox.desktop;
+text/html=firefox.desktop;
+application/xhtml+xml=firefox.desktop;
+x-scheme-handler/https=firefox.desktop;
+application/octet-stream=vim.desktop;
+image/png=ristretto.desktop;
+
+[Default Applications]
+x-scheme-handler/http=firefox.desktop
+text/html=firefox.desktop
+application/xhtml+xml=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+image/*=ristretto.desktop
+application/pdf=evince.desktop
+application/ps=evince.desktop
+text/plain=vim.desktop
+text/*=vim.desktop
