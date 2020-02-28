@@ -51,7 +51,7 @@ set scrolloff=2 nolist
 set fillchars=fold:\ ,vert:\| 
 set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:$,precedes:«,extends:»
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
-set undodir=~/.undodir undofile
+set undodir=~/cache/.undodir undofile
 set updatetime=100 inccommand=nosplit shortmess=I 
 set sessionoptions=blank,curdir,help,tabpages,winsize
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*/.git/*,*/target/*,*~
@@ -64,6 +64,8 @@ filetype plugin indent on
 
 "" key mappings
 let maplocalleader = ","
+nnoremap <silent> <2-LeftMouse> :let @/='\V\<'.escape(expand('<cword>'), '\').'\>'<cr>:set hls<cr>
+nnoremap <silent> * :let @/='\V\<'.escape(expand('<cword>'), '\').'\>'<cr>:set hls<cr>
 nmap f <Plug>(easymotion-bd-f)
 nmap <M-x> :
 nnoremap Q :q!<cr>
@@ -417,7 +419,7 @@ function! MyAyu()
     hi! link cocerrorvirtualtext warningmsg
     hi! link cocerrorsign warningmsg 
     hi! link cocwarningsign special
-    hi! link cochighlighttext visual 
+    hi! link cochighlighttext pmenusel
     hi! link cocunderline visual
     hi! link cocerrorfloat cocerrorsign 
     hi! link cocwarningfloat cocwarningsign 

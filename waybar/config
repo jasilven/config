@@ -1,9 +1,8 @@
 {
-    "layer": "top", // Waybar at top layer
-    "position": "top", // Waybar at the bottom of your screen
-    "height": 24, // Waybar height
-    // "width": 1366, // Waybar width
-    // Choose the order of the modules
+    "layer": "top",
+    "position": "top",
+    "height": 24,
+    // "width": 1366,
     "modules-left": ["sway/workspaces", "sway/mode", "custom/spotify"],
     "modules-center": ["sway/window"],
     "modules-right": ["cpu", "pulseaudio", "network",  "memory", "battery", "tray", "idle_inhibitor", "clock"],

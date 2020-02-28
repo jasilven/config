@@ -61,4 +61,4 @@ alias ll="exa -l"
 # alias clj="clj -J-Dclojure.server.jvm=\"{:port 5555 :accept clojure.core.server/io-prepl}\""
 alias find="fd"
 alias tm="tmux attach || tmux new"
-alias mail="neomutt"
+alias mutt=neomutt

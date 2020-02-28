@@ -19,7 +19,7 @@
   "diagnostic.errorSign": "!",
   "diagnostic.warningSign": "?",
   "diagnostic.highlightOffset": 1000,
-  "diagnostic.hintSign": "h",
+  "diagnostic.hintSign": "i",
   "suggest.autoTrigger": "always",
   "suggest.snippetIndicator": "~",
   "suggest.labelMaxLength": 60,
