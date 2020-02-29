@@ -50,7 +50,7 @@ bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 
 # shutdown/reboot/lock
-set $Locker swaylock -c 000800 && sleep 1 && swaymsg output * dpms off
+set $Locker swaylock -c 000000 && sleep 1 && swaymsg output * dpms off
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id $Locker, mode "default"
