@@ -56,8 +56,9 @@
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-good": "", // An empty format will hide the module
-        "format-full": "",
+        "format-good": "{capacity}% {icon}",
+        "format-full": "{capacity}% {icon}",
+        // "format-good": "", // An empty format will hide the module
         "format-icons": ["", "", "", "", ""]
     },
     "network": {
