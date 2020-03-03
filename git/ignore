@@ -2,7 +2,8 @@
 .lsp
 .rustup/*
 tags
-target
+**/target
+**/target/**
 classes/*
 checkouts/*
 pom.xml

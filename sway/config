@@ -11,7 +11,8 @@ client.focused #4c7899 #285577 #ffffff #2e9ef4  #0080ff
 input type:keyboard {
     repeat_delay 250
     repeat_rate 40
-    xkb_options caps:escape
+    xkb_options "caps:escape,grp:switch"
+    xkb_layout "us,fi"
 }
 
 # mouse
@@ -35,9 +36,8 @@ bindsym $mod+Delete kill
 bindsym $mod+Return exec alacritty
 bindsym $mod+d exec bemenu-run
 bindsym $mod+t exec thunar 
-bindsym Print exec --no-startup-id "xfce4-screenshooter"
-bindsym $mod+Print exec --no-startup-id "xfce4-screenshooter"
-#bindsym $mod+Pause exec --no-startup-id "pactl set-sink-mute $sink toggle"
+bindsym Print exec --no-startup-id grim -g "$(slurp)"
+bindsym $mod+Print exec --no-startup-id  grim -g "$(slurp)"
 
 # volume and brightness
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -67,6 +67,8 @@ bindsym Pause mode "$mode_system"
 # floating
 for_window [app_id="thunar"] floating enable
 for_window [app_id="ristretto"] floating enable
+for_window [app_id="engrampa"] floating enable
+for_window [app_id="evince"] floating enable
 for_window [title="Volume Control"] floating enable
 
 # layouts
@@ -130,8 +132,9 @@ bar {
 
 exec swayidle -w \
           timeout 300 'swaylock -f -c 000000' \
-          timeout 600 'swaymsg "output * dpms off"' \
+          timeout 330 'swaymsg "output * dpms off"' \
                resume 'swaymsg "output * dpms on"' \
           before-sleep 'swaylock -f -c 000000'
 exec alacritty
+exec mako
 exec firefoxc

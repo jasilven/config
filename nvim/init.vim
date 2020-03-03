@@ -271,7 +271,7 @@ au BufReadPost *.rs setlocal filetype=rust
 au FileType rust nnoremap <silent> <buffer> <space>r :w<cr>:call CargoCmd("cargo run", expand('%:t:r')) <cr>
 au FileType rust nnoremap <silent> <buffer> <space>t :w<cr>:call CargoCmd("RUST_BACKTRACE=1 cargo test", expand('%:t:r')) <cr>
 au FileType rust nnoremap <silent> <buffer> <space>c :w<cr>:call CargoCmd("cargo check", expand('%:t:r')) <cr>
-" au FileType rust setlocal foldmethod=manual
+au FileType rust set foldmethod=manual
 " au FileType rust nnoremap za zfa}
 au FileType rust nnoremap <M-z> :!zeal 'rust:'<cword> &<cr><cr>
 function! CargoCmd(cmd,bin)
@@ -394,6 +394,7 @@ autocmd BufNewFile,BufRead ~/tmp/neomutt* set noautoindent filetype=mail wm=0 tw
 "" ayu 
 function! MyAyu()
     syntax reset
+    hi! Normal cterm=NONE term=NONE
     let g:ayucolor="mirage"
     colorscheme ayu
     hi! signcolumn guibg=default

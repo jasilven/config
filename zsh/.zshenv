@@ -8,6 +8,7 @@ export PAGER=less
 export MOZ_USE_XINPUT2=1
 export LC_TIME=en_US.UTF-8
 export FZF_DEFAULT_COMMAND="fd"
+export TERM=xterm-256color
 
 # wayland stuff
 export WINIT_HIDPI_FACTOR=1

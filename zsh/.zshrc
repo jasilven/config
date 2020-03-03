@@ -2,7 +2,7 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt appendhistory autocd extendedglob notify prompt_subst
-unsetopt prompt_cr prompt_sp
+unsetopt prompt_cr prompt_sp BEEP
 bindkey -e
 # set tilde to work
 set -o magicequalsubst
@@ -40,8 +40,8 @@ PS1+='${VIMODE}'
 #   a big red 'I' for command mode - to me this is 'NOT insert' because red
 function zle-line-init zle-keymap-select {
     DOLLAR='%B%F{green}$%b'
-    GIANT_I='%B%F{red}I%b'
-    VIMODE="${${KEYMAP/vicmd/$GIANT_I}/(main|viins)/$DOLLAR}"
+    GIANT_N='%B%F{red}N%b'
+    VIMODE="${${KEYMAP/vicmd/$GIANT_N}/(main|viins)/$DOLLAR}"
     zle reset-prompt
 }
 zle -N zle-line-init
@@ -62,3 +62,4 @@ alias ll="exa -l"
 alias find="fd"
 alias tm="tmux attach || tmux new"
 alias mutt=neomutt
+alias open=xdg-open

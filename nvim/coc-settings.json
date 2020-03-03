@@ -1,4 +1,5 @@
 {
+  "rust-analyzer.serverPath": "~/.cargo/bin/rust-analyzer",
   "json.enable": true,
   "coc-actions.showActionKind":true ,
   "codeLens.enable":true,
