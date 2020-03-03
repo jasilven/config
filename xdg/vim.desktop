@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Vim Text Editor
+Comment=Edit text files
+Exec=vim %F
+Terminal=true
+Type=Application
+Icon=vim
+Categories=Utility;TextEditor;
+StartupNotify=true
+MimeType=text/plain;
