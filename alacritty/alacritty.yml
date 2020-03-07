@@ -84,7 +84,8 @@ colors:
     yellow:  '0xffae57'
     blue:    '0x61afef'
     magenta: '0xd33682'
-    cyan:    '0x2aa198'
+    # cyan:    '0x2aa198'
+    cyan:    '0x8be9fd'
     white:   '0xeee8d5'
   bright:
     black:   '0x073642'
@@ -93,7 +94,8 @@ colors:
     yellow:  '0xffae57'
     blue:    '0x61afef'
     magenta: '0xd33682'
-    cyan:    '0x2aa198'
+    cyan:    '0xa4ffff'
+    # cyan:    '0x2aa198'
     white:   '0xeee8d5'
 
 visual_bell:
