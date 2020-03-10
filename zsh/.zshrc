@@ -64,3 +64,4 @@ alias tm="tmux attach || tmux new"
 alias mutt=neomutt
 alias open=xdg-open
 alias gnome="dbus-run-session gnome-session"
+alias more=less
