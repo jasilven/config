@@ -1,5 +1,5 @@
 export XDG_CONFIG_HOME=$HOME/config
-export XDG_CURRENT_DESKTOP=sway
+#export XDG_CURRENT_DESKTOP=sway
 export LEIN_HOME=$HOME/config/lein
 export ZDOTDIR=$HOME/config/zsh
 export PATH=".:$HOME/bin:$HOME/.cargo/bin:$HOME/go/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin"
