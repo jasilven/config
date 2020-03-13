@@ -35,7 +35,7 @@ bindsym $mod+q kill
 bindsym $mod+Delete kill
 bindsym $mod+Return exec alacritty
 bindsym $mod+d exec bemenu-run
-bindsym $mod+t exec thunar 
+bindsym $mod+t exec nautilus
 bindsym Print exec --no-startup-id grim -g "$(slurp)"
 bindsym $mod+Print exec --no-startup-id  grim -g "$(slurp)"
 
@@ -46,17 +46,16 @@ bindsym $mod+Prior exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+Next exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec sudo brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec sudo brightnessctl set +5%
 
 # shutdown/reboot/lock
-set $Locker swaylock -c 000000 && sleep 1 && swaymsg output * dpms off
-set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $Locker swaylock -c 000000 && sleep 1
+set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id $Locker, mode "default"
     bindsym e exec --no-startup-id swaymsg exit, mode "default"
     bindsym s exec --no-startup-id $Locker && systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id $Locker && systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"  
     bindsym Return mode "default"
@@ -65,10 +64,14 @@ mode "$mode_system" {
 bindsym Pause mode "$mode_system"
 
 # floating
-for_window [app_id="thunar"] floating enable
+for_window [app_id="org.gnome.Nautilus"] floating enable
+for_window [title="gThumb"] floating enable
+for_window [app_id="file-roller"] floating enable
+for_window [app_id="gnome-terminal-server"] floating enable
 for_window [app_id="ristretto"] floating enable
 for_window [app_id="engrampa"] floating enable
 for_window [app_id="evince"] floating enable
+for_window [app_id="thunar"] floating enable
 for_window [title="Volume Control"] floating enable
 
 # layouts
@@ -133,8 +136,8 @@ bar {
 exec swayidle -w \
           timeout 300 'swaylock -f -c 000000' \
           timeout 310 'swaymsg "output * dpms off"' \
+          timeout 320 'systemctl suspend' \
                resume 'swaymsg "output * dpms on"' \
-          timeout 330 'sudo systemctl suspend' \
           before-sleep 'swaylock -f -c 000000'
 
 exec mako

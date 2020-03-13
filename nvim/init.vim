@@ -51,7 +51,7 @@ set scrolloff=2 nolist
 set fillchars=fold:\ ,vert:\| 
 set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:$,precedes:«,extends:»
 set mouse=a clipboard=unnamed,unnamedplus guioptions=egmrti
-set undodir=~/cache/.undodir undofile
+set undodir=~/.cache/.undodir undofile
 set updatetime=100 inccommand=nosplit shortmess=I 
 set sessionoptions=blank,curdir,help,tabpages,winsize
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*/.git/*,*/target/*,*~
