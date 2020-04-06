@@ -1,5 +1,12 @@
 ;;(setq package-enable-at-startup nil)
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (setq package-archives '(("gnu"            . "http://elpa.gnu.org/packages/")
                          ("melpa"          . "https://melpa.org/packages/")
                          ("melpa-stable"   . "https://stable.melpa.org/packages/")
@@ -14,7 +21,7 @@
 (use-package exec-path-from-shell :ensure t)
 
 ;; editor modes
-(global-so-long-mode 1)
+;; (global-so-long-mode 1)
 (blink-cursor-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -122,6 +129,7 @@
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
 (use-package doom-themes :ensure t )
+;; (use-package dracula-theme :ensure t )
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
@@ -544,108 +552,97 @@
             (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
   (ivy-rich-mode 1))
 
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :config
-  (require 'lsp-clients)
-  (setq lsp-auto-guess-root t
-	    lsp-prefer-flymake nil
-	    lsp-enable-indentation nil
-	    lsp-enable-on-type-formatting nil)
-  (add-to-list 'lsp-file-watch-ignored "\\.vscode$"))
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :commands lsp
+;;   :config
+;;   (require 'lsp-clients)
+;;   (setq lsp-auto-guess-root t
+;; 	    lsp-prefer-flymake nil
+;; 	    lsp-enable-indentation nil
+;; 	    lsp-enable-on-type-formatting nil)
+;;   (add-to-list 'lsp-file-watch-ignored "\\.vscode$"))
 
-(use-package lsp-ui
-  :ensure t
-  :hook ((lsp-mode . lsp-ui-mode)
-	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
-                             (set-face-attribute 'lsp-ui-sideline-global nil :height 0.9 :background "#00242e")
-                             (lsp-ui-doc-mode -1))))
-  :config
-  (setq lsp-ui-sideline-show-symbol t)
-  (setq lsp-ui-sideline-ignore-duplicate t)
-  (setq lsp-ui-doc-use-webkit -1)
-  (setq lsp-ui-flycheck-enable t)
-  (setq lsp-ui-doc-include-signature t)
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-sideline-show-hover t)
-  (lsp-ui-doc-mode -1)
-  (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
-  (set-face-attribute 'markdown-code-face nil :background "#002B36")
-  ;; (require 'lsp-ui-flycheck)
-  ;; (setq lsp-ui-doc-use-webkit t)
-  ;; (setq lsp-ui-sideline-show-hover nil)
-  ;; :bind (:map lsp-ui-mode-map
-  ;;             ("C-c r ." . lsp-ui-peek-find-definitions)
-  ;;             ("C-c r ?" . lsp-ui-peek-find-references)
-  ;;             ("C-c r d" . lsp-ui-peek-find-definitions)
-  ;;             ("C-c r r" . lsp-ui-peek-find-references)
-  ;;             ("C-c r i" . lsp-ui-imenu)
-  ;;             ("C-c r F" . lsp-ui-sideline-apply-code-actions)
-  ;;             ("C-c r R" . lsp-rename))
-  )
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :hook ((lsp-mode . lsp-ui-mode)
+;; 	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
+;;                              (set-face-attribute 'lsp-ui-sideline-global nil :height 0.9 :background "#00242e")
+;;                              (lsp-ui-doc-mode -1))))
+;;   :config
+;;   (setq lsp-ui-sideline-show-symbol t)
+;;   (setq lsp-ui-sideline-ignore-duplicate t)
+;;   (setq lsp-ui-doc-use-webkit -1)
+;;   (setq lsp-ui-flycheck-enable t)
+;;   (setq lsp-ui-doc-include-signature t)
+;;   (setq lsp-ui-doc-enable nil)
+;;   (setq lsp-ui-sideline-show-hover t)
+;;   (lsp-ui-doc-mode -1)
+;;   (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
+;;   (set-face-attribute 'markdown-code-face nil :background "#002B36")
+;;   )
 
-(defun my/cargo-run-bin ()
-  "Run cargo run."    
-  (interactive)
-  (let ((bin-name (file-name-sans-extension (buffer-name))))
-    (delete-other-windows)
-    (if (string= "main" bin-name)
-        (cargo-process-run)
-      (cargo-process-run-bin bin-name))))
+;; (defun my/cargo-run-bin ()
+;;   "Run cargo run."    
+;;   (interactive)
+;;   (let ((bin-name (file-name-sans-extension (buffer-name))))
+;;     (delete-other-windows)
+;;     (if (string= "main" bin-name)
+;;         (cargo-process-run)
+;;       (cargo-process-run-bin bin-name))))
 
-(defun my/cargo-process-test()
-  "Run cargo test."
-  (interactive)
-  (delete-other-windows)
-  (cargo-process-test))
+;; (defun my/cargo-process-test()
+;;   "Run cargo test."
+;;   (interactive)
+;;   (delete-other-windows)
+;;   (cargo-process-test))
 
-(defun my/cargo-process-check()
-  "Run cargo check."
-  (interactive)
-  (delete-other-windows)
-  (cargo-process-check))
+;; (defun my/cargo-process-check()
+;;   "Run cargo check."
+;;   (interactive)
+;;   (delete-other-windows)
+;;   (cargo-process-check))
 
-(use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :hook (rust-mode . lsp)
-  :config
-  ;; (flycheck-inline-mode -1)
-  (electric-pair-local-mode t)
-  (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
-  (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
-  (define-key rust-mode-map (kbd "C-c C-k") 'my/cargo-process-check)
-  (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
-  (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'my/cargo-process-test)
-  (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'my/cargo-process-check)
-  (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
-  (require 'lsp-clients)
-  (setq rust-format-on-save t))
+;; (use-package rust-mode
+;;   :ensure t
+;;   :mode "\\.rs\\'"
+;;   :hook (rust-mode . lsp)
+;;   :config
+;;   ;; (flycheck-inline-mode -1)
+;;   (electric-pair-local-mode t)
+;;   (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
+;;   (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
+;;   (define-key rust-mode-map (kbd "C-c C-k") 'my/cargo-process-check)
+;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
+;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'my/cargo-process-test)
+;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'my/cargo-process-check)
+;;   (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
+;;   (require 'lsp-clients)
+;;   (setq rust-format-on-save t))
 
-(use-package flycheck-rust
-  :ensure t
-  :after flycheck
-  :commands flycheck-rust-setup
-  :init
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+;; (use-package flycheck-rust
+;;   :ensure t
+;;   :after flycheck
+;;   :commands flycheck-rust-setup
+;;   :init
+;;   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-(use-package cargo
-  :ensure t
-  :commands cargo-minor-mode
-  :config
-  (define-key cargo-process-mode-map (kbd "go") 'other-window)
-  (add-hook 'cargo-process-mode-hook
-            (lambda ()
-              (text-scale-decrease 1)
-              (visual-line-mode 1)
-              (setq-local global-hl-line-mode nil)))
-  :hook (rust-mode . cargo-minor-mode))
+;; (use-package cargo
+;;   :ensure t
+;;   :commands cargo-minor-mode
+;;   :config
+;;   (define-key cargo-process-mode-map (kbd "go") 'other-window)
+;;   (add-hook 'cargo-process-mode-hook
+;;             (lambda ()
+;;               (text-scale-decrease 1)
+;;               (visual-line-mode 1)
+;;               (setq-local global-hl-line-mode nil)))
+;;   :hook (rust-mode . cargo-minor-mode))
 
-(use-package toml-mode
-  :ensure t
-  :mode (("\\.toml\\'" . toml-mode)
-	     ("/Pipfile\\'" . toml-mode)))
+;; (use-package toml-mode
+;;   :ensure t
+;;   :mode (("\\.toml\\'" . toml-mode)
+;; 	     ("/Pipfile\\'" . toml-mode)))
 
 (use-package json-mode
   :ensure t
@@ -776,7 +773,7 @@
     (setq mac-option-modifier 'meta)
     (setq mac-command-modifier 'meta)
     (exec-path-from-shell-initialize))
-  (my/theme-solarized-dark)
+  ;; (my/theme-solarized-dark)
   (set-frame-width nil 87)
   (set-frame-height nil 30)
   (my/set-font)
@@ -797,7 +794,8 @@
  '(google-translate-default-source-language "fi" t)
  '(google-translate-default-target-language "en" t)
  '(package-selected-packages
-   '(evil-surround yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes)))
+   (quote
+    (dracula-theme evil-surround yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
