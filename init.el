@@ -21,7 +21,7 @@
 (use-package exec-path-from-shell :ensure t)
 
 ;; editor modes
-;; (global-so-long-mode 1)
+(global-so-long-mode 1)
 (blink-cursor-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -99,7 +99,7 @@
  make-backup-files nil
  midnight-period 7200
  mouse-wheel-progressive-speed nil
- mouse-wheel-scroll-amount '(3 ((shift) . 2) ((control) . nil))
+ mouse-wheel-scroll-amount '(2 ((shift) . 1)) ;; one line at a time
  ring-bell-function #'ignore
  scalable-fonts-allowed t
  scroll-conservatively 10000
@@ -116,7 +116,8 @@
  version-control t
  indicate-empty-lines t
  x-select-enable-clipboard t
- kill-buffer-query-functions nil)
+ kill-buffer-query-functions nil
+ indicate-empty-lines nil)
 
 (use-package move-text :ensure t :config (move-text-default-bindings))
 (use-package restclient :ensure t)
@@ -129,7 +130,6 @@
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
 (use-package doom-themes :ensure t )
-;; (use-package dracula-theme :ensure t )
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
@@ -168,8 +168,9 @@
   (global-set-key (kbd "C-x '") 'flycheck-list-errors)
   :init (global-flycheck-mode))
 
-;; (use-package flycheck-pos-tip :ensure t :after flycheck
-;;   :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
+(use-package flycheck-pos-tip :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
 
 ;; (use-package flycheck-posframe :ensure t :after flycheck
 ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
@@ -180,12 +181,6 @@
 (use-package avy :ensure t
   :config
   (set-face-attribute 'avy-lead-face nil :weight 'bold :background "#ff2600" :foreground "#ffffff"))
-
-(use-package beacon
-  :ensure t
-  :custom
-  (beacon-color "#f1fa8c")
-  :hook (after-init . beacon-mode))
 
 (use-package aggressive-indent :ensure t
   :config
@@ -346,9 +341,12 @@
   (define-key company-search-map (kbd "C-p") 'company-select-previous)
   (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering))
 
+(use-package flycheck-clj-kondo :ensure t)
+
 (use-package clojure-mode
   :ensure t
   :config
+  (require 'flycheck-clj-kondo)
   (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face))
 
 (use-package cider
@@ -552,6 +550,11 @@
             (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 45))))))
   (ivy-rich-mode 1))
 
+(use-package json-mode
+  :ensure t
+  :mode (("\\.json\\'" . json-mode)
+	     ("/Pipfile.lock\\'" . json-mode)))
+
 ;; (use-package lsp-mode
 ;;   :ensure t
 ;;   :commands lsp
@@ -644,11 +647,6 @@
 ;;   :mode (("\\.toml\\'" . toml-mode)
 ;; 	     ("/Pipfile\\'" . toml-mode)))
 
-(use-package json-mode
-  :ensure t
-  :mode (("\\.json\\'" . json-mode)
-	     ("/Pipfile.lock\\'" . json-mode)))
-
 ;; my stuff
 
 
@@ -678,55 +676,55 @@
   (set-face-attribute 'mode-line-inactive nil :inherit nil :height 0.90)
   )
 
-(defun my/common-faces ()
-  (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
-  (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
-  (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (set-face-attribute 'warning nil :height 0.90)
-  (set-face-attribute 'error nil :height 0.90)
-  (set-face-attribute 'success nil :height 0.90)
-  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (set-face-attribute 'font-lock-preprocessor-face nil :foreground nil :inherit 'default :weight 'normal)
-  (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
-  (set-face-attribute 'font-lock-constant-face nil :foreground nil :inherit 'normal))
+;; (defun my/common-faces ()
+;;   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
+;;   (set-face-attribute 'font-lock-variable-name-face nil :foreground nil)
+;;   (set-face-attribute 'font-lock-variable-name-face nil :inherit nil)
+;;   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+;;   (set-face-attribute 'warning nil :height 0.90)
+;;   (set-face-attribute 'error nil :height 0.90)
+;;   (set-face-attribute 'success nil :height 0.90)
+;;   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+;;   (set-face-attribute 'font-lock-preprocessor-face nil :foreground nil :inherit 'default :weight 'normal)
+;;   (set-face-attribute 'line-number-current-line nil :inherit 'line-number)
+;;   (set-face-attribute 'font-lock-constant-face nil :foreground nil :inherit 'normal))
 
-(defun my/theme-solarized-dark ()
-  "My solarized dark."
-  (interactive "*")
-  (load-theme 'doom-solarized-dark)
-  (set-face-attribute 'error nil :foreground "#e66f6d" :weight 'bold)
-  (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
-  (set-face-attribute 'region nil :background "#055633")
-  (set-face-attribute 'hl-line nil :background "#083a4a")
-  (set-face-attribute 'line-number-current-line nil :background "#083a4a" :foreground "#cccccc")
-  (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
-  (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A" :slant 'italic)
-  (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#bbaaaa")
-  (setq beacon-color "#f1fa8c")
-  (my/common-faces)
-  (my/modeline-adjust))
+;; (defun my/theme-solarized-dark ()
+;;   "My solarized dark."
+;;   (interactive "*")
+;;   (load-theme 'doom-solarized-dark)
+;;   (set-face-attribute 'error nil :foreground "#e66f6d" :weight 'bold)
+;;   (set-face-attribute 'font-lock-constant-face nil :foreground "#839496")
+;;   (set-face-attribute 'region nil :background "#055633")
+;;   (set-face-attribute 'hl-line nil :background "#083a4a")
+;;   (set-face-attribute 'line-number-current-line nil :background "#083a4a" :foreground "#cccccc")
+;;   (set-face-attribute 'font-lock-doc-face nil :slant 'normal)
+;;   (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A" :slant 'italic)
+;;   (set-face-attribute 'highlight-symbol-face nil :background nil :underline t :foreground "#bbaaaa")
+;;   (setq beacon-color "#f1fa8c")
+;;   (my/common-faces)
+;;   (my/modeline-adjust))
 
-(defun my/theme-doom-one-light ()
-  "My one light."
-  (interactive)
-  (load-theme 'doom-one-light)
-  (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A")
-  (set-face-attribute 'ivy-posframe nil :background "#e9e9fa" :foreground "#000000")
-  (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
-  (set-face-attribute 'default nil :background "#f2f2f2")
-  (set-face-attribute 'hl-line nil :background "#CDFDC7" :inherit nil)
-  (set-face-attribute 'line-number-current-line nil :background "#CDFDC7" :foreground "#333333")
-  (set-face-attribute 'show-paren-match nil :background "#F3FF4A")
-  (setq beacon-color "#268bd2")
-  (my/common-faces)
-  (my/modeline-adjust))
+;; (defun my/theme-doom-one-light ()
+;;   "My one light."
+;;   (interactive)
+;;   (load-theme 'doom-one-light)
+;;   (set-face-attribute 'compilation-error nil :inherit 'fringe :weight 'bold :height 0.9 :foreground "#56697A")
+;;   (set-face-attribute 'ivy-posframe nil :background "#e9e9fa" :foreground "#000000")
+;;   (set-face-attribute 'highlight-symbol-face nil :underline t :foreground "#000000" :background "#dddddd")
+;;   (set-face-attribute 'default nil :background "#f2f2f2")
+;;   (set-face-attribute 'hl-line nil :background "#CDFDC7" :inherit nil)
+;;   (set-face-attribute 'line-number-current-line nil :background "#CDFDC7" :foreground "#333333")
+;;   (set-face-attribute 'show-paren-match nil :background "#F3FF4A")
+;;   (setq beacon-color "#268bd2")
+;;   (my/common-faces)
+;;   (my/modeline-adjust))
 
 (defun my/set-font ()
   "My default font."
   (interactive)
   (if (eq window-system 'x)
-      (set-frame-font "Fira Code Medium-12")
+      (set-frame-font "Fira Mono Medium-12")
     (set-frame-font "Monaco-15")))
 
 (defun my/save-buffer ()
@@ -784,19 +782,6 @@
 
 (provide 'init)
     ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(beacon-color "#f1fa8c")
- '(dired-listing-switches "-aBhl --group-directories-first")
- '(google-translate-default-source-language "fi" t)
- '(google-translate-default-target-language "en" t)
- '(package-selected-packages
-   (quote
-    (dracula-theme evil-surround yasnippet-snippets yasnippet toml-mode neotree lsp-mode move-text beacon diminish rainbow-delimiters rainbow-delimeters parinfer volatile-highlights google-translate hide-mode-line aggressive-indent flycheck-inline highlight-thing diff-hl diff-hl- ivy-posframe deft ivy-postframe deadgrep which-key use-package treemacs-projectile treemacs-evil solaire-mode smex shell-pop restclient projectile-ripgrep popwin lsp-ui key-chord json-mode ivy-rich highlight-symbol git-gutter flycheck-rust flycheck-posframe flycheck-pos-tip flycheck-plantuml flycheck-joker expand-region exec-path-from-shell evil-smartparens evil-magit evil-collection doom-themes doom-modeline counsel-projectile company-lsp clj-refactor cargo almost-mono-themes))))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
