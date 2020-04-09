@@ -22,7 +22,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
-Plug '~/dev/clojure/conjure'
+" Plug '~/dev/clojure/conjure'
 " Plug 'Olical/conjure', { 'do': 'bin/compile', 'for': 'clojure', 'on': 'ConjureUp' }
 " Plug 'Olical/conjure', { 'do': 'bin/compile', 'for': 'clojure' }
 " Plug 'Olical/conjure', { 'tag': 'v2.1.2', 'do': 'bin/compile' }
@@ -34,7 +34,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'pseewald/vim-anyfold' 
 Plug 'majutsushi/tagbar'
 Plug 'farmergreg/vim-lastplace'
-Plug 'jasilven/redbush', { 'do': 'cargo install --path .' }
+" Plug 'jasilven/redbush', { 'do': 'cargo install --path .' }
 " Plug '/home/jari/dev/rust/redbush/plugin'
 call plug#end()
 

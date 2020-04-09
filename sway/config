@@ -2,7 +2,7 @@ set $mod Mod4
 font pango:Menlo 12
 floating_modifier $mod
 default_border pixel 4
-xwayland disable
+# xwayland disable
 
 output * bg /usr/share/backgrounds/manjaro-wallpapers-18.0/manjaro-cat.jpg fill
 client.focused #4c7899 #285577 #ffffff #2e9ef4  #0080ff

@@ -77,8 +77,8 @@
  display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
- gc-cons-upper-limit 536870912
- gc-cons-threshold 16777216
+ ;; gc-cons-upper-limit 536870912
+ ;; gc-cons-threshold 16777216
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
  clean-buffer-list-delay-general 1
@@ -99,10 +99,10 @@
  make-backup-files nil
  midnight-period 7200
  mouse-wheel-progressive-speed nil
- mouse-wheel-scroll-amount '(2 ((shift) . 1)) ;; one line at a time
+ mouse-wheel-scroll-amount '(4 ((shift) . 1)) ;; one line at a time
  ring-bell-function #'ignore
  scalable-fonts-allowed t
- scroll-conservatively 10000
+ scroll-conservatively 100000
  scroll-step 1
  sentence-end-double-space nil
  set-default-coding-systems 'utf-8
@@ -119,12 +119,13 @@
  kill-buffer-query-functions nil
  indicate-empty-lines nil)
 
-(use-package move-text :ensure t :config (move-text-default-bindings))
-(use-package restclient :ensure t)
+;; (use-package move-text :ensure t :config (move-text-default-bindings))
+;; (use-package restclient :ensure t)
+;; (use-package expand-region :ensure t)
+(use-package gcmh :ensure t :config (gcmh-mode 1))
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
 (use-package which-key :ensure t :config (which-key-mode))
-(use-package expand-region :ensure t)
 (use-package treemacs-projectile :after (treemacs projectile) :ensure t)
 (use-package treemacs-evil :after (treemacs evil) :ensure t)
 (use-package all-the-icons :ensure t)
@@ -148,8 +149,7 @@
 (use-package ace-window :ensure t
   :config
   (ace-window-display-mode 1)
-  (set-face-attribute 'aw-leading-char-face nil :inherit nil :height 2.0 :foreground "#cb4b16")
-  )
+  (set-face-attribute 'aw-leading-char-face nil :inherit nil :height 2.0 :foreground "#cb4b16"))
 
 (use-package dired
   :ensure nil
@@ -164,6 +164,8 @@
 
 (use-package flycheck :ensure t
   :config
+  (setq flycheck-display-errors-delay 0.3)
+  (setq flycheck-idle-change-delay 0.8)
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (global-set-key (kbd "C-x '") 'flycheck-list-errors)
   :init (global-flycheck-mode))
@@ -724,7 +726,7 @@
   "My default font."
   (interactive)
   (if (eq window-system 'x)
-      (set-frame-font "Fira Mono Medium-12")
+      (set-frame-font "Fira Code Medium-12")
     (set-frame-font "Monaco-15")))
 
 (defun my/save-buffer ()
@@ -788,3 +790,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(dired-listing-switches "-aBhl --group-directories-first")
+ '(package-selected-packages
+   '(gcmh gcmh-mode sublimity yasnippet-snippets which-key use-package treemacs-projectile treemacs-evil toml-mode smex shell-pop restclient projectile-ripgrep popwin neotree move-text lsp-ui key-chord json-mode ivy-rich ivy-posframe highlight-symbol hide-mode-line flycheck-rust flycheck-pos-tip flycheck-joker flycheck-inline flycheck-clj-kondo expand-region exec-path-from-shell evil-surround evil-smartparens evil-magit dracula-theme doom-themes doom-modeline diff-hl counsel-projectile company cider cargo beacon aggressive-indent))
+ '(pixel-scroll-mode t))
