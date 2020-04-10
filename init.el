@@ -1,4 +1,4 @@
-;;(setq package-enable-at-startup nil)
+1;;(setq package-enable-at-startup nil)
 
 
 ;; Added by Package.el.  This must come before configurations of
@@ -21,7 +21,7 @@
 (use-package exec-path-from-shell :ensure t)
 
 ;; editor modes
-(global-so-long-mode 1)
+;;(global-so-long-mode 1)
 (blink-cursor-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -201,12 +201,12 @@
 
 (use-package ivy-posframe :ensure t
   :config
-  (setq ivy-posframe-min-width 80
+  (setq ivy-posframe-min-width 90
         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
         ivy-posframe-border-width 2
         ivy-posframe-width 90
         ivy-posframe-min-height 10
-        ivy-posframe-height 10
+        ivy-posframe-height 15
         ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
         ivy-posframe-display-functions-alist
         '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
@@ -783,19 +783,4 @@
 (my/initialize)
 
 (provide 'init)
-    ;;; init.el ends here
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(dired-listing-switches "-aBhl --group-directories-first")
- '(package-selected-packages
-   '(gcmh gcmh-mode sublimity yasnippet-snippets which-key use-package treemacs-projectile treemacs-evil toml-mode smex shell-pop restclient projectile-ripgrep popwin neotree move-text lsp-ui key-chord json-mode ivy-rich ivy-posframe highlight-symbol hide-mode-line flycheck-rust flycheck-pos-tip flycheck-joker flycheck-inline flycheck-clj-kondo expand-region exec-path-from-shell evil-surround evil-smartparens evil-magit dracula-theme doom-themes doom-modeline diff-hl counsel-projectile company cider cargo beacon aggressive-indent))
- '(pixel-scroll-mode t))
+;; init.el ends here
