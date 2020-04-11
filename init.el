@@ -1,4 +1,4 @@
-1;;(setq package-enable-at-startup nil)
+;;(setq package-enable-at-startup nil)
 
 
 ;; Added by Package.el.  This must come before configurations of
@@ -19,6 +19,8 @@
 ;;   (package-install 'use-package))
 (require 'use-package)
 (use-package exec-path-from-shell :ensure t)
+(set-frame-width nil 87)
+(set-frame-height nil 30)
 
 ;; editor modes
 ;;(global-so-long-mode 1)
@@ -29,17 +31,18 @@
 (scroll-bar-mode -1)
 (show-paren-mode 1)
 (global-hl-line-mode t)
-(size-indication-mode t)
-(global-display-line-numbers-mode -1)
+(size-indication-mode -1)
+;;(global-display-line-numbers-mode -1)
 (global-eldoc-mode t)
 (global-auto-revert-mode t)
+
+;; hooks
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'clojure-mode-hook #'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)
-                              (hl-line-mode -1)))
+(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil) (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
 (add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)
@@ -70,6 +73,7 @@
 
 ;; defaults
 (setq-default
+ set-frame-name "Editor"
  compilation-ask-about-save nil
  hl-line-sticky-flag nil
  global-hl-line-sticky-flag nil
@@ -99,7 +103,7 @@
  make-backup-files nil
  midnight-period 7200
  mouse-wheel-progressive-speed nil
- mouse-wheel-scroll-amount '(4 ((shift) . 1)) ;; one line at a time
+ mouse-wheel-scroll-amount '(4 ((shift) . 1))
  ring-bell-function #'ignore
  scalable-fonts-allowed t
  scroll-conservatively 100000
@@ -122,6 +126,12 @@
 ;; (use-package move-text :ensure t :config (move-text-default-bindings))
 ;; (use-package restclient :ensure t)
 ;; (use-package expand-region :ensure t)
+(use-package fast-scroll :ensure t
+  :config
+  (add-hook 'fast-scroll-start-hook (lambda () (flycheck-mode -1) (font-lock-mode -1)))
+  (add-hook 'fast-scroll-end-hook (lambda () (flycheck-mode 1) (font-lock-mode 1)))
+  (fast-scroll-config)
+  (fast-scroll-mode 1))
 (use-package gcmh :ensure t :config (gcmh-mode 1))
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
@@ -130,7 +140,7 @@
 (use-package treemacs-evil :after (treemacs evil) :ensure t)
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
-(use-package doom-themes :ensure t )
+(use-package doom-themes :ensure t :init (load-theme 'doom-one))
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
@@ -138,13 +148,12 @@
   :config
   (yas-reload-all)
   (add-hook 'prog-mode-hook (lambda () (yas-minor-mode-on))))
+(use-package yasnippet-snippets :ensure t :after yasnippet)
 
 (use-package evil-surround
   :ensure t
   :config
   (global-evil-surround-mode 1))
-
-(use-package yasnippet-snippets :ensure t :after yasnippet)
 
 (use-package ace-window :ensure t
   :config
@@ -173,12 +182,6 @@
 (use-package flycheck-pos-tip :ensure t
   :after flycheck
   :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
-
-;; (use-package flycheck-posframe :ensure t :after flycheck
-;;   :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
-
-;; (use-package flycheck-inline :ensure t :after flycheck
-;;   :config (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 
 (use-package avy :ensure t
   :config
@@ -404,8 +407,7 @@
 (use-package ivy
   :ensure t
   :bind
-  (
-   ("C-x b" . ivy-switch-buffer)
+  (("C-x b" . ivy-switch-buffer)
    ("C-x C-b" . ivy-switch-buffer))
   :config
   (setq ivy-use-virtual-buffers t)
@@ -472,7 +474,8 @@
   :ensure t
   :hook
   (neotree-mode . (lambda () (text-scale-decrease 1)
-                    (setq-local display-line-numbers nil)))
+                    (setq-local display-line-numbers nil)
+                    (hide-mode-line-mode)))
   :bind
   (( "C-\\" . neotree-toggle)
    ( "C-<return>" . neotree-toggle))
@@ -482,11 +485,11 @@
   (setq-local tab-width 0)
   (setq neo-smart-open nil)
   (setq neo-autorefresh nil)
-  (setq neo-window-width 30)
+  (setq neo-window-width 25)
   (setq neo-click-changes-root nil)
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq all-the-icons-color-icons nil)
-  (setq neo-theme (if (display-graphic-p) 'arrow 'arrow))
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (add-hook 'neotree-mode-hook
             (lambda ()
               (define-key evil-normal-state-local-map (kbd "go") 'other-window)
@@ -500,33 +503,26 @@
               (define-key evil-normal-state-local-map (kbd "A") 'neotree-stretch-toggle)
               (define-key evil-normal-state-local-map (kbd "H") 'neotree-hidden-file-toggle))))
 
-
-;; (use-package treemacs
-;;   :ensure t
-;;   :bind
-;;   (( "C-\\" . treemacs)
-;;    ( "C-<return>" . treemacs))
-;;   :hook
-;;   (treemacs-mode . (lambda () (text-scale-decrease 1)
-;;                      (setq-local display-line-numbers nil)))
-;;   :config
-;;   (setq treemacs-show-cursor nil)
-;;   (setq treemacs-project-follow-cleanup 1)
-;;   (treemacs-resize-icons 11)
-;;   (setq treemacs-eldoc-display t)
-;;   (treemacs-follow-mode t)
-;;   (setq treemacs-width 22)
-;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
-
 (use-package doom-modeline
   :ensure t
   :config
+  (doom-modeline-def-modeline 'my-simple-line
+    '(matches buffer-info remote-host parrot selection-info)
+    '(misc-info input-method buffer-encoding major-mode process vcs))
+  (defun setup-custom-doom-modeline ()
+    (doom-modeline-set-modeline 'my-simple-line 'default))
+  (add-hook 'doom-modeline-mode-hook 'setup-custom-doom-modeline)
   (setq doom-modeline-major-mode-icon nil)
   (setq doom-modeline-major-mode-color-icon nil)
   (setq doom-modeline-buffer-modification-icon -1)
   (setq doom-modeline-modal-icon nil)
   (setq doom-modeline-buffer-state-icon nil)
-  :hook (after-init . my/modeline-adjust))
+  (setq doom-modeline-persp-name nil)
+  (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-height 1)
+  (set-face-attribute 'mode-line nil :family "Noto Sans" :height 0.9)
+  (set-face-attribute 'mode-line-inactive nil :family "Noto Sans" :height 0.9)
+  :hook (after-init . doom-modeline-mode))
 
 (use-package ivy-rich
   :ensure t
@@ -555,7 +551,24 @@
 (use-package json-mode
   :ensure t
   :mode (("\\.json\\'" . json-mode)
-	     ("/Pipfile.lock\\'" . json-mode)))
+         ("/Pipfile.lock\\'" . json-mode)))
+
+;; (use-package treemacs
+;;   :ensure t
+;;   :bind
+;;   (( "C-\\" . treemacs)
+;;    ( "C-<return>" . treemacs))
+;;   :hook
+;;   (treemacs-mode . (lambda () (text-scale-decrease 1)
+;;                      (setq-local display-line-numbers nil)))
+;;   :config
+;;   (setq treemacs-show-cursor nil)
+;;   (setq treemacs-project-follow-cleanup 1)
+;;   (treemacs-resize-icons 11)
+;;   (setq treemacs-eldoc-display t)
+;;   (treemacs-follow-mode t)
+;;   (setq treemacs-width 22)
+;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 ;; (use-package lsp-mode
 ;;   :ensure t
@@ -588,7 +601,7 @@
 ;;   )
 
 ;; (defun my/cargo-run-bin ()
-;;   "Run cargo run."    
+;;   "Run cargo run."
 ;;   (interactive)
 ;;   (let ((bin-name (file-name-sans-extension (buffer-name))))
 ;;     (delete-other-windows)
@@ -652,31 +665,18 @@
 ;; my stuff
 
 
-(defun my/switch-to-repl-and-back ()
-  "Switch to repl and back."
-  (interactive)
-  (cider-switch-to-repl-buffer)
-  (cider-switch-to-last-clojure-buffer))
-
-(defun my/jump-back ()
-  "My jump back based on mode."
-  (interactive)
-  (if (eq major-mode 'clojure-mode)
-      (cider-pop-back)
-    (evil-jump-backward)))
-
-(defun my/modeline-adjust ()
-  "My adjust modeline."
-  (interactive)
-  (doom-modeline-mode)
-  (set-face-attribute 'doom-modeline-buffer-modified nil :inherit 'doom-modeline-battery-warning :weight 'bold)
-  ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
-  (setq doom-modeline-bar-width 3)
-  ;; (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
-  (set-face-attribute 'mode-line nil :inherit nil :height 0.90)
-  ;; (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
-  (set-face-attribute 'mode-line-inactive nil :inherit nil :height 0.90)
-  )
+;; (defun my/modeline-adjust ()
+;;   "My adjust modeline."
+;;   (interactive)
+;;   (doom-modeline-mode)
+;;   (set-face-attribute 'doom-modeline-buffer-modified nil :inherit 'doom-modeline-battery-warning :weight 'bold)
+;;   ;; (setq doom-modeline-height (/ (face-attribute 'default :height) 100))
+;;   (setq doom-modeline-bar-width 3)
+;;   ;; (set-face-attribute 'mode-line nil :inherit nil :height (-  (face-attribute 'default :height) 10 ))
+;;   (set-face-attribute 'mode-line nil :inherit nil :height 0.90)
+;;   ;; (set-face-attribute 'mode-line-inactive nil :inherit nil :height (- (face-attribute 'default :height) 40))
+;;   (set-face-attribute 'mode-line-inactive nil :inherit nil :height 0.90)
+;;   )
 
 ;; (defun my/common-faces ()
 ;;   (set-face-attribute 'font-lock-builtin-face nil :foreground nil)
@@ -721,6 +721,19 @@
 ;;   (setq beacon-color "#268bd2")
 ;;   (my/common-faces)
 ;;   (my/modeline-adjust))
+
+(defun my/switch-to-repl-and-back ()
+  "Switch to repl and back."
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (cider-switch-to-last-clojure-buffer))
+
+(defun my/jump-back ()
+  "My jump back based on mode."
+  (interactive)
+  (if (eq major-mode 'clojure-mode)
+      (cider-pop-back)
+    (evil-jump-backward)))
 
 (defun my/set-font ()
   "My default font."
@@ -768,19 +781,14 @@
 (defun my/initialize ()
   "Initialize."
   (interactive "*")
-  (set-frame-name "Editor")
   (when (memq window-system '(mac ns x))
     (setq mac-option-modifier 'meta)
     (setq mac-command-modifier 'meta)
     (exec-path-from-shell-initialize))
-  ;; (my/theme-solarized-dark)
-  (set-frame-width nil 87)
-  (set-frame-height nil 30)
   (my/set-font)
-  (my/modeline-adjust)
   (put 'downcase-region 'disabled nil))
 
 (my/initialize)
 
 (provide 'init)
-;; init.el ends here
+;;; init.el ends here

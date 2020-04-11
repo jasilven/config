@@ -39,7 +39,7 @@ Plug 'farmergreg/vim-lastplace'
 call plug#end()
 
 "" settings
-set signcolumn=yes:1
+" set signcolumn=yes:1
 set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8 spelllang=en_us
 set smarttab tabstop=4 shiftwidth=4 expandtab " set t_Co=256 completeopt-=preview 
 set noswapfile nobackup noshowmode nowrap noshowcmd nospell nofoldenable
