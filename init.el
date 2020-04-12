@@ -50,6 +50,7 @@
 (add-hook 'flycheck-error-list-mode-hook (lambda () (text-scale-decrease 1)))
 ;; (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
 (add-hook 'cargo-process-mode-hook (lambda () (goto-char (point-max))))
+(add-hook 'cider-popup-buffer-mode-hook (lambda () (display-line-numbers-mode -1)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; global keys
@@ -70,6 +71,8 @@
 (global-set-key (kbd "C-c y") 'company-yasnippet)
 (global-set-key (kbd "C-c C-y") 'company-yasnippet)
 (global-set-key (kbd "M-o") (lambda () (end-of-line) (electric-newline-and-maybe-indent)))
+(global-set-key (kbd "<C-mouse-4>") 'scroll-down-line)
+(global-set-key (kbd "<C-mouse-5>") 'scroll-up-line)
 
 ;; defaults
 (setq-default
@@ -103,7 +106,7 @@
  make-backup-files nil
  midnight-period 7200
  mouse-wheel-progressive-speed nil
- mouse-wheel-scroll-amount '(4 ((shift) . 1))
+ mouse-wheel-scroll-amount '(3 ((shift) . 1))
  ring-bell-function #'ignore
  scalable-fonts-allowed t
  scroll-conservatively 100000
@@ -128,8 +131,8 @@
 ;; (use-package expand-region :ensure t)
 (use-package fast-scroll :ensure t
   :config
-  (add-hook 'fast-scroll-start-hook (lambda () (flycheck-mode -1) (font-lock-mode -1)))
-  (add-hook 'fast-scroll-end-hook (lambda () (flycheck-mode 1) (font-lock-mode 1)))
+  (add-hook 'fast-scroll-start-hook (lambda () (flycheck-mode -1) ))
+  (add-hook 'fast-scroll-end-hook (lambda () (flycheck-mode 1) ))
   (fast-scroll-config)
   (fast-scroll-mode 1))
 (use-package gcmh :ensure t :config (gcmh-mode 1))
@@ -352,6 +355,7 @@
   :ensure t
   :config
   (require 'flycheck-clj-kondo)
+  (setq clojure-align-forms-automatically t)
   (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face))
 
 (use-package cider
@@ -360,6 +364,12 @@
   :init
   (use-package flycheck-joker :ensure t)
   :config
+  (defun add-clj-format-before-save () (interactive)
+         (add-hook 'before-save-hook
+                   'cider-format-buffer
+                   t t))
+  (add-hook 'clojure-mode-hook
+            'add-clj-format-before-save)
   (add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 1)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
@@ -368,22 +378,21 @@
   (set-face-attribute 'clojure-keyword-face nil :inherit 'font-lock-function-name-face)
   ;; (define-key cider-mode-map (kbd "C-s") #'my/save-buffer)
   (define-key cider-repl-mode-map (kbd "C-<return>") #'cider-repl-newline-and-indent)
-  (setq cljr-warn-on-eval nil)
-  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
-  (setq cider-save-file-on-load t)
-  (setq clojure-toplevel-inside-comment-form t)
+  (setq cider-auto-select-error-buffer nil)
   (setq cider-clojure-cli-global-options nil)
   (setq cider-print-fn 'fipp)
-  (setq cider-repl-use-pretty-printing t)
-  (setq cider-repl-history-recenter nil)
   (setq cider-print-quota 1000000)
   (setq cider-prompt-for-symbol nil)
-  (setq nrepl-hide-special-buffers t)
   (setq cider-repl-display-help-banner nil)
-  (setq cider-show-error-buffer nil)
-  (setq cider-auto-select-error-buffer nil)
-  (setq cider-stacktrace-default-filters '(tooling dup java REPL))
+  (setq cider-repl-history-recenter nil)
+  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
+  (setq cider-repl-use-pretty-printing t)
   (setq cider-save-file-on-load t)
+  (setq cider-show-error-buffer nil)
+  (setq cider-stacktrace-default-filters '(tooling dup java REPL))
+  (setq cljr-warn-on-eval nil)
+  (setq clojure-toplevel-inside-comment-form t)
+  (setq nrepl-hide-special-buffers t)
   (evil-define-key 'normal clojure-mode-map "K" 'cider-doc)
   (evil-define-key 'normal clojure-mode-map "gd" 'cider-find-var)
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> ck") 'cider-eval-buffer)
@@ -722,6 +731,13 @@
 ;;   (my/common-faces)
 ;;   (my/modeline-adjust))
 
+;; (defun my/save-buffer ()
+;;   "Indent whole buffer."
+;;   (interactive "*")
+;;   (delete-trailing-whitespace)
+;;   (indent-region (point-min) (point-max))
+;;   (save-buffer))
+
 (defun my/switch-to-repl-and-back ()
   "Switch to repl and back."
   (interactive)
@@ -741,13 +757,6 @@
   (if (eq window-system 'x)
       (set-frame-font "Fira Code Medium-12")
     (set-frame-font "Monaco-15")))
-
-(defun my/save-buffer ()
-  "Indent whole buffer."
-  (interactive "*")
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max))
-  (save-buffer))
 
 (defun my/indent-buffer ()
   "Indent whole buffer."
@@ -792,3 +801,15 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(hl-line ((t (:background "gray22")))))
