@@ -41,16 +41,14 @@
 (add-hook 'clojure-mode-hook #'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'prog-mode-hook #'hs-minor-mode)
+(add-hook 'clojure-mode-hook #'hs-minor-mode)
 (add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil) (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (hl-line-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil)
-                            (text-scale-decrease 1)))
+(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil) (text-scale-decrease 1)))
 (add-hook 'flycheck-error-list-mode-hook (lambda () (text-scale-decrease 1)))
-;; (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
 (add-hook 'cargo-process-mode-hook (lambda () (goto-char (point-max))))
-(add-hook 'cider-popup-buffer-mode-hook (lambda () (display-line-numbers-mode -1)))
+;; (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; global keys
@@ -154,9 +152,9 @@
 (use-package yasnippet-snippets :ensure t :after yasnippet)
 
 (use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+           :ensure t
+           :config
+           (global-evil-surround-mode 1))
 
 (use-package ace-window :ensure t
   :config
@@ -205,23 +203,23 @@
   :hook
   ((cider-repl-mode imenu-list-minor-mode treemacs-mode) . hide-mode-line-mode))
 
-(use-package ivy-posframe :ensure t
-  :config
-  (setq ivy-posframe-min-width 90
-        ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
-        ivy-posframe-border-width 2
-        ivy-posframe-width 90
-        ivy-posframe-min-height 10
-        ivy-posframe-height 15
-        ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
-        ivy-posframe-display-functions-alist
-        '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
-          (counsel-company . ivy-posframe-display-at-point)
-          (complete-symbol . ivy-posframe-display-at-point)
-          (counsel-M-x     . ivy-posframe-display-at-window-center)
-          (t               . ivy-posframe-display-at-window-center)))
-  (set-face-attribute 'internal-border nil :background "#2AA18E")
-  (ivy-posframe-mode 1))
+;; (use-package ivy-posframe :ensure t
+;;   :config
+;;   (setq ivy-posframe-min-width 90
+;;         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
+;;         ivy-posframe-border-width 2
+;;         ivy-posframe-width 90
+;;         ivy-posframe-min-height 10
+;;         ivy-posframe-height 15
+;;         ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
+;;         ivy-posframe-display-functions-alist
+;;         '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
+;;           (counsel-company . ivy-posframe-display-at-point)
+;;           (complete-symbol . ivy-posframe-display-at-point)
+;;           (counsel-M-x     . ivy-posframe-display-at-window-center)
+;;           (t               . ivy-posframe-display-at-window-center)))
+;;   (set-face-attribute 'internal-border nil :background "#2AA18E")
+;;   (ivy-posframe-mode 1))
 
 (use-package popwin
   :ensure t
@@ -371,6 +369,7 @@
   (add-hook 'clojure-mode-hook
             'add-clj-format-before-save)
   (add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 1)))
+  (add-hook 'cider-popup-buffer-mode-hook (lambda () (display-line-numbers-mode -1)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'cider--debug-mode-hook 'evil-normalize-keymaps)
@@ -404,14 +403,15 @@
   (evil-define-key 'normal clojure-mode-map (kbd "<SPC> r") 'cider-jump-to-compilation-error)
   (evil-define-key 'normal clojure-mode-map (kbd "C-x C-x") 'cider-eval-defun-at-point)
   (evil-define-key 'normal clojure-mode-map (kbd "C-c C-z") 'my/switch-to-repl-and-back)
-  (evil-define-key 'normal clojure-mode-map (kbd "C-j") 'my/switch-to-repl-and-back)
-  (add-hook 'cider-docview-mode-hook
-            (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)
-              (visual-line-mode t)))
+  ;; (evil-define-key 'normal clojure-mode-map (kbd "C-j") 'my/switch-to-repl-and-back)
+  ;; (add-hook 'cider-docview-mode-hook
+  ;;           (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)
+  ;;             (visual-line-mode t)))
   (add-hook 'cider-repl-mode-hook
             (lambda () (text-scale-decrease 1) (display-line-numbers-mode -1) (setq-local global-hl-line-mode nil)))
-  (add-hook 'cider-popup-buffer-mode-hook
-            (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil))))
+  ;; (add-hook 'cider-popup-buffer-mode-hook
+  ;;           (lambda () (text-scale-decrease 1) (setq-local global-hl-line-mode nil)))
+  )
 
 (use-package ivy
   :ensure t
@@ -801,15 +801,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(hl-line ((t (:background "gray22")))))
