@@ -10,8 +10,6 @@
 (setq package-archives '(("gnu"            . "http://elpa.gnu.org/packages/")
                          ("melpa"          . "https://melpa.org/packages/")
                          ("melpa-stable"   . "https://stable.melpa.org/packages/")
-                         ("milkbox"        . "http://melpa.milkbox.net/packages/")
-                         ("milkbox-stable" . "http://melpa-stable.milkbox.net/packages/")
                          ))
 ;;("marmalade"    . "http://marmalade-repo.org/packages/")
 ;; (unless (package-installed-p 'use-package)
@@ -82,8 +80,9 @@
  display-line-numbers-width 3
  text-scale-mode-step 1.1
  tramp-default-method "ssh"
- ;; gc-cons-upper-limit 536870912
- ;; gc-cons-threshold 16777216
+ gc-cons-upper-limit 536870912
+ gc-cons-threshold 100000000
+ read-process-output-max (* 1024 1024)
  term-scroll-show-maximum-output t
  term-scroll-to-bottom-on-output t
  clean-buffer-list-delay-general 1
@@ -124,24 +123,14 @@
  kill-buffer-query-functions nil
  indicate-empty-lines nil)
 
-;; (use-package move-text :ensure t :config (move-text-default-bindings))
-;; (use-package restclient :ensure t)
-;; (use-package expand-region :ensure t)
-(use-package fast-scroll :ensure t
-  :config
-  (add-hook 'fast-scroll-start-hook (lambda () (flycheck-mode -1) ))
-  (add-hook 'fast-scroll-end-hook (lambda () (flycheck-mode 1) ))
-  (fast-scroll-config)
-  (fast-scroll-mode 1))
-(use-package gcmh :ensure t :config (gcmh-mode 1))
 (use-package undo-tree :ensure t :config (global-undo-tree-mode))
 (use-package evil-magit :after magit :ensure t)
 (use-package which-key :ensure t :config (which-key-mode))
-(use-package treemacs-projectile :after (treemacs projectile) :ensure t)
-(use-package treemacs-evil :after (treemacs evil) :ensure t)
+;; (use-package treemacs-projectile :after (treemacs projectile) :ensure t)
+;; (use-package treemacs-evil :after (treemacs evil) :ensure t)
 (use-package all-the-icons :ensure t)
 (use-package smex :ensure t)
-(use-package doom-themes :ensure t :init (load-theme 'doom-one))
+(use-package doom-themes :ensure t :init (load-theme 'doom-solarized-light))
 (use-package key-chord :ensure t :config (key-chord-mode 1))
 (use-package projectile-ripgrep :after projectile :ensure t)
 (use-package counsel-projectile :after projectile :ensure t)
@@ -174,15 +163,15 @@
 
 (use-package flycheck :ensure t
   :config
-  (setq flycheck-display-errors-delay 0.3)
+  (setq flycheck-display-errors-delay 0.9)
   (setq flycheck-idle-change-delay 0.8)
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   (global-set-key (kbd "C-x '") 'flycheck-list-errors)
   :init (global-flycheck-mode))
 
-(use-package flycheck-pos-tip :ensure t
-  :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
+;; (use-package flycheck-pos-tip :ensure t
+;;   :after flycheck
+;;   :config (add-hook 'flycheck-mode-hook #'flycheck-pos-tip-mode))
 
 (use-package avy :ensure t
   :config
@@ -202,24 +191,6 @@
 (use-package hide-mode-line :ensure t
   :hook
   ((cider-repl-mode imenu-list-minor-mode treemacs-mode) . hide-mode-line-mode))
-
-;; (use-package ivy-posframe :ensure t
-;;   :config
-;;   (setq ivy-posframe-min-width 90
-;;         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
-;;         ivy-posframe-border-width 2
-;;         ivy-posframe-width 90
-;;         ivy-posframe-min-height 10
-;;         ivy-posframe-height 15
-;;         ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
-;;         ivy-posframe-display-functions-alist
-;;         '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
-;;           (counsel-company . ivy-posframe-display-at-point)
-;;           (complete-symbol . ivy-posframe-display-at-point)
-;;           (counsel-M-x     . ivy-posframe-display-at-window-center)
-;;           (t               . ivy-posframe-display-at-window-center)))
-;;   (set-face-attribute 'internal-border nil :background "#2AA18E")
-;;   (ivy-posframe-mode 1))
 
 (use-package popwin
   :ensure t
@@ -306,7 +277,6 @@
   (define-key evil-normal-state-map (kbd "<SPC> <tab>") 'my/switch-to-last-buffer)
   (define-key evil-normal-state-map (kbd "<SPC> <SPC>") 'er/expand-region))
 
-
 (use-package shell-pop
   :ensure t
   :config
@@ -315,13 +285,6 @@
   (setq shell-pop-term-shell "/bin/zsh")
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
-
-(use-package highlight-symbol
-  :ensure t
-  :config
-  (setq highlight-symbol-idle-delay 0.9)
-  (add-hook 'emacs-elisp-mode-hook #'highlight-symbol-mode)
-  (add-hook 'clojure-mode-hook #'highlight-symbol-mode))
 
 (use-package company
   :ensure t
@@ -440,7 +403,6 @@
    ("C-S-r" . projectile-replace)
    ("C-x C-p" . projectile-switch-project))
   :config
-  (setq projectile-completion-system 'ivy)
   (projectile-mode 1))
 
 (use-package smartparens
@@ -562,117 +524,194 @@
   :mode (("\\.json\\'" . json-mode)
          ("/Pipfile.lock\\'" . json-mode)))
 
-;; (use-package treemacs
-;;   :ensure t
-;;   :bind
-;;   (( "C-\\" . treemacs)
-;;    ( "C-<return>" . treemacs))
-;;   :hook
-;;   (treemacs-mode . (lambda () (text-scale-decrease 1)
-;;                      (setq-local display-line-numbers nil)))
-;;   :config
-;;   (setq treemacs-show-cursor nil)
-;;   (setq treemacs-project-follow-cleanup 1)
-;;   (treemacs-resize-icons 11)
-;;   (setq treemacs-eldoc-display t)
-;;   (treemacs-follow-mode t)
-;;   (setq treemacs-width 22)
-;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+(use-package lsp-ui
+  :ensure t
+  :hook ((lsp-mode . lsp-ui-mode))
+  :config
+  ;; (setq lsp-ui-sideline-show-symbol -1)
+  ;; (setq lsp-ui-sideline-show-hover -1)
+  ;; (setq lsp-ui-sideline-show-diagnostics -1)
+  ;; (setq lsp-ui-sideline-ignore-duplicate t)
+  ;; (setq lsp-ui-doc-use-webkit -1)
+  ;; (setq lsp-ui-flycheck-enable t)
+  ;; (setq lsp-ui-doc-include-signature -1)
+  ;; (setq lsp-ui-doc-enable -1)
+  ;; (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
+  ;; (set-face-attribute 'markdown-code-face nil :background "#002B36")
+  )
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :commands lsp
-;;   :config
-;;   (require 'lsp-clients)
-;;   (setq lsp-auto-guess-root t
-;; 	    lsp-prefer-flymake nil
-;; 	    lsp-enable-indentation nil
-;; 	    lsp-enable-on-type-formatting nil)
-;;   (add-to-list 'lsp-file-watch-ignored "\\.vscode$"))
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config
+  (require 'lsp-clients)
+  (lsp-lens-mode 1)
+  (setq lsp-auto-guess-root t
+        lsp-prefer-capf t
+        lsp-enable-indentation nil
+        lsp-idle-delay 0.500
+        lsp-enable-on-type-formatting nil)
+  (add-to-list 'lsp-file-watch-ignored "\\.vscode$"))
 
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :hook ((lsp-mode . lsp-ui-mode)
-;; 	     (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
-;;                              (set-face-attribute 'lsp-ui-sideline-global nil :height 0.9 :background "#00242e")
-;;                              (lsp-ui-doc-mode -1))))
-;;   :config
-;;   (setq lsp-ui-sideline-show-symbol t)
-;;   (setq lsp-ui-sideline-ignore-duplicate t)
-;;   (setq lsp-ui-doc-use-webkit -1)
-;;   (setq lsp-ui-flycheck-enable t)
-;;   (setq lsp-ui-doc-include-signature t)
-;;   (setq lsp-ui-doc-enable nil)
-;;   (setq lsp-ui-sideline-show-hover t)
-;;   (lsp-ui-doc-mode -1)
-;;   (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
-;;   (set-face-attribute 'markdown-code-face nil :background "#002B36")
-;;   )
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 
-;; (defun my/cargo-run-bin ()
-;;   "Run cargo run."
-;;   (interactive)
-;;   (let ((bin-name (file-name-sans-extension (buffer-name))))
-;;     (delete-other-windows)
-;;     (if (string= "main" bin-name)
-;;         (cargo-process-run)
-;;       (cargo-process-run-bin bin-name))))
+(use-package rust-mode
+  :ensure t
+  :mode "\\.rs\\'"
+  :hook (rust-mode . lsp)
+  :config
+  ;; (flycheck-inline-mode -1)
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+  (electric-pair-local-mode t)
+  (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
+  (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
+  (define-key rust-mode-map (kbd "C-c C-k") 'my/cargo-process-check)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'my/cargo-test)
+  (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'my/cargo-check)
+  (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
+  (require 'lsp-clients)
+  (setq rust-format-on-save t))
 
-;; (defun my/cargo-process-test()
-;;   "Run cargo test."
-;;   (interactive)
-;;   (delete-other-windows)
-;;   (cargo-process-test))
+(use-package flycheck-rust
+  :ensure t
+  :after (flycheck rust-mode)
+  :commands flycheck-rust-setup
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-;; (defun my/cargo-process-check()
-;;   "Run cargo check."
-;;   (interactive)
-;;   (delete-other-windows)
-;;   (cargo-process-check))
+(use-package cargo
+  :ensure t
+  :commands cargo-minor-mode
+  :config
+  (define-key cargo-process-mode-map (kbd "go") 'other-window)
+  (add-hook 'cargo-process-mode-hook
+            (lambda ()
+              (text-scale-decrease 1)
+              (visual-line-mode 1)
+              (setq-local global-hl-line-mode nil)))
+  :hook (rust-mode . cargo-minor-mode))
 
-;; (use-package rust-mode
-;;   :ensure t
-;;   :mode "\\.rs\\'"
-;;   :hook (rust-mode . lsp)
-;;   :config
-;;   ;; (flycheck-inline-mode -1)
-;;   (electric-pair-local-mode t)
-;;   (define-key rust-mode-map (kbd "C-c C-r") 'my/cargo-run-bin)
-;;   (define-key rust-mode-map (kbd "C-c C-t") 'my/cargo-process-test)
-;;   (define-key rust-mode-map (kbd "C-c C-k") 'my/cargo-process-check)
-;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> r") 'my/cargo-run-bin)
-;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> t") 'my/cargo-process-test)
-;;   (evil-define-key 'normal rust-mode-map (kbd "<SPC> c") 'my/cargo-process-check)
-;;   (evil-define-key 'normal rust-mode-map "K" 'lsp-ui-doc-glance)
-;;   (require 'lsp-clients)
-;;   (setq rust-format-on-save t))
-
-;; (use-package flycheck-rust
-;;   :ensure t
-;;   :after flycheck
-;;   :commands flycheck-rust-setup
-;;   :init
-;;   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-;; (use-package cargo
-;;   :ensure t
-;;   :commands cargo-minor-mode
-;;   :config
-;;   (define-key cargo-process-mode-map (kbd "go") 'other-window)
-;;   (add-hook 'cargo-process-mode-hook
-;;             (lambda ()
-;;               (text-scale-decrease 1)
-;;               (visual-line-mode 1)
-;;               (setq-local global-hl-line-mode nil)))
-;;   :hook (rust-mode . cargo-minor-mode))
-
-;; (use-package toml-mode
-;;   :ensure t
-;;   :mode (("\\.toml\\'" . toml-mode)
-;; 	     ("/Pipfile\\'" . toml-mode)))
+(use-package toml-mode
+  :ensure t
+  :mode (("\\.toml\\'" . toml-mode)
+         ("/Pipfile\\'" . toml-mode)))
 
 ;; my stuff
 
+(defun my/cargo-run-bin ()
+  "Run cargo run."
+  (interactive)
+  (let ((bin-name (file-name-sans-extension (buffer-name))))
+    (delete-other-windows)
+    (if (string= "main" bin-name)
+        (cargo-process-run)
+      (cargo-process-run-bin bin-name))))
+
+(defun my/cargo-test()
+  "Run cargo test."
+  (interactive)
+  (shell-command "cargo test"))
+
+(defun my/cargo-check()
+  "Run cargo check."
+  (interactive)
+  ;; (delete-other-windows)
+  (shell-command "cargo check"))
+
+
+(defun my/switch-to-repl-and-back ()
+  "Switch to repl and back."
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (cider-switch-to-last-clojure-buffer))
+
+(defun my/jump-back ()
+  "My jump back based on mode."
+  (interactive)
+  (if (eq major-mode 'clojure-mode)
+      (cider-pop-back)
+    (evil-jump-backward)))
+
+(defun my/set-font ()
+  "My default font."
+  (interactive)
+  (if (eq window-system 'x)
+      (set-frame-font "Fira Code Medium-12")
+    (set-frame-font "Monaco-15")))
+
+(defun my/indent-buffer ()
+  "Indent whole buffer."
+  (interactive "*")
+  (indent-region (point-min) (point-max)))
+
+(defun my/date ()
+  "Insert date."
+  (interactive "*")
+  (insert (format-time-string "%Y-%m-%d %a %H:%M")))
+
+(defun my/switch-to-last-buffer ()
+  "Switch to last buffer."
+  (interactive)
+  (switch-to-buffer nil))
+
+(defun er-rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
+
+;; my initialize
+(defun my/initialize ()
+  "Initialize."
+  (interactive "*")
+  (when (memq window-system '(mac ns x))
+    (setq mac-option-modifier 'meta)
+    (setq mac-command-modifier 'meta)
+    (exec-path-from-shell-initialize))
+  (my/set-font)
+  (put 'downcase-region 'disabled nil))
+
+(my/initialize)
+
+(provide 'init)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(dired-listing-switches "-aBhl --group-directories-first")
+ '(lsp-enable-symbol-highlighting nil)
+ '(lsp-lens-auto-enable t)
+ '(lsp-rust-server (quote rust-analyzer))
+ '(lsp-signature-auto-activate nil)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-doc-include-signature -1)
+ '(lsp-ui-sideline-enable t)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-diagnostics t)
+ '(lsp-ui-sideline-show-hover nil)
+ '(lsp-ui-sideline-show-symbol nil)
+ '(package-selected-packages
+   (quote
+    (lsp-ui yasnippet-snippets which-key use-package treemacs-projectile treemacs-evil toml-mode smex shell-pop projectile-ripgrep popwin neotree key-chord json-mode ivy-rich ivy-posframe highlight-symbol hide-mode-line gcmh flycheck-rust flycheck-pos-tip flycheck-joker flycheck-clj-kondo fast-scroll exec-path-from-shell evil-surround evil-smartparens evil-magit doom-themes doom-modeline diff-hl counsel-projectile company cider cargo aggressive-indent)))
+ '(projectile-completion-system (quote ivy))
+ '(projectile-sort-order (quote recently-active))
+ '(rust-format-show-buffer nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
 ;; (defun my/modeline-adjust ()
 ;;   "My adjust modeline."
@@ -738,66 +777,74 @@
 ;;   (indent-region (point-min) (point-max))
 ;;   (save-buffer))
 
-(defun my/switch-to-repl-and-back ()
-  "Switch to repl and back."
-  (interactive)
-  (cider-switch-to-repl-buffer)
-  (cider-switch-to-last-clojure-buffer))
+;; (use-package treemacs
+;;   :ensure t
+;;   :bind
+;;   (( "C-\\" . treemacs)
+;;    ( "C-<return>" . treemacs))
+;;   :hook
+;;   (treemacs-mode . (lambda () (text-scale-decrease 1)
+;;                      (setq-local display-line-numbers nil)))
+;;   :config
+;;   (setq treemacs-show-cursor nil)
+;;   (setq treemacs-project-follow-cleanup 1)
+;;   (treemacs-resize-icons 11)
+;;   (setq treemacs-eldoc-display t)
+;;   (treemacs-follow-mode t)
+;;   (setq treemacs-width 22)
+;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+;; (use-package move-text :ensure t :config (move-text-default-bindings))
+;; (use-package restclient :ensure t)
+;; (use-package expand-region :ensure t)
+;; (use-package fast-scroll :ensure t
+;;   :config
+;;   (add-hook 'fast-scroll-start-hook (lambda () (flycheck-mode -1) ))
+;;   (add-hook 'fast-scroll-end-hook (lambda () (flycheck-mode 1) ))
+;;   (fast-scroll-config)
+;;   (fast-scroll-mode 1))
+;; (use-package gcmh :ensure t :config (gcmh-mode 1))
 
-(defun my/jump-back ()
-  "My jump back based on mode."
-  (interactive)
-  (if (eq major-mode 'clojure-mode)
-      (cider-pop-back)
-    (evil-jump-backward)))
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :hook ((lsp-mode . lsp-ui-mode)
+;;          (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1)
+;;                              (set-face-attribute 'lsp-ui-sideline-global nil :height 0.9 :background "#00242e")
+;;                              (lsp-ui-doc-mode -1))))
+;;   :config
+;;   (setq lsp-ui-sideline-show-symbol -1)
+;;   (setq lsp-ui-sideline-ignore-duplicate t)
+;;   (setq lsp-ui-sideline-show-hover -1)
+;;   (setq lsp-ui-sideline-show-diagnostics -1)
+;;   ;; (setq lsp-ui-doc-use-webkit -1)
+;;   ;; (setq lsp-ui-flycheck-enable t)
+;;   (setq lsp-ui-doc-include-signature -1)
+;;   (setq lsp-ui-doc-enable -1)
+;;   (lsp-ui-doc-mode -1)
+;;   ;; (set-face-attribute 'lsp-ui-doc-background nil :background "#002B36")
+;;   ;; (set-face-attribute 'markdown-code-face nil :background "#002B36")
+;;   )
 
-(defun my/set-font ()
-  "My default font."
-  (interactive)
-  (if (eq window-system 'x)
-      (set-frame-font "Fira Code Medium-12")
-    (set-frame-font "Monaco-15")))
+;; (use-package ivy-posframe :ensure t
+;;   :config
+;;   (setq ivy-posframe-min-width 90
+;;         ivy-posframe-font (if (eq window-system 'x) "Fira Code Medium-11" "Monaco-12")
+;;         ivy-posframe-border-width 2
+;;         ivy-posframe-width 90
+;;         ivy-posframe-min-height 10
+;;         ivy-posframe-height 15
+;;         ivy-posframe-parameters '((left-fringe . 1) (right-fringe . 5))
+;;         ivy-posframe-display-functions-alist
+;;         '((swiper          . ivy-posframe-display-at-frame-bottom-window-center)
+;;           (counsel-company . ivy-posframe-display-at-point)
+;;           (complete-symbol . ivy-posframe-display-at-point)
+;;           (counsel-M-x     . ivy-posframe-display-at-window-center)
+;;           (t               . ivy-posframe-display-at-window-center)))
+;;   (set-face-attribute 'internal-border nil :background "#2AA18E")
+;;   (ivy-posframe-mode 1))
 
-(defun my/indent-buffer ()
-  "Indent whole buffer."
-  (interactive "*")
-  (indent-region (point-min) (point-max)))
-
-(defun my/date ()
-  "Insert date."
-  (interactive "*")
-  (insert (format-time-string "%Y-%m-%d %a %H:%M")))
-
-(defun my/switch-to-last-buffer ()
-  "Switch to last buffer."
-  (interactive)
-  (switch-to-buffer nil))
-
-(defun er-rename-file-and-buffer ()
-  "Rename the current buffer and file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (message "Buffer is not visiting a file!")
-      (let ((new-name (read-file-name "New name: " filename)))
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (set-visited-file-name new-name t t)))))))
-
-;; my initialize
-(defun my/initialize ()
-  "Initialize."
-  (interactive "*")
-  (when (memq window-system '(mac ns x))
-    (setq mac-option-modifier 'meta)
-    (setq mac-command-modifier 'meta)
-    (exec-path-from-shell-initialize))
-  (my/set-font)
-  (put 'downcase-region 'disabled nil))
-
-(my/initialize)
-
-(provide 'init)
-;;; init.el ends here
+;; (use-package highlight-symbol
+;;   :ensure t
+;;   :config
+;;   (setq highlight-symbol-idle-delay 2)
+;;   (add-hook 'emacs-elisp-mode-hook #'highlight-symbol-mode)
+;;   (add-hook 'clojure-mode-hook #'highlight-symbol-mode))
